@@ -16,6 +16,9 @@ public class StorageRoomInteraction : MonoBehaviour
     public GameObject jumpscare;
     public GameObject bakul;
 
+    [Header("Bakul")]
+    public GameObject bakulZoom;
+
     // =========================================================
     // STATUS EVENT
     // =========================================================
@@ -43,6 +46,13 @@ public class StorageRoomInteraction : MonoBehaviour
     // =========================================================
 
     private int gentongClickCount = 0;
+
+
+    // =========================================================
+    // BAKUL
+    // =========================================================
+
+    private bool bakulUnlocked = false;
 
 
     // =========================================================
@@ -292,6 +302,8 @@ public class StorageRoomInteraction : MonoBehaviour
             // Bakul mulai terlihat
             bakul.SetActive(true);
 
+            bakulUnlocked = true;
+
             Debug.Log("Bakul sekarang terlihat.");
 
             // Tunggu 2 detik
@@ -374,4 +386,26 @@ public class StorageRoomInteraction : MonoBehaviour
         // ArrowBack muncul kembali
         arrowBack.SetActive(true);
     }
+
+
+    // =========================================================
+    // BAKUL
+    // =========================================================
+
+    public void ClickBakul()
+    {
+        if (eventRunning)
+            return;
+
+        if (!bakulUnlocked)
+            return;
+
+        Debug.Log("Bakul diklik.");
+
+        bakul.SetActive(false);
+        bakulZoom.SetActive(true);
+
+        arrowBack.SetActive(false);
+    }
+
 }
