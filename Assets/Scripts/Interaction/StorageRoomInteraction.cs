@@ -73,14 +73,14 @@ public class StorageRoomInteraction : MonoBehaviour
         // Mulai dari dialog pertama
         catatanDialogueIndex = 0;
 
-        // Tunggu 2,5 detik sebelum dialog
+        // Tunggu 2 detik sebelum dialog
         StartCoroutine(StartCatatanDialogue());
     }
 
 
     private IEnumerator StartCatatanDialogue()
     {
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2f);
 
         // Tampilkan tombol dialog
         dialogueNextButton.SetActive(true);
@@ -200,8 +200,14 @@ public class StorageRoomInteraction : MonoBehaviour
         {
             Debug.Log("Event Gentong 1 dimulai.");
 
-            // Tunggu 2,5 detik
-            yield return new WaitForSeconds(2.5f);
+            // Tunggu 2 detik
+            yield return new WaitForSeconds(2f);
+
+            // Event suara benda jatuh
+            Debug.Log("SFX: Suara benda jatuh");
+
+            // Tunggu 2 detik setelah event
+            yield return new WaitForSeconds(2f);
 
             // Tampilkan tombol dialog
             dialogueNextButton.SetActive(true);
@@ -219,14 +225,14 @@ public class StorageRoomInteraction : MonoBehaviour
         {
             Debug.Log("Event Gentong 2 dimulai.");
 
-            // Tunggu 2,5 detik
-            yield return new WaitForSeconds(2.5f);
+            // Tunggu 2 detik
+            yield return new WaitForSeconds(2f);
 
             // Event bisikan
             Debug.Log("SFX: Bisikan 'Mayang...'");
 
-            // Tunggu 2,5 detik setelah event
-            yield return new WaitForSeconds(2.5f);
+            // Tunggu 2 detik setelah event
+            yield return new WaitForSeconds(2f);
 
             dialogueNextButton.SetActive(true);
 
@@ -243,24 +249,24 @@ public class StorageRoomInteraction : MonoBehaviour
         {
             Debug.Log("Event Gentong 3 dimulai.");
 
-            // Tunggu 2,5 detik
-            yield return new WaitForSeconds(2.5f);
+            // Tunggu 2 detik
+            yield return new WaitForSeconds(2f);
 
             // Jumpscare muncul
             jumpscare.SetActive(true);
 
             Debug.Log("JUMPSCARE MUNCUL");
 
-            // Jumpscare berlangsung 2,5 detik
-            yield return new WaitForSeconds(2.5f);
+            // Jumpscare berlangsung 2 detik
+            yield return new WaitForSeconds(2f);
 
             // Jumpscare hilang otomatis
             jumpscare.SetActive(false);
 
             Debug.Log("JUMPSCARE SELESAI");
 
-            // Tunggu 2,5 detik
-            yield return new WaitForSeconds(2.5f);
+            // Tunggu 2 detik
+            yield return new WaitForSeconds(2f);
 
             dialogueNextButton.SetActive(true);
 
@@ -277,8 +283,8 @@ public class StorageRoomInteraction : MonoBehaviour
         {
             Debug.Log("Event Gentong 4 dimulai.");
 
-            // Tunggu 2,5 detik
-            yield return new WaitForSeconds(2.5f);
+            // Tunggu 2 detik
+            yield return new WaitForSeconds(2f);
 
             // Gentong menghilang / bergeser
             gentong.SetActive(false);
@@ -288,8 +294,8 @@ public class StorageRoomInteraction : MonoBehaviour
 
             Debug.Log("Bakul sekarang terlihat.");
 
-            // Tunggu 2,5 detik
-            yield return new WaitForSeconds(2.5f);
+            // Tunggu 2 detik
+            yield return new WaitForSeconds(2f);
 
             dialogueNextButton.SetActive(true);
 
