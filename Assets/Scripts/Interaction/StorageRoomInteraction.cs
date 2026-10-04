@@ -18,6 +18,8 @@ public class StorageRoomInteraction : MonoBehaviour
 
     [Header("Bakul")]
     public GameObject bakulZoom;
+    public GameObject bakulInventory;
+    public GameObject buttonInvestigasiArtefak;
 
     // =========================================================
     // STATUS EVENT
@@ -397,15 +399,74 @@ public class StorageRoomInteraction : MonoBehaviour
         if (eventRunning)
             return;
 
-        if (!bakulUnlocked)
-            return;
-
         Debug.Log("Bakul diklik.");
 
+        // Hilangkan Bakul dari ruangan
         bakul.SetActive(false);
+
+        // Masukkan Bakul ke inventory
+        bakulInventory.SetActive(true);
+
+        // Buka zoom Bakul
         bakulZoom.SetActive(true);
 
-        arrowBack.SetActive(false);
+        // Tombol investigasi belum dibuat
+        if (buttonInvestigasiArtefak != null)
+        {
+            buttonInvestigasiArtefak.SetActive(true);
+        }
+
+        // Tampilkan tombol kembali
+        arrowBack.SetActive(true);
     }
 
+    public void CloseBakulZoom()
+    {
+        if (eventRunning)
+            return;
+
+        bakulZoom.SetActive(false);
+
+        if (buttonInvestigasiArtefak != null)
+        {
+            buttonInvestigasiArtefak.SetActive(false);
+        }
+
+        arrowBack.SetActive(true);
+    }
+
+    public void ClickBakulInventory()
+    {
+        if (eventRunning)
+            return;
+
+        Debug.Log("Bakul di inventory diklik.");
+
+        bakulZoom.SetActive(true);
+
+        if (buttonInvestigasiArtefak != null)
+        {
+            buttonInvestigasiArtefak.SetActive(true);
+        }
+
+        arrowBack.SetActive(true);
+    }
+
+    public void ClickArrowBack()
+    {
+        if (eventRunning)
+            return;
+
+        if (bakulZoom.activeSelf)
+        {
+            CloseBakulZoom();
+            return;
+        }
+
+        if (catatanZoom.activeSelf)
+        {
+            CloseCatatanZoom();
+            return;
+        }
+    }
 }
