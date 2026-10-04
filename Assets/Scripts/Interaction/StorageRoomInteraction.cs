@@ -1,337 +1,157 @@
+
 using System.Collections;
 using UnityEngine;
 
 public class StorageRoomInteraction : MonoBehaviour
 {
     [Header("Catatan")]
-    public GameObject catatan;
-    public GameObject catatanZoom;
-    public GameObject arrowBack;
+    [SerializeField] private GameObject catatan;
+    [SerializeField] private GameObject catatanZoom;
+    [SerializeField] private GameObject arrowBack;
 
     [Header("Dialog")]
-    public GameObject dialogueNextButton;
+    [SerializeField] private GameObject dialoguePanel;
+    [SerializeField] private GameObject dialogueNextButton;
+    [SerializeField] private DialogueUI dialogueUI;
 
     [Header("Gentong")]
-    public GameObject gentong;
-    public GameObject jumpscare;
-    public GameObject bakul;
+    [SerializeField] private GameObject gentong;
+    [SerializeField] private GameObject jumpscare;
+    [SerializeField] private GameObject bakul;
+
+    [Header("Animasi Jumpscare")]
+    [SerializeField] private CanvasGroup jumpscareCanvasGroup;
+    [SerializeField] private float jumpscareFadeInDuration = 0.2f;
+    [SerializeField] private float jumpscareHoldDuration = 1.1f;
+    [SerializeField] private float jumpscareFadeOutDuration = 0.4f;
+
+    [Header("Animasi Gentong")]
+    [SerializeField] private RectTransform gentongRectTransform;
+    [SerializeField] private CanvasGroup gentongCanvasGroup;
+    [SerializeField] private Vector2 gentongShiftedPosition;
+    [SerializeField] private float gentongFadeDuration = 0.5f;
 
     [Header("Bakul")]
-    public GameObject bakulZoom;
-    public GameObject bakulInventory;
-    public GameObject buttonInvestigasiArtefak;
+    [SerializeField] private GameObject bakulZoom;
+    [SerializeField] private GameObject bakulInventory;
+    [SerializeField] private GameObject buttonInvestigasiArtefak;
 
-    // =========================================================
-    // STATUS EVENT
-    // =========================================================
-
-    private bool eventRunning = false;
-
-    // Menentukan event apa yang sedang berjalan
+    private bool eventRunning;
     private string currentEvent = "";
+    private int gentongClickCount;
+    private int catatanDialogueIndex;
+    private bool bakulUnlocked;
 
-    // =========================================================
-    // CATATAN
-    // =========================================================
+    private bool IsInteractionBlocked()
+    {
+        // Jangan izinkan interaksi saat event atau dialog berlangsung.
+        if (eventRunning)
+            return true;
 
-    private int catatanDialogueIndex = 0;
+        // Jangan izinkan interaksi saat zoom Catatan terbuka.
+        if (catatanZoom != null && catatanZoom.activeSelf)
+            return true;
 
-    private string[] catatanDialogue =
+        // Jangan izinkan interaksi objek lain saat zoom Bakul terbuka.
+        if (bakulZoom != null && bakulZoom.activeSelf)
+            return true;
+
+        return false;
+    }
+
+    private readonly string[] catatanDialogue =
     {
         "hmm...",
         "Sepertinya ada maksud dari dokumen ini..."
     };
 
-
-    // =========================================================
-    // GENTONG
-    // =========================================================
-
-    private int gentongClickCount = 0;
-
-
-    // =========================================================
-    // BAKUL
-    // =========================================================
-
-    private bool bakulUnlocked = false;
-
-
-    // =========================================================
-    // CATATAN - MULAI
-    // =========================================================
-
-    public void OpenCatatan()
+    private void Awake()
     {
-        // Jangan bisa membuka Catatan jika ada event lain
-        if (eventRunning)
-            return;
+        // Sembunyikan dialog saat scene mulai.
+        HideDialogue();
 
-        eventRunning = true;
-        currentEvent = "Catatan";
-
-        // Sembunyikan Catatan biasa
-        catatan.SetActive(false);
-
-        // Tampilkan Catatan Zoom
-        catatanZoom.SetActive(true);
-
-        // ArrowBack tidak boleh digunakan
-        arrowBack.SetActive(false);
-
-        // DialogueNextButton disembunyikan dulu
-        dialogueNextButton.SetActive(false);
-
-        // Mulai dari dialog pertama
-        catatanDialogueIndex = 0;
-
-        // Tunggu 2 detik sebelum dialog
-        StartCoroutine(StartCatatanDialogue());
-    }
-
-
-    private IEnumerator StartCatatanDialogue()
-    {
-        yield return new WaitForSeconds(2f);
-
-        // Tampilkan tombol dialog
-        dialogueNextButton.SetActive(true);
-
-        ShowCatatanDialogue();
-    }
-
-
-    // =========================================================
-    // CATATAN - NEXT DIALOG
-    // =========================================================
-
-    public void NextCatatanDialogue()
-    {
-        // Pastikan yang sedang berjalan memang event Catatan
-        if (currentEvent != "Catatan")
-            return;
-
-        catatanDialogueIndex++;
-
-        // Masih ada dialog berikutnya
-        if (catatanDialogueIndex < catatanDialogue.Length)
+        if (jumpscare != null)
         {
-            ShowCatatanDialogue();
-        }
-        else
-        {
-            // Dialog terakhir selesai
-            FinishCatatanEvent();
-        }
-    }
-
-
-    private void ShowCatatanDialogue()
-    {
-        Debug.Log("ARKA: " + catatanDialogue[catatanDialogueIndex]);
-    }
-
-
-    // =========================================================
-    // CATATAN - SELESAI
-    // =========================================================
-
-    private void FinishCatatanEvent()
-    {
-        Debug.Log("Event Catatan selesai");
-
-        dialogueNextButton.SetActive(false);
-
-        eventRunning = false;
-        currentEvent = "";
-
-        // Setelah dialog selesai,
-        // pemain boleh menggunakan ArrowBack
-        arrowBack.SetActive(true);
-    }
-
-
-    // =========================================================
-    // CATATAN - KELUAR ZOOM
-    // =========================================================
-
-    public void CloseCatatanZoom()
-    {
-        // Jangan bisa keluar selama event/dialog berlangsung
-        if (eventRunning)
-            return;
-
-        catatanZoom.SetActive(false);
-        catatan.SetActive(true);
-
-        arrowBack.SetActive(true);
-    }
-
-
-    // =========================================================
-    // GENTONG - KLIK
-    // =========================================================
-
-    public void ClickGentong()
-    {
-        // Jangan menerima klik jika ada event yang sedang berjalan
-        if (eventRunning)
-            return;
-
-        eventRunning = true;
-
-        // ArrowBack langsung hilang
-        arrowBack.SetActive(false);
-
-        // DialogueNextButton belum boleh muncul
-        dialogueNextButton.SetActive(false);
-
-        // Tambah jumlah klik Gentong
-        gentongClickCount++;
-
-        // Tentukan event yang sedang berjalan
-        currentEvent = "Gentong" + gentongClickCount;
-
-        Debug.Log("Gentong diklik: " + gentongClickCount);
-
-        StartCoroutine(GentongEvent());
-    }
-
-
-    // =========================================================
-    // GENTONG - EVENT
-    // =========================================================
-
-    private IEnumerator GentongEvent()
-    {
-        // =====================================================
-        // GENTONG 1
-        // =====================================================
-
-        if (gentongClickCount == 1)
-        {
-            Debug.Log("Event Gentong 1 dimulai.");
-
-            // Tunggu 2 detik
-            yield return new WaitForSeconds(2f);
-
-            // Event suara benda jatuh
-            Debug.Log("SFX: Suara benda jatuh");
-
-            // Tunggu 2 detik setelah event
-            yield return new WaitForSeconds(2f);
-
-            // Tampilkan tombol dialog
-            dialogueNextButton.SetActive(true);
-
-            // Hanya SATU dialog
-            Debug.Log("ARKA: Apa itu?");
-        }
-
-
-        // =====================================================
-        // GENTONG 2
-        // =====================================================
-
-        else if (gentongClickCount == 2)
-        {
-            Debug.Log("Event Gentong 2 dimulai.");
-
-            // Tunggu 2 detik
-            yield return new WaitForSeconds(2f);
-
-            // Event bisikan
-            Debug.Log("SFX: Bisikan 'Mayang...'");
-
-            // Tunggu 2 detik setelah event
-            yield return new WaitForSeconds(2f);
-
-            dialogueNextButton.SetActive(true);
-
-            // Hanya SATU dialog
-            Debug.Log("ARKA: Siapa...?");
-        }
-
-
-        // =====================================================
-        // GENTONG 3
-        // =====================================================
-
-        else if (gentongClickCount == 3)
-        {
-            Debug.Log("Event Gentong 3 dimulai.");
-
-            // Tunggu 2 detik
-            yield return new WaitForSeconds(2f);
-
-            // Jumpscare muncul
-            jumpscare.SetActive(true);
-
-            Debug.Log("JUMPSCARE MUNCUL");
-
-            // Jumpscare berlangsung 2 detik
-            yield return new WaitForSeconds(2f);
-
-            // Jumpscare hilang otomatis
             jumpscare.SetActive(false);
 
-            Debug.Log("JUMPSCARE SELESAI");
-
-            // Tunggu 2 detik
-            yield return new WaitForSeconds(2f);
-
-            dialogueNextButton.SetActive(true);
-
-            // Hanya SATU dialog
-            Debug.Log("ARKA: Tadi... apa itu?");
+            if (jumpscareCanvasGroup == null)
+                jumpscareCanvasGroup =
+                    jumpscare.GetComponent<CanvasGroup>();
         }
 
+        if (catatanZoom != null)
+            catatanZoom.SetActive(false);
 
-        // =====================================================
-        // GENTONG 4
-        // =====================================================
+        if (bakulZoom != null)
+            bakulZoom.SetActive(false);
 
-        else if (gentongClickCount == 4)
+        if (buttonInvestigasiArtefak != null)
+            buttonInvestigasiArtefak.SetActive(false);
+
+        // Ambil komponen dari objek Gentong jika belum diisi.
+        if (gentong != null)
         {
-            Debug.Log("Event Gentong 4 dimulai.");
+            if (gentongRectTransform == null)
+                gentongRectTransform =
+                    gentong.GetComponent<RectTransform>();
 
-            // Tunggu 2 detik
-            yield return new WaitForSeconds(2f);
-
-            // Gentong menghilang / bergeser
-            gentong.SetActive(false);
-
-            // Bakul mulai terlihat
-            bakul.SetActive(true);
-
-            bakulUnlocked = true;
-
-            Debug.Log("Bakul sekarang terlihat.");
-
-            // Tunggu 2 detik
-            yield return new WaitForSeconds(2f);
-
-            dialogueNextButton.SetActive(true);
-
-            // Hanya SATU dialog
-            Debug.Log("ARKA: Bakul...?");
+            if (gentongCanvasGroup == null)
+                gentongCanvasGroup =
+                    gentong.GetComponent<CanvasGroup>();
         }
     }
 
+    // =====================================================
+    // DIALOG
+    // =====================================================
 
-    // =========================================================
-    // DIALOGUE NEXT BUTTON
-    // =========================================================
+    private void ShowDialogue(string speaker, string line)
+    {
+        if (dialoguePanel == null ||
+            dialogueNextButton == null ||
+            dialogueUI == null)
+        {
+            Debug.LogError(
+                "Referensi DialoguePanel, DialogueNextButton, " +
+                "atau DialogueUI belum lengkap di Inspector."
+            );
+            return;
+        }
+
+        dialoguePanel.SetActive(true);
+        dialogueNextButton.SetActive(false);
+
+        dialogueUI.ShowLine(speaker, line);
+
+        // Tombol muncul bersama dialog.
+        // Jika teks sedang diketik, klik pertama menyelesaikan ketikan.
+        dialogueNextButton.SetActive(true);
+    }
+
+    private void HideDialogue()
+    {
+        if (dialogueNextButton != null)
+            dialogueNextButton.SetActive(false);
+
+        if (dialogueUI != null)
+            dialogueUI.Hide();
+
+        if (dialoguePanel != null)
+            dialoguePanel.SetActive(false);
+    }
 
     public void NextDialogue()
     {
-        // Tidak ada event
         if (!eventRunning)
             return;
 
-        // =====================================================
-        // CATATAN
-        // =====================================================
+        // Klik pertama menyelesaikan animasi ketik,
+        // jika teks masih belum selesai.
+        if (dialogueUI != null &&
+            dialogueUI.TryCompleteTyping())
+        {
+            return;
+        }
 
         if (currentEvent == "Catatan")
         {
@@ -339,85 +159,403 @@ public class StorageRoomInteraction : MonoBehaviour
             return;
         }
 
-
-        // =====================================================
-        // GENTONG
-        // =====================================================
-
-        if (currentEvent == "Gentong1")
+        if (currentEvent.StartsWith("Gentong"))
         {
-            FinishGentongEvent(1);
+            FinishGentongEvent();
             return;
         }
 
-        if (currentEvent == "Gentong2")
+        if (currentEvent == "BakulTerhalang")
         {
-            FinishGentongEvent(2);
-            return;
-        }
-
-        if (currentEvent == "Gentong3")
-        {
-            FinishGentongEvent(3);
-            return;
-        }
-
-        if (currentEvent == "Gentong4")
-        {
-            FinishGentongEvent(4);
-            return;
+            FinishBlockedBakulEvent();
         }
     }
 
-
-    // =========================================================
-    // GENTONG - SELESAI
-    // =========================================================
-
-    private void FinishGentongEvent(int eventNumber)
+    private void FinishCurrentEvent()
     {
-        Debug.Log("Event Gentong " + eventNumber + " selesai.");
+        HideDialogue();
 
-        // Sembunyikan tombol dialog
-        dialogueNextButton.SetActive(false);
-
-        // Event selesai
         eventRunning = false;
         currentEvent = "";
 
-        // ArrowBack muncul kembali
-        arrowBack.SetActive(true);
+        if (arrowBack != null)
+            arrowBack.SetActive(true);
     }
 
+    // =====================================================
+    // CATATAN
+    // =====================================================
 
-    // =========================================================
-    // BAKUL
-    // =========================================================
+    public void OpenCatatan()
+    {
+        if (IsInteractionBlocked())
+            return;
 
-    public void ClickBakul()
+        eventRunning = true;
+        currentEvent = "Catatan";
+        catatanDialogueIndex = 0;
+
+        HideDialogue();
+
+        catatan.SetActive(false);
+        catatanZoom.SetActive(true);
+        arrowBack.SetActive(false);
+
+        StartCoroutine(StartCatatanDialogue());
+    }
+
+    private IEnumerator StartCatatanDialogue()
+    {
+        yield return new WaitForSeconds(2f);
+
+        if (currentEvent != "Catatan")
+            yield break;
+
+        ShowCatatanDialogue();
+    }
+
+    private void ShowCatatanDialogue()
+    {
+        ShowDialogue(
+            "Arka",
+            catatanDialogue[catatanDialogueIndex]
+        );
+    }
+
+    private void NextCatatanDialogue()
+    {
+        if (currentEvent != "Catatan")
+            return;
+
+        catatanDialogueIndex++;
+
+        if (catatanDialogueIndex < catatanDialogue.Length)
+        {
+            ShowCatatanDialogue();
+        }
+        else
+        {
+            FinishCatatanEvent();
+        }
+    }
+
+    private void FinishCatatanEvent()
+    {
+        Debug.Log("Event Catatan selesai.");
+        FinishCurrentEvent();
+    }
+
+    public void CloseCatatanZoom()
     {
         if (eventRunning)
             return;
 
-        Debug.Log("Bakul diklik.");
+        catatanZoom.SetActive(false);
+        catatan.SetActive(true);
 
-        // Hilangkan Bakul dari ruangan
-        bakul.SetActive(false);
+        if (arrowBack != null)
+            arrowBack.SetActive(true);
+    }
 
-        // Masukkan Bakul ke inventory
-        bakulInventory.SetActive(true);
+    // =====================================================
+    // GENTONG
+    // =====================================================
 
-        // Buka zoom Bakul
-        bakulZoom.SetActive(true);
+    public void ClickGentong()
+    {
+        if (IsInteractionBlocked())
+            return;
 
-        // Tombol investigasi belum dibuat
-        if (buttonInvestigasiArtefak != null)
+        eventRunning = true;
+        arrowBack.SetActive(false);
+
+        HideDialogue();
+
+        gentongClickCount++;
+
+        currentEvent = "Gentong" + gentongClickCount;
+
+        Debug.Log("Gentong diklik: " + gentongClickCount);
+
+        StartCoroutine(GentongEvent());
+    }
+
+    private IEnumerator GentongEvent()
+    {
+        switch (gentongClickCount)
         {
-            buttonInvestigasiArtefak.SetActive(true);
+            case 1:
+                Debug.Log("Event Gentong 1 dimulai.");
+
+                yield return new WaitForSeconds(1f);
+
+                Debug.Log("SFX: Suara benda jatuh");
+
+                yield return new WaitForSeconds(1f);
+
+                ShowDialogue("Arka", "Apa itu?");
+                break;
+
+            case 2:
+                Debug.Log("Event Gentong 2 dimulai.");
+
+                yield return new WaitForSeconds(1f);
+
+                Debug.Log("SFX: Bisikan 'Mayang...'");
+
+                yield return new WaitForSeconds(1f);
+
+                ShowDialogue("Arka", "Siapa...?");
+                break;
+
+            case 3:
+                Debug.Log("Event Gentong 3 dimulai.");
+
+                yield return new WaitForSeconds(3f);
+
+                yield return StartCoroutine(PlayJumpscare());
+
+                yield return new WaitForSeconds(1f);
+
+                ShowDialogue("Arka", "Tadi... apa itu?");
+                break;
+
+            case 4:
+                Debug.Log("Event Gentong 4 dimulai.");
+
+                yield return new WaitForSeconds(0.5f);
+
+                // Gentong bergeser dengan efek fade.
+                yield return StartCoroutine(ShiftGentong());
+
+                bakulUnlocked = true;
+                bakul.SetActive(true);
+
+                Debug.Log("Gentong bergeser. Bakul terbuka.");
+
+                yield return new WaitForSeconds(1f);
+
+                ShowDialogue("Arka", "Bakul...?");
+                break;
+
+            default:
+                // Tidak ada event tambahan setelah klik keempat.
+                FinishCurrentEvent();
+                break;
+        }
+    }
+
+    private IEnumerator PlayJumpscare()
+    {
+        if (jumpscare == null || jumpscareCanvasGroup == null)
+        {
+            Debug.LogError(
+                "Jumpscare atau CanvasGroup Jumpscare belum dihubungkan."
+            );
+            yield break;
         }
 
-        // Tampilkan tombol kembali
-        arrowBack.SetActive(true);
+        float fadeIn = Mathf.Max(0.01f, jumpscareFadeInDuration);
+        float hold = Mathf.Max(0f, jumpscareHoldDuration);
+        float fadeOut = Mathf.Max(0.01f, jumpscareFadeOutDuration);
+
+        // Aktifkan jumpscare dalam keadaan transparan.
+        jumpscareCanvasGroup.alpha = 0f;
+        jumpscare.SetActive(true);
+
+        Debug.Log("JUMPSCARE FADE IN");
+
+        // Fade in: transparan menjadi terlihat.
+        float elapsed = 0f;
+
+        while (elapsed < fadeIn)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            jumpscareCanvasGroup.alpha =
+                Mathf.Clamp01(elapsed / fadeIn);
+
+            yield return null;
+        }
+
+        jumpscareCanvasGroup.alpha = 1f;
+
+        // Tahan jumpscare agar pemain sempat melihatnya.
+        yield return new WaitForSecondsRealtime(hold);
+
+        Debug.Log("JUMPSCARE FADE OUT");
+
+        // Fade out: terlihat menjadi transparan.
+        elapsed = 0f;
+
+        while (elapsed < fadeOut)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            jumpscareCanvasGroup.alpha =
+                1f - Mathf.Clamp01(elapsed / fadeOut);
+
+            yield return null;
+        }
+
+        jumpscareCanvasGroup.alpha = 0f;
+        jumpscare.SetActive(false);
+
+        Debug.Log("JUMPSCARE SELESAI");
+    }
+
+    private IEnumerator ShiftGentong()
+    {
+        if (gentong == null || gentongRectTransform == null)
+        {
+            Debug.LogError(
+                "Gentong atau RectTransform Gentong belum dihubungkan."
+            );
+            yield break;
+        }
+
+        Vector2 originalPosition =
+            gentongRectTransform.anchoredPosition;
+
+        // Tanpa CanvasGroup, geser langsung sebagai fallback.
+        if (gentongCanvasGroup == null)
+        {
+            Debug.LogWarning(
+                "CanvasGroup Gentong belum ada. " +
+                "Gentong akan bergeser tanpa fade."
+            );
+
+            gentongRectTransform.anchoredPosition =
+                gentongShiftedPosition;
+
+            yield break;
+        }
+
+        float duration = Mathf.Max(0.01f, gentongFadeDuration);
+        float elapsed = 0f;
+
+        // Fade keluar.
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            gentongCanvasGroup.alpha =
+                Mathf.Lerp(1f, 0f, elapsed / duration);
+
+            yield return null;
+        }
+
+        gentongCanvasGroup.alpha = 0f;
+
+        // Pindahkan Gentong agar tidak menutupi Bakul.
+        gentongRectTransform.anchoredPosition =
+            gentongShiftedPosition;
+
+        // Fade masuk.
+        elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            gentongCanvasGroup.alpha =
+                Mathf.Lerp(0f, 1f, elapsed / duration);
+
+            yield return null;
+        }
+
+        gentongCanvasGroup.alpha = 1f;
+
+        Debug.Log(
+            "Gentong berpindah dari " + originalPosition +
+            " ke " + gentongShiftedPosition
+        );
+    }
+
+    private void FinishGentongEvent()
+    {
+        Debug.Log(currentEvent + " selesai.");
+        FinishCurrentEvent();
+    }
+
+    // =====================================================
+    // BAKUL TERHALANG
+    // =====================================================
+
+    public void HandleBakulClick()
+    {
+        if (IsInteractionBlocked())
+            return;
+
+        if (bakulUnlocked)
+        {
+            ClickBakul();
+        }
+        else
+        {
+            ClickBlockedBakul();
+        }
+    }
+
+    public void ClickBlockedBakul()
+    {
+        if (IsInteractionBlocked())
+            return;
+
+        eventRunning = true;
+        currentEvent = "BakulTerhalang";
+
+        arrowBack.SetActive(false);
+        HideDialogue();
+
+        ShowDialogue(
+            "Arka",
+            "Benda ini terhalang sesuatu."
+        );
+    }
+
+    private void FinishBlockedBakulEvent()
+    {
+        Debug.Log("Event Bakul terhalang selesai.");
+        FinishCurrentEvent();
+    }
+
+    // =====================================================
+    // BAKUL ZOOM DAN INVENTORY
+    // =====================================================
+
+    public void ClickBakul()
+    {
+        if (IsInteractionBlocked())
+            return;
+
+        Debug.Log("Bakul diklik.");
+
+        // Bakul di ruangan menghilang setelah diambil.
+        bakul.SetActive(false);
+
+        // Bakul masuk ke inventory.
+        bakulInventory.SetActive(true);
+
+        OpenBakulZoom();
+    }
+
+    public void ClickBakulInventory()
+    {
+        if (IsInteractionBlocked())
+            return;
+
+        Debug.Log("Bakul di inventory diklik.");
+        OpenBakulZoom();
+    }
+
+    private void OpenBakulZoom()
+    {
+        bakulZoom.SetActive(true);
+
+        if (buttonInvestigasiArtefak != null)
+            buttonInvestigasiArtefak.SetActive(true);
+
+        if (arrowBack != null)
+            arrowBack.SetActive(true);
     }
 
     public void CloseBakulZoom()
@@ -428,29 +566,15 @@ public class StorageRoomInteraction : MonoBehaviour
         bakulZoom.SetActive(false);
 
         if (buttonInvestigasiArtefak != null)
-        {
             buttonInvestigasiArtefak.SetActive(false);
-        }
 
-        arrowBack.SetActive(true);
+        if (arrowBack != null)
+            arrowBack.SetActive(true);
     }
 
-    public void ClickBakulInventory()
-    {
-        if (eventRunning)
-            return;
-
-        Debug.Log("Bakul di inventory diklik.");
-
-        bakulZoom.SetActive(true);
-
-        if (buttonInvestigasiArtefak != null)
-        {
-            buttonInvestigasiArtefak.SetActive(true);
-        }
-
-        arrowBack.SetActive(true);
-    }
+    // =====================================================
+    // ARROW BACK
+    // =====================================================
 
     public void ClickArrowBack()
     {
@@ -466,7 +590,6 @@ public class StorageRoomInteraction : MonoBehaviour
         if (catatanZoom.activeSelf)
         {
             CloseCatatanZoom();
-            return;
         }
     }
 }
