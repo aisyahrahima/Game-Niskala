@@ -28,13 +28,28 @@ public class DialogueUI : MonoBehaviour
 
     public void ShowLine(string speaker, string line)
     {
+        Debug.Log(
+            "DIALOGUE UI: ShowLine dipanggil. Speaker = " +
+            speaker +
+            ", Line = " +
+            line
+        );
+
         if (dialoguePanel == null ||
             nameText == null ||
             dialogueText == null)
         {
-            Debug.LogError("Referensi UI dialog belum lengkap.");
+            Debug.LogError(
+                "DIALOGUE UI: Referensi UI dialog belum lengkap."
+            );
+
             return;
         }
+
+        Debug.Log(
+            "DIALOGUE UI: DialoguePanel ditemukan: " +
+            dialoguePanel.name
+        );
 
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
@@ -43,7 +58,24 @@ public class DialogueUI : MonoBehaviour
         currentLine = line;
         dialogueText.text = "";
 
+        Debug.Log(
+            "DIALOGUE UI: Sebelum SetActive = " +
+            dialoguePanel.activeSelf
+        );
+
         dialoguePanel.SetActive(true);
+
+        Debug.Log(
+            "DIALOGUE UI: Setelah SetActive(true) = " +
+            dialoguePanel.activeSelf +
+            " | activeInHierarchy = " +
+            dialoguePanel.activeInHierarchy
+        );
+
+        Debug.Log(
+            "DIALOGUE UI: Sesudah SetActive = " +
+            dialoguePanel.activeSelf
+        );
 
         if (nextButton != null)
             nextButton.interactable = true;
