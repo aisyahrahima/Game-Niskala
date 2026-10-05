@@ -581,15 +581,30 @@ public class StorageRoomInteraction : MonoBehaviour
         if (eventRunning)
             return;
 
-        if (bakulZoom.activeSelf)
+        // Prioritas 1: tutup zoom Bakul.
+        if (bakulZoom != null && bakulZoom.activeSelf)
         {
             CloseBakulZoom();
             return;
         }
 
-        if (catatanZoom.activeSelf)
+        // Prioritas 2: tutup zoom Catatan.
+        if (catatanZoom != null && catatanZoom.activeSelf)
         {
             CloseCatatanZoom();
+            return;
+        }
+
+        // Prioritas 3: kembali ke Ruang Makan.
+        if (SceneTransitionManager.Instance != null)
+        {
+            SceneTransitionManager.Instance.LoadScene("RuangMakan");
+        }
+        else
+        {
+            Debug.LogError(
+                "SceneTransitionManager tidak ditemukan."
+            );
         }
     }
 }
