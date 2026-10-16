@@ -153,31 +153,25 @@ public class BedroomLockerController : MonoBehaviour
 
     private void ShowCurrentDialogue()
     {
-        Debug.Log("BEDROOM: ShowCurrentDialogue dipanggil.");
-
-        if (dialogueUI == null)
+        if (DialogueSystem.Instance == null)
         {
             Debug.LogError(
-                "BEDROOM: DialogueUI masih NULL!"
+                "DialogueSystem tidak ditemukan di scene KamarTidur."
             );
-
             return;
         }
 
-        Debug.Log(
-            "BEDROOM: DialogueUI ditemukan pada object: " +
-            dialogueUI.gameObject.name
-        );
-
-        Debug.Log(
-            "BEDROOM: Mengirim dialog: " +
-            lockerDialogue[dialogueIndex]
-        );
-
-        dialogueUI.ShowLine(
+        bool started = DialogueSystem.Instance.StartDialogue(
             "Arka",
-            lockerDialogue[dialogueIndex]
+            lockerDialogue
         );
+
+        if (!started)
+        {
+            Debug.LogWarning(
+                "Dialog Lemari tidak dapat dimulai."
+            );
+        }
     }
 
     public void NextLockerDialogue()
@@ -206,6 +200,24 @@ public class BedroomLockerController : MonoBehaviour
         SetDigitButtons(true);
     }
 
+    private void OnEnable()
+    {
+        DialogueSystem.DialogueFinished += OnDialogueFinished;
+    }
+
+    private void OnDisable()
+    {
+        DialogueSystem.DialogueFinished -= OnDialogueFinished;
+    }
+
+    private void OnDialogueFinished()
+    {
+        if (lockerOpen)
+        {
+            SetArrowBack(true);
+        }
+    }
+
     // =========================================================
     // PUTAR ANGKA
     // =========================================================
@@ -218,21 +230,23 @@ public class BedroomLockerController : MonoBehaviour
         if (lockerUnlocked)
             return;
 
+        // Angka tidak boleh diubah selama dialog berlangsung.
+        if (DialogueSystem.Instance != null &&
+            DialogueSystem.Instance.IsDialogueActive)
+            return;
+
         if (slotIndex < 0 || slotIndex >= currentCode.Length)
             return;
 
         currentCode[slotIndex] += direction;
 
-        // Kalau lebih dari 9, kembali ke 1.
         if (currentCode[slotIndex] > 9)
             currentCode[slotIndex] = 1;
 
-        // Kalau kurang dari 1, kembali ke 9.
         if (currentCode[slotIndex] < 1)
             currentCode[slotIndex] = 9;
 
         UpdateDigitDisplay();
-
         CheckCode();
     }
 
