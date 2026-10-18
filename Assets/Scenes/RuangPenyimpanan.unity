@@ -1553,6 +1553,17 @@ RectTransform:
   m_AnchoredPosition: {x: -23.3, y: -274}
   m_SizeDelta: {x: 314.171, y: 49.658}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1249099068 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1265159736595945333, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+  m_PrefabInstance: {fileID: 5478909036920598983}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1e56eb979f0c774d8738c80e0729ee5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueUI
 --- !u!1 &1305583384 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1924553806410883552, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
@@ -1608,7 +1619,7 @@ MonoBehaviour:
   arrowBack: {fileID: 605040811}
   dialoguePanel: {fileID: 1753230048}
   dialogueNextButton: {fileID: 1305583384}
-  dialogueUI: {fileID: 5288305}
+  dialogueUI: {fileID: 1249099068}
   gentong: {fileID: 840164811}
   jumpscare: {fileID: 877293412}
   bakul: {fileID: 420533325}
