@@ -226,10 +226,14 @@ public class BedroomSpecialInteractions : MonoBehaviour
         scarfAlreadyClicked = true;
         interactionBusy = true;
 
-        // Sembunyikan ArrowBack selama interaksi Selendang.
+        // Sembunyikan Selendang agar tidak bisa disorot lagi.
+        SetActiveSafe(scarfRoom, false);
+
+        // Sembunyikan ArrowBack selama event.
         SetArrowBack(false);
 
         Debug.Log("Selendang diklik.");
+
         StartCoroutine(ScarfSequence());
     }
 

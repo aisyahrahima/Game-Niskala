@@ -57,11 +57,7 @@ public class CursorManager : MonoBehaviour
 
     private void Update()
     {
-        bool overInteractable = IsPointerOverInteractable();
-
-        // Grab ketika menyorot objek interaktif.
-        // Pointer ketika tidak menyorot objek interaktif.
-        if (overInteractable)
+        if (IsPointerOverInteractable())
         {
             SetGrab();
         }
@@ -75,20 +71,21 @@ public class CursorManager : MonoBehaviour
     {
         EventSystem eventSystem = EventSystem.current;
 
-        if (eventSystem == null)
+        if (eventSystem == null || Mouse.current == null)
             return false;
 
-        if (Mouse.current == null)
-            return false;
+        PointerEventData pointerData =
+            new PointerEventData(eventSystem);
 
-        PointerEventData pointerData = new PointerEventData(eventSystem);
-        pointerData.position = Mouse.current.position.ReadValue();
+        pointerData.position =
+            Mouse.current.position.ReadValue();
 
-        // Bersihkan hasil raycast sebelumnya.
         raycastResults.Clear();
 
-        // Periksa objek UI di bawah mouse.
-        eventSystem.RaycastAll(pointerData, raycastResults);
+        eventSystem.RaycastAll(
+            pointerData,
+            raycastResults
+        );
 
         foreach (RaycastResult result in raycastResults)
         {
@@ -97,23 +94,24 @@ public class CursorManager : MonoBehaviour
             if (hitObject == null)
                 continue;
 
-            // Periksa objek yang terkena raycast dan parent-nya.
             Transform current = hitObject.transform;
 
             while (current != null)
             {
-                // Periksa Button, Toggle, Slider, Dropdown, dan Selectable lain.
+                if (!current.gameObject.activeInHierarchy)
+                    break;
+
+                // Button dan komponen Selectable lainnya.
                 Selectable selectable =
                     current.GetComponent<Selectable>();
 
                 if (selectable != null &&
-                    selectable.IsInteractable() &&
-                    selectable.gameObject.activeInHierarchy)
+                    selectable.IsInteractable())
                 {
                     return true;
                 }
 
-                // Periksa komponen yang menangani klik.
+                // Komponen yang menerima klik.
                 MonoBehaviour[] components =
                     current.GetComponents<MonoBehaviour>();
 
@@ -126,7 +124,9 @@ public class CursorManager : MonoBehaviour
                     }
 
                     if (component is IPointerClickHandler)
+                    {
                         return true;
+                    }
                 }
 
                 current = current.parent;
@@ -142,7 +142,10 @@ public class CursorManager : MonoBehaviour
     {
         if (source == null)
         {
-            Debug.LogError("Gambar cursor belum dihubungkan.");
+            Debug.LogError(
+                "Gambar cursor belum dihubungkan."
+            );
+
             return null;
         }
 
@@ -156,16 +159,18 @@ public class CursorManager : MonoBehaviour
             Mathf.RoundToInt(source.height * scale)
         );
 
-        RenderTexture renderTexture = RenderTexture.GetTemporary(
-            width,
-            height,
-            0,
-            RenderTextureFormat.ARGB32
-        );
+        RenderTexture renderTexture =
+            RenderTexture.GetTemporary(
+                width,
+                height,
+                0,
+                RenderTextureFormat.ARGB32
+            );
 
         RenderTexture previous = RenderTexture.active;
 
         Graphics.Blit(source, renderTexture);
+
         RenderTexture.active = renderTexture;
 
         Texture2D result = new Texture2D(
@@ -186,6 +191,7 @@ public class CursorManager : MonoBehaviour
         result.wrapMode = TextureWrapMode.Clamp;
 
         RenderTexture.active = previous;
+
         RenderTexture.ReleaseTemporary(renderTexture);
 
         result.name = source.name + "_Scaled";
@@ -195,13 +201,10 @@ public class CursorManager : MonoBehaviour
 
     public void SetPointer()
     {
-        if (scaledPointer == null || isGrabCursor == false)
-        {
-            if (scaledPointer == null)
-                return;
-        }
+        if (scaledPointer == null)
+            return;
 
-        if (isGrabCursor == false)
+        if (isGrabCursor)
         {
             Cursor.SetCursor(
                 scaledPointer,
