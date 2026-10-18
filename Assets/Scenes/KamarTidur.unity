@@ -383,56 +383,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!1 &124344411
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 124344413}
-  - component: {fileID: 124344412}
-  m_Layer: 0
-  m_Name: CursorManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &124344412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 124344411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a483d9c19e41f29479037c44932f717c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CursorManager
-  pointerCursor: {fileID: 2800000, guid: ca0571839d2753e4f832a232b86a7a6f, type: 3}
-  grabCursor: {fileID: 2800000, guid: 9738d85fbab6e6c44bfca64963c622e2, type: 3}
-  pointerScale: 0.5
-  grabScale: 0.5
-  pointerHotspot: {x: 0, y: 0}
-  grabHotspot: {x: 0, y: 0}
---- !u!4 &124344413
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 124344411}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 389.13562, y: 223.31213, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &170082573
 GameObject:
   m_ObjectHideFlags: 0
@@ -4849,5 +4799,4 @@ SceneRoots:
   - {fileID: 1980448206}
   - {fileID: 327858963}
   - {fileID: 1205344322}
-  - {fileID: 124344413}
   - {fileID: 1288708347}
