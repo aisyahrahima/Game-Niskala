@@ -1,10 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
     public void StartGame()
     {
-        FadeManager.Instance.LoadScene("ChapterMenu");
+        SceneManager.LoadScene("ChapterMenu");
     }
 
     public void QuitGame()

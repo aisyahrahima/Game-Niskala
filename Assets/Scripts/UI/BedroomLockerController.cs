@@ -18,6 +18,10 @@ public class BedroomLockerController : MonoBehaviour
     [Header("Lemari Zoom")]
     [SerializeField] private GameObject lemariZoom;
     [SerializeField] private GameObject catatanCikSima;
+    [SerializeField] private GameObject catatanCikSimaZoom;
+
+    [Header("Inventory Catatan")]
+    [SerializeField] private GameObject catatanCikSimaInventory;
 
     [Header("Common UI")]
     [SerializeField] private GameObject arrowBack;
@@ -39,6 +43,9 @@ public class BedroomLockerController : MonoBehaviour
     [SerializeField] private Button upButton4;
     [SerializeField] private Button downButton4;
 
+    [Header("Interaksi Tambahan Kamar")]
+    [SerializeField] private BedroomSpecialInteractions specialInteractions;
+
     private readonly int[] correctCode = { 7, 3, 1, 8 };
 
     private int[] currentCode = { 1, 1, 1, 1 };
@@ -47,6 +54,7 @@ public class BedroomLockerController : MonoBehaviour
     private bool lockerOpen = false;
     private bool lockerUnlocked = false;
     private bool zoomOpen = false;
+    private bool catatanCollected = false;
 
     private int dialogueIndex = 0;
 
@@ -81,6 +89,12 @@ public class BedroomLockerController : MonoBehaviour
         if (lockerDimmer != null)
             lockerDimmer.SetActive(false);
 
+        if (catatanCikSimaZoom != null)
+            catatanCikSimaZoom.SetActive(false);
+
+        if (catatanCikSimaInventory != null)
+            catatanCikSimaInventory.SetActive(false);
+
         SetArrowBack(true);
         SetViewButtons(true);
         SetDigitButtons(true);
@@ -94,14 +108,21 @@ public class BedroomLockerController : MonoBehaviour
 
     public void ClickLemari()
     {
-        // Kalau sudah terbuka, langsung buka zoom.
+        // Jika catatan sudah diambil, lemari tidak bisa dibuka lagi.
+        if (catatanCollected)
+            return;
+
+        // Jangan membuka lemari jika interaksi objek lain sedang berjalan.
+        if (specialInteractions != null &&
+            specialInteractions.IsInteractionBlocked())
+            return;
+
         if (lockerUnlocked)
         {
             OpenLemariZoom();
             return;
         }
 
-        // Kalau locker sedang terbuka, jangan lakukan apa-apa.
         if (lockerOpen)
             return;
 
@@ -215,6 +236,9 @@ public class BedroomLockerController : MonoBehaviour
         if (lockerOpen)
         {
             SetArrowBack(true);
+            SetDigitButtons(true);
+
+            Debug.Log("Dialog lemari selesai. Tombol angka diaktifkan.");
         }
     }
 
@@ -375,12 +399,41 @@ public class BedroomLockerController : MonoBehaviour
         SetViewButtons(false);
     }
 
+    public void ClickCatatanCikSima()
+    {
+        // Catatan hanya bisa diambil saat zoom lemari terbuka.
+        if (!zoomOpen)
+            return;
+
+        // Jangan mengambil catatan lebih dari satu kali.
+        if (catatanCollected)
+            return;
+
+        catatanCollected = true;
+
+        if (catatanCikSima != null)
+            catatanCikSima.SetActive(false);
+
+        if (catatanCikSimaZoom != null)
+            catatanCikSimaZoom.SetActive(true);
+
+        if (catatanCikSimaInventory != null)
+            catatanCikSimaInventory.SetActive(true);
+
+        Debug.Log("Catatan Cik Sima masuk ke inventory.");
+    }
+
     // =========================================================
     // ARROW BACK
     // =========================================================
 
     public void ClickArrowBack()
     {
+        if (specialInteractions != null &&
+            specialInteractions.TryCloseSpecialZoom())
+        {
+            return;
+        }
         // Prioritas 1:
         // kalau Lemari Zoom terbuka, tutup zoom.
         if (zoomOpen)
@@ -451,6 +504,9 @@ public class BedroomLockerController : MonoBehaviour
         if (catatanCikSima != null)
             catatanCikSima.SetActive(false);
 
+        if (catatanCikSimaZoom != null)
+            catatanCikSimaZoom.SetActive(false);
+
         if (lemariClosed != null)
             lemariClosed.SetActive(false);
 
@@ -512,5 +568,10 @@ public class BedroomLockerController : MonoBehaviour
 
         if (downButton4 != null)
             downButton4.interactable = enabled;
+    }
+
+    public bool IsLockerViewOpen()
+    {
+        return lockerOpen || zoomOpen;
     }
 }

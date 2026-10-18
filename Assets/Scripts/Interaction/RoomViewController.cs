@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class RoomViewController : MonoBehaviour
 {
@@ -16,15 +18,24 @@ public class RoomViewController : MonoBehaviour
     [SerializeField] private float top = -490.043f;
     [SerializeField] private float bottom = -490.043f;
 
-    private bool isRightView = false;
+    [Header("Smooth Transition")]
+    [SerializeField] private float transitionDuration = 0.5f;
+
+    private bool isRightView;
+    private Coroutine moveCoroutine;
+
+    private void Start()
+    {
+        SetLeftViewImmediate();
+    }
 
     public void MoveToRightView()
     {
         if (isRightView)
             return;
 
-        SetRightView();
         isRightView = true;
+        StartMove(SetRightPosition());
     }
 
     public void MoveToLeftView()
@@ -32,39 +43,101 @@ public class RoomViewController : MonoBehaviour
         if (!isRightView)
             return;
 
-        SetLeftView();
         isRightView = false;
+        StartMove(SetLeftPosition());
     }
 
-    private void SetLeftView()
+    private Vector2 GetCurrentOffsetMin()
     {
-        roomContent.offsetMin = new Vector2(
-            startLeft,
-            bottom
-        );
+        return roomContent.offsetMin;
+    }
 
-        roomContent.offsetMax = new Vector2(
-            -startRight,
-            -top
+    private Vector2 GetCurrentOffsetMax()
+    {
+        return roomContent.offsetMax;
+    }
+
+    private Vector2 SetLeftPosition()
+    {
+        return new Vector2(startLeft, bottom);
+    }
+
+    private Vector2 SetRightPosition()
+    {
+        return new Vector2(rightViewLeft, bottom);
+    }
+
+    private void StartMove(Vector2 targetOffsetMin)
+    {
+        if (roomContent == null)
+        {
+            Debug.LogError("RoomContent belum dihubungkan.");
+            return;
+        }
+
+        if (moveCoroutine != null)
+            StopCoroutine(moveCoroutine);
+
+        Vector2 targetOffsetMax = isRightView
+            ? new Vector2(-rightViewRight, -top)
+            : new Vector2(-startRight, -top);
+
+        moveCoroutine = StartCoroutine(
+            SmoothMove(targetOffsetMin, targetOffsetMax)
         );
     }
 
-    private void SetRightView()
+    private IEnumerator SmoothMove(
+        Vector2 targetOffsetMin,
+        Vector2 targetOffsetMax)
     {
-        roomContent.offsetMin = new Vector2(
-            rightViewLeft,
-            bottom
-        );
+        Vector2 initialOffsetMin = roomContent.offsetMin;
+        Vector2 initialOffsetMax = roomContent.offsetMax;
 
-        roomContent.offsetMax = new Vector2(
-            -rightViewRight,
-            -top
-        );
+        float duration = Mathf.Max(0.01f, transitionDuration);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            // SmoothStep membuat awal dan akhir gerakan lebih halus.
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            roomContent.offsetMin = Vector2.Lerp(
+                initialOffsetMin,
+                targetOffsetMin,
+                t
+            );
+
+            roomContent.offsetMax = Vector2.Lerp(
+                initialOffsetMax,
+                targetOffsetMax,
+                t
+            );
+
+            yield return null;
+        }
+
+        roomContent.offsetMin = targetOffsetMin;
+        roomContent.offsetMax = targetOffsetMax;
+
+        moveCoroutine = null;
     }
 
-    private void Start()
+    private void SetLeftViewImmediate()
     {
-        SetLeftView();
+        if (roomContent == null)
+        {
+            Debug.LogError("RoomContent belum dihubungkan.");
+            return;
+        }
+
+        roomContent.offsetMin = SetLeftPosition();
+        roomContent.offsetMax = new Vector2(-startRight, -top);
+
         isRightView = false;
     }
 }

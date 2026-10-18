@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 82278eca9424084419a3fc9974287f5a
+guid: dce5693f02bd6224c9c273dbbdb45c4b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5809169404367572789
-    second: Kamar_Tidur_0
+      213: 6455300816593963163
+    second: Ruangan Kamar _0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Kamar_Tidur_0
+      name: Ruangan Kamar _0
       rect:
         serializedVersion: 2
         x: 0
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bc07a9c743fa16fa0800000000000000
-      internalID: -5809169404367572789
+      spriteID: b984f5b14e5d59950800000000000000
+      internalID: 6455300816593963163
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Kamar_Tidur_0: -5809169404367572789
+      Ruangan Kamar _0: 6455300816593963163
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

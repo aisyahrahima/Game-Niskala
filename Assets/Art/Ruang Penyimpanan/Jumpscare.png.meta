@@ -5,9 +5,6 @@ TextureImporter:
   - first:
       213: 3374032309195941459
     second: Jumpscare_0
-  - first:
-      213: 5367982485309249589
-    second: Jumpscare_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -132,10 +129,10 @@ TextureImporter:
       name: Jumpscare_0
       rect:
         serializedVersion: 2
-        x: 2
+        x: 0
         y: 0
-        width: 284
-        height: 482
+        width: 288
+        height: 481
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,28 +143,6 @@ TextureImporter:
       bones: []
       spriteID: 356a0524288f2de20800000000000000
       internalID: 3374032309195941459
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Jumpscare_1
-      rect:
-        serializedVersion: 2
-        x: 280
-        y: 442
-        width: 7
-        height: 12
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 538506d21a7ee7a40800000000000000
-      internalID: 5367982485309249589
       vertices: []
       indices: 
       edges: []
@@ -187,7 +162,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       Jumpscare_0: 3374032309195941459
-      Jumpscare_1: 5367982485309249589
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -31,6 +31,14 @@ public class StorageRoomInteraction : MonoBehaviour
     [SerializeField] private Vector2 gentongShiftedPosition;
     [SerializeField] private float gentongFadeDuration = 0.5f;
 
+    [Header("Kilatan Jendela Cahaya")]
+    [SerializeField] private GameObject jendelaCahaya;
+    [SerializeField] private CanvasGroup jendelaCahayaCanvasGroup;
+
+    [SerializeField] private int jumlahKilatan = 3;
+    [SerializeField] private float durasiKilatan = 0.12f;
+    [SerializeField] private float jedaAntarKilatan = 0.12f;
+
     [Header("Bakul")]
     [SerializeField] private GameObject bakulZoom;
     [SerializeField] private GameObject bakulInventory;
@@ -99,6 +107,75 @@ public class StorageRoomInteraction : MonoBehaviour
                 gentongCanvasGroup =
                     gentong.GetComponent<CanvasGroup>();
         }
+
+        if (jendelaCahaya != null)
+        {
+            jendelaCahaya.SetActive(false);
+
+            if (jendelaCahayaCanvasGroup == null)
+            {
+                jendelaCahayaCanvasGroup =
+                    jendelaCahaya.GetComponent<CanvasGroup>();
+            }
+
+            if (jendelaCahayaCanvasGroup != null)
+                jendelaCahayaCanvasGroup.alpha = 0f;
+        }
+    }
+
+    private IEnumerator PlayJendelaCahayaFlash()
+    {
+        if (jendelaCahaya == null)
+        {
+            Debug.LogWarning(
+                "Jendela_Cahaya belum dihubungkan di Inspector."
+            );
+            yield break;
+        }
+
+        jendelaCahaya.SetActive(true);
+
+        int flashes = Mathf.Max(1, jumlahKilatan);
+        float flashDuration = Mathf.Max(0.01f, durasiKilatan);
+        float interval = Mathf.Max(0f, jedaAntarKilatan);
+
+        for (int i = 0; i < flashes; i++)
+        {
+            // Cahaya muncul.
+            if (jendelaCahayaCanvasGroup != null)
+            {
+                jendelaCahayaCanvasGroup.alpha = 1f;
+            }
+
+            yield return new WaitForSecondsRealtime(flashDuration);
+
+            // Cahaya menghilang sesaat.
+            if (jendelaCahayaCanvasGroup != null)
+            {
+                jendelaCahayaCanvasGroup.alpha = 0f;
+            }
+            else
+            {
+                jendelaCahaya.SetActive(false);
+                yield return new WaitForSecondsRealtime(interval);
+
+                if (i < flashes - 1)
+                    jendelaCahaya.SetActive(true);
+
+                continue;
+            }
+
+            if (i < flashes - 1)
+                yield return new WaitForSecondsRealtime(interval);
+        }
+
+        // Pastikan gambar benar-benar tidak terlihat setelah efek selesai.
+        if (jendelaCahayaCanvasGroup != null)
+            jendelaCahayaCanvasGroup.alpha = 0f;
+
+        jendelaCahaya.SetActive(false);
+
+        Debug.Log("Efek kilatan Jendela_Cahaya selesai.");
     }
 
     // =====================================================
@@ -289,7 +366,9 @@ public class StorageRoomInteraction : MonoBehaviour
 
                 yield return new WaitForSeconds(1f);
 
+                // Suara benda jatuh dan kilatan dimulai bersamaan.
                 Debug.Log("SFX: Suara benda jatuh");
+                StartCoroutine(PlayJendelaCahayaFlash());
 
                 yield return new WaitForSeconds(1f);
 

@@ -129,10 +129,10 @@ TextureImporter:
       name: Lemari_Opened_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 0
-        width: 258
-        height: 280
+        x: 3
+        y: 2
+        width: 259
+        height: 281
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

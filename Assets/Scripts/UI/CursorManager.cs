@@ -1,5 +1,8 @@
-
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class CursorManager : MonoBehaviour
 {
@@ -23,6 +26,11 @@ public class CursorManager : MonoBehaviour
     private Texture2D scaledPointer;
     private Texture2D scaledGrab;
 
+    private readonly List<RaycastResult> raycastResults =
+        new List<RaycastResult>();
+
+    private bool isGrabCursor;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -32,33 +40,121 @@ public class CursorManager : MonoBehaviour
         }
 
         Instance = this;
+        DontDestroyOnLoad(gameObject);
 
-        scaledPointer = CreateScaledCursor(pointerCursor, pointerScale);
-        scaledGrab = CreateScaledCursor(grabCursor, grabScale);
+        scaledPointer = CreateScaledCursor(
+            pointerCursor,
+            pointerScale
+        );
 
-        Debug.Log("Pointer hasil resize: " +
-            (scaledPointer != null
-                ? scaledPointer.width + " x " + scaledPointer.height
-                : "null"));
-
-        Debug.Log("Grab hasil resize: " +
-            (scaledGrab != null
-                ? scaledGrab.width + " x " + scaledGrab.height
-                : "null"));
+        scaledGrab = CreateScaledCursor(
+            grabCursor,
+            grabScale
+        );
 
         SetPointer();
     }
 
-    private Texture2D CreateScaledCursor(Texture2D source, float scale)
+    private void Update()
+    {
+        bool overInteractable = IsPointerOverInteractable();
+
+        // Grab ketika menyorot objek interaktif.
+        // Pointer ketika tidak menyorot objek interaktif.
+        if (overInteractable)
+        {
+            SetGrab();
+        }
+        else
+        {
+            SetPointer();
+        }
+    }
+
+    private bool IsPointerOverInteractable()
+    {
+        EventSystem eventSystem = EventSystem.current;
+
+        if (eventSystem == null)
+            return false;
+
+        if (Mouse.current == null)
+            return false;
+
+        PointerEventData pointerData = new PointerEventData(eventSystem);
+        pointerData.position = Mouse.current.position.ReadValue();
+
+        // Bersihkan hasil raycast sebelumnya.
+        raycastResults.Clear();
+
+        // Periksa objek UI di bawah mouse.
+        eventSystem.RaycastAll(pointerData, raycastResults);
+
+        foreach (RaycastResult result in raycastResults)
+        {
+            GameObject hitObject = result.gameObject;
+
+            if (hitObject == null)
+                continue;
+
+            // Periksa objek yang terkena raycast dan parent-nya.
+            Transform current = hitObject.transform;
+
+            while (current != null)
+            {
+                // Periksa Button, Toggle, Slider, Dropdown, dan Selectable lain.
+                Selectable selectable =
+                    current.GetComponent<Selectable>();
+
+                if (selectable != null &&
+                    selectable.IsInteractable() &&
+                    selectable.gameObject.activeInHierarchy)
+                {
+                    return true;
+                }
+
+                // Periksa komponen yang menangani klik.
+                MonoBehaviour[] components =
+                    current.GetComponents<MonoBehaviour>();
+
+                foreach (MonoBehaviour component in components)
+                {
+                    if (component == null ||
+                        !component.isActiveAndEnabled)
+                    {
+                        continue;
+                    }
+
+                    if (component is IPointerClickHandler)
+                        return true;
+                }
+
+                current = current.parent;
+            }
+        }
+
+        return false;
+    }
+
+    private Texture2D CreateScaledCursor(
+        Texture2D source,
+        float scale)
     {
         if (source == null)
         {
-            Debug.LogError("Gambar kursor belum dihubungkan.");
+            Debug.LogError("Gambar cursor belum dihubungkan.");
             return null;
         }
 
-        int width = Mathf.Max(1, Mathf.RoundToInt(source.width * scale));
-        int height = Mathf.Max(1, Mathf.RoundToInt(source.height * scale));
+        int width = Mathf.Max(
+            1,
+            Mathf.RoundToInt(source.width * scale)
+        );
+
+        int height = Mathf.Max(
+            1,
+            Mathf.RoundToInt(source.height * scale)
+        );
 
         RenderTexture renderTexture = RenderTexture.GetTemporary(
             width,
@@ -93,40 +189,57 @@ public class CursorManager : MonoBehaviour
         RenderTexture.ReleaseTemporary(renderTexture);
 
         result.name = source.name + "_Scaled";
+
         return result;
     }
 
     public void SetPointer()
     {
-        if (scaledPointer == null) return;
+        if (scaledPointer == null || isGrabCursor == false)
+        {
+            if (scaledPointer == null)
+                return;
+        }
 
-        Vector2 hotspot = pointerHotspot * pointerScale;
+        if (isGrabCursor == false)
+        {
+            Cursor.SetCursor(
+                scaledPointer,
+                pointerHotspot * pointerScale,
+                CursorMode.Auto
+            );
+        }
 
-        Cursor.SetCursor(
-            scaledPointer,
-            hotspot,
-            CursorMode.Auto
-        );
+        isGrabCursor = false;
     }
 
     public void SetGrab()
     {
-        if (scaledGrab == null) return;
+        if (scaledGrab == null)
+            return;
 
-        Vector2 hotspot = grabHotspot * grabScale;
+        if (isGrabCursor)
+            return;
 
         Cursor.SetCursor(
             scaledGrab,
-            hotspot,
+            grabHotspot * grabScale,
             CursorMode.Auto
         );
+
+        isGrabCursor = true;
     }
 
     private void OnDestroy()
     {
-        if (Instance != this) return;
+        if (Instance != this)
+            return;
 
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        Cursor.SetCursor(
+            null,
+            Vector2.zero,
+            CursorMode.Auto
+        );
 
         if (scaledPointer != null)
             Destroy(scaledPointer);
