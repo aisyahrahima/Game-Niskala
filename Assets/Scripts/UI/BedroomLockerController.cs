@@ -23,6 +23,9 @@ public class BedroomLockerController : MonoBehaviour
     [Header("Inventory Catatan")]
     [SerializeField] private GameObject catatanCikSimaInventory;
 
+    [Header("Investigasi Artefak")]
+    [SerializeField] private GameObject buttonInvestigasiArtefak;
+
     [Header("Common UI")]
     [SerializeField] private GameObject arrowBack;
 
@@ -405,22 +408,86 @@ public class BedroomLockerController : MonoBehaviour
         if (!zoomOpen)
             return;
 
-        // Jangan mengambil catatan lebih dari satu kali.
+        // Catatan hanya bisa diambil satu kali.
         if (catatanCollected)
             return;
 
         catatanCollected = true;
 
+        // Sembunyikan catatan dari tampilan lemari.
         if (catatanCikSima != null)
             catatanCikSima.SetActive(false);
 
-        if (catatanCikSimaZoom != null)
-            catatanCikSimaZoom.SetActive(true);
-
+        // Simpan catatan ke inventory.
         if (catatanCikSimaInventory != null)
             catatanCikSimaInventory.SetActive(true);
 
+        // Tutup tampilan lemari secara permanen
+        // untuk sisa sesi permainan ini.
+        zoomOpen = false;
+
+        if (lemariZoom != null)
+            lemariZoom.SetActive(false);
+
+        if (catatanCikSima != null)
+            catatanCikSima.SetActive(false);
+
+        if (lockerDimmer != null)
+            lockerDimmer.SetActive(false);
+
+        // Tampilkan zoom catatan dan tombol investigasi.
+        OpenCatatanCikSimaZoom();
+
         Debug.Log("Catatan Cik Sima masuk ke inventory.");
+    }
+
+    public void ClickCatatanCikSimaInventory()
+    {
+        // Catatan harus sudah diambil terlebih dahulu.
+        if (!catatanCollected)
+            return;
+
+        // Jangan membuka zoom inventory jika zoom lemari
+        // atau puzzle lemari masih terbuka.
+        if (zoomOpen || lockerOpen)
+            return;
+
+        // Jangan membuka zoom saat dialog berlangsung.
+        if (DialogueSystem.Instance != null &&
+            DialogueSystem.Instance.IsDialogueActive)
+            return;
+
+        OpenCatatanCikSimaZoom();
+
+        Debug.Log("Catatan Cik Sima di inventory diklik.");
+    }
+
+    private void OpenCatatanCikSimaZoom()
+    {
+        if (catatanCikSimaZoom != null)
+        {
+            catatanCikSimaZoom.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError(
+                "Catatan Cik Sima Zoom belum dihubungkan di Inspector."
+            );
+        }
+
+        if (buttonInvestigasiArtefak != null)
+        {
+            buttonInvestigasiArtefak.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError(
+                "Button Investigasi Artefak belum dihubungkan di Inspector."
+            );
+        }
+
+        SetArrowBack(true);
+        SetViewButtons(false);
     }
 
     // =========================================================
@@ -434,6 +501,21 @@ public class BedroomLockerController : MonoBehaviour
         {
             return;
         }
+
+        if (catatanCikSimaZoom != null &&
+            catatanCikSimaZoom.activeSelf &&
+            !zoomOpen)
+        {
+            catatanCikSimaZoom.SetActive(false);
+
+            if (buttonInvestigasiArtefak != null)
+                buttonInvestigasiArtefak.SetActive(false);
+
+            SetArrowBack(true);
+            SetViewButtons(true);
+            return;
+        }
+
         // Prioritas 1:
         // kalau Lemari Zoom terbuka, tutup zoom.
         if (zoomOpen)
@@ -572,6 +654,9 @@ public class BedroomLockerController : MonoBehaviour
 
     public bool IsLockerViewOpen()
     {
-        return lockerOpen || zoomOpen;
+        return lockerOpen ||
+               zoomOpen ||
+               (catatanCikSimaZoom != null &&
+                catatanCikSimaZoom.activeSelf);
     }
 }

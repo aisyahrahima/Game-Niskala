@@ -7,7 +7,12 @@ public class ViewRightHover : MonoBehaviour, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (roomViewController != null)
-            roomViewController.MoveToRightView();
+        if (roomViewController == null)
+            return;
+
+        if (!roomViewController.CanChangeView())
+            return;
+
+        roomViewController.MoveToRightView();
     }
 }

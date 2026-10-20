@@ -24,13 +24,43 @@ public class RoomViewController : MonoBehaviour
     private bool isRightView;
     private Coroutine moveCoroutine;
 
+    [Header("Interaction Check")]
+    [SerializeField] private BedroomSpecialInteractions specialInteractions;
+    [SerializeField] private BedroomLockerController lockerController;
+
     private void Start()
     {
         SetLeftViewImmediate();
     }
 
+    public bool CanChangeView()
+    {
+        if (specialInteractions != null &&
+            specialInteractions.IsInteractionBlocked())
+        {
+            return false;
+        }
+
+        if (lockerController != null &&
+            lockerController.IsLockerViewOpen())
+        {
+            return false;
+        }
+
+        if (DialogueSystem.Instance != null &&
+            DialogueSystem.Instance.IsDialogueActive)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public void MoveToRightView()
     {
+        if (!CanChangeView())
+            return;
+
         if (isRightView)
             return;
 
@@ -40,6 +70,9 @@ public class RoomViewController : MonoBehaviour
 
     public void MoveToLeftView()
     {
+        if (!CanChangeView())
+            return;
+
         if (!isRightView)
             return;
 

@@ -7,7 +7,12 @@ public class ViewLeftHover : MonoBehaviour, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (roomViewController != null)
-            roomViewController.MoveToLeftView();
+        if (roomViewController == null)
+            return;
+
+        if (!roomViewController.CanChangeView())
+            return;
+
+        roomViewController.MoveToLeftView();
     }
 }
