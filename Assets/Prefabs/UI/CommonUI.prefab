@@ -930,9 +930,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: StorageRoomInteraction, Assembly-CSharp
-        m_MethodName: NextDialogue
+      - m_Target: {fileID: 1106840051104428505}
+        m_TargetAssemblyTypeName: DialogueSystem, Assembly-CSharp
+        m_MethodName: NextLine
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

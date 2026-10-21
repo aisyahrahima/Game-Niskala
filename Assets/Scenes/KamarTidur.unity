@@ -155,7 +155,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -79.77, y: -251.47}
+  m_AnchoredPosition: {x: -79.77, y: -282.61}
   m_SizeDelta: {x: 314.171, y: 49.658}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &35768673
@@ -802,7 +802,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -66.888, y: 104}
+  m_AnchoredPosition: {x: -73.8, y: 77.4}
   m_SizeDelta: {x: 652.51, y: 604.875}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &226122064
@@ -4076,17 +4076,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ViewLeftHover
   roomViewController: {fileID: 743334541}
---- !u!114 &1745066223 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1265159736595945333, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
-  m_PrefabInstance: {fileID: 1805288152}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1e56eb979f0c774d8738c80e0729ee5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DialogueUI
 --- !u!1 &1800102183
 GameObject:
   m_ObjectHideFlags: 0
@@ -4501,7 +4490,6 @@ MonoBehaviour:
   catatanCikSimaInventory: {fileID: 1068536526}
   buttonInvestigasiArtefak: {fileID: 35768671}
   arrowBack: {fileID: 1805288154}
-  dialogueUI: {fileID: 1745066223}
   viewLeftButton: {fileID: 1694890734}
   viewRightButton: {fileID: 703083224}
   upButton1: {fileID: 1105839121}
