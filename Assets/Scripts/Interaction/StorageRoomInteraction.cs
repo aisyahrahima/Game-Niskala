@@ -10,9 +10,7 @@ public class StorageRoomInteraction : MonoBehaviour
     [SerializeField] private GameObject arrowBack;
 
     [Header("Dialog")]
-    [SerializeField] private GameObject dialoguePanel;
-    [SerializeField] private GameObject dialogueNextButton;
-    [SerializeField] private DialogueUI dialogueUI;
+    [SerializeField] private DialogueSystem dialogueSystem;
 
     [Header("Gentong")]
     [SerializeField] private GameObject gentong;
@@ -56,6 +54,12 @@ public class StorageRoomInteraction : MonoBehaviour
         if (eventRunning)
             return true;
 
+        if (dialogueSystem != null &&
+            dialogueSystem.IsDialogueActive)
+        {
+            return true;
+        }
+
         // Jangan izinkan interaksi saat zoom Catatan terbuka.
         if (catatanZoom != null && catatanZoom.activeSelf)
             return true;
@@ -73,11 +77,31 @@ public class StorageRoomInteraction : MonoBehaviour
         "Sepertinya ada maksud dari dokumen ini..."
     };
 
+    private void OnEnable()
+    {
+        GameEvents.DialogueFinished += OnDialogueFinished;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.DialogueFinished -= OnDialogueFinished;
+    }
+
+    private void OnDialogueFinished()
+    {
+        if (!eventRunning)
+            return;
+
+        if (currentEvent == "Catatan" ||
+            currentEvent.StartsWith("Gentong") ||
+            currentEvent == "BakulTerhalang")
+        {
+            FinishCurrentEvent();
+        }
+    }
+
     private void Awake()
     {
-        // Sembunyikan dialog saat scene mulai.
-        HideDialogue();
-
         if (jumpscare != null)
         {
             jumpscare.SetActive(false);
@@ -182,76 +206,36 @@ public class StorageRoomInteraction : MonoBehaviour
     // DIALOG
     // =====================================================
 
-    private void ShowDialogue(string speaker, string line)
+    private bool StartRoomDialogue(params string[] lines)
     {
-        if (dialoguePanel == null ||
-            dialogueNextButton == null ||
-            dialogueUI == null)
+        if (dialogueSystem == null)
         {
             Debug.LogError(
-                "Referensi DialoguePanel, DialogueNextButton, " +
-                "atau DialogueUI belum lengkap di Inspector."
+                "DialogueSystem belum dihubungkan di Inspector."
             );
-            return;
+            FinishCurrentEvent();
+            return false;
         }
 
-        dialoguePanel.SetActive(true);
-        dialogueNextButton.SetActive(false);
+        bool started = dialogueSystem.StartDialogue(
+            "Arka",
+            lines
+        );
 
-        dialogueUI.ShowLine(speaker, line);
-
-        // Tombol muncul bersama dialog.
-        // Jika teks sedang diketik, klik pertama menyelesaikan ketikan.
-        dialogueNextButton.SetActive(true);
-    }
-
-    private void HideDialogue()
-    {
-        if (dialogueNextButton != null)
-            dialogueNextButton.SetActive(false);
-
-        if (dialogueUI != null)
-            dialogueUI.Hide();
-
-        if (dialoguePanel != null)
-            dialoguePanel.SetActive(false);
-    }
-
-    public void NextDialogue()
-    {
-        if (!eventRunning)
-            return;
-
-        // Klik pertama menyelesaikan animasi ketik,
-        // jika teks masih belum selesai.
-        if (dialogueUI != null &&
-            dialogueUI.TryCompleteTyping())
+        if (!started)
         {
-            return;
+            Debug.LogWarning(
+                "Dialog RuangPenyimpanan gagal dimulai."
+            );
+            FinishCurrentEvent();
+            return false;
         }
 
-        if (currentEvent == "Catatan")
-        {
-            NextCatatanDialogue();
-            return;
-        }
-
-        if (currentEvent.StartsWith("Gentong"))
-        {
-            FinishGentongEvent();
-            return;
-        }
-
-        if (currentEvent == "BakulTerhalang")
-        {
-            FinishBlockedBakulEvent();
-        }
+        return true;
     }
 
     private void FinishCurrentEvent()
     {
-        HideDialogue();
-
         eventRunning = false;
         currentEvent = "";
 
@@ -268,52 +252,37 @@ public class StorageRoomInteraction : MonoBehaviour
         if (IsInteractionBlocked())
             return;
 
+        if (catatan == null || catatanZoom == null)
+        {
+            Debug.LogError(
+                "Catatan atau Catatan Zoom belum dihubungkan."
+            );
+            return;
+        }
+
         eventRunning = true;
         currentEvent = "Catatan";
-        catatanDialogueIndex = 0;
-
-        HideDialogue();
 
         catatan.SetActive(false);
         catatanZoom.SetActive(true);
-        arrowBack.SetActive(false);
+
+        if (arrowBack != null)
+            arrowBack.SetActive(false);
 
         StartCoroutine(StartCatatanDialogue());
     }
 
     private IEnumerator StartCatatanDialogue()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSecondsRealtime(2f);
 
-        if (currentEvent != "Catatan")
+        if (!eventRunning || currentEvent != "Catatan")
             yield break;
 
-        ShowCatatanDialogue();
-    }
-
-    private void ShowCatatanDialogue()
-    {
-        ShowDialogue(
-            "Arka",
-            catatanDialogue[catatanDialogueIndex]
+        StartRoomDialogue(
+            "hmm...",
+            "Sepertinya ada maksud dari dokumen ini..."
         );
-    }
-
-    private void NextCatatanDialogue()
-    {
-        if (currentEvent != "Catatan")
-            return;
-
-        catatanDialogueIndex++;
-
-        if (catatanDialogueIndex < catatanDialogue.Length)
-        {
-            ShowCatatanDialogue();
-        }
-        else
-        {
-            FinishCatatanEvent();
-        }
     }
 
     private void FinishCatatanEvent()
@@ -344,9 +313,9 @@ public class StorageRoomInteraction : MonoBehaviour
             return;
 
         eventRunning = true;
-        arrowBack.SetActive(false);
 
-        HideDialogue();
+        if (arrowBack != null)
+            arrowBack.SetActive(false);
 
         gentongClickCount++;
 
@@ -372,7 +341,7 @@ public class StorageRoomInteraction : MonoBehaviour
 
                 yield return new WaitForSeconds(1f);
 
-                ShowDialogue("Arka", "Apa itu?");
+                StartRoomDialogue("Apa itu?");
                 break;
 
             case 2:
@@ -384,7 +353,7 @@ public class StorageRoomInteraction : MonoBehaviour
 
                 yield return new WaitForSeconds(1f);
 
-                ShowDialogue("Arka", "Siapa...?");
+                StartRoomDialogue("Siapa...?");
                 break;
 
             case 3:
@@ -396,7 +365,7 @@ public class StorageRoomInteraction : MonoBehaviour
 
                 yield return new WaitForSeconds(1f);
 
-                ShowDialogue("Arka", "Tadi... apa itu?");
+                StartRoomDialogue("Tadi... apa itu?");
                 break;
 
             case 4:
@@ -414,7 +383,7 @@ public class StorageRoomInteraction : MonoBehaviour
 
                 yield return new WaitForSeconds(1f);
 
-                ShowDialogue("Arka", "Bakul...?");
+                StartRoomDialogue("Bakul...?");
                 break;
 
             default:
@@ -582,11 +551,10 @@ public class StorageRoomInteraction : MonoBehaviour
         eventRunning = true;
         currentEvent = "BakulTerhalang";
 
-        arrowBack.SetActive(false);
-        HideDialogue();
+        if (arrowBack != null)
+            arrowBack.SetActive(false);
 
-        ShowDialogue(
-            "Arka",
+        StartRoomDialogue(
             "Benda ini terhalang sesuatu."
         );
     }

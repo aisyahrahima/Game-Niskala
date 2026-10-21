@@ -1,13 +1,8 @@
-
-using System;
 using UnityEngine;
 
 public class DialogueSystem : MonoBehaviour
 {
     public static DialogueSystem Instance { get; private set; }
-
-    public static event Action DialogueStarted;
-    public static event Action DialogueFinished;
 
     [Header("UI")]
     [SerializeField] private DialogueUI dialogueUI;
@@ -68,7 +63,7 @@ public class DialogueSystem : MonoBehaviour
         currentLineIndex = 0;
         isDialogueActive = true;
 
-        DialogueStarted?.Invoke();
+        GameEvents.RaiseDialogueStarted();
 
         ShowCurrentLine();
 
@@ -120,6 +115,6 @@ public class DialogueSystem : MonoBehaviour
         currentLines = null;
         currentLineIndex = 0;
 
-        DialogueFinished?.Invoke();
+        GameEvents.RaiseDialogueFinished();
     }
 }

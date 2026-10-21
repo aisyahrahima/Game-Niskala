@@ -29,9 +29,6 @@ public class BedroomLockerController : MonoBehaviour
     [Header("Common UI")]
     [SerializeField] private GameObject arrowBack;
 
-    [Header("Dialogue")]
-    [SerializeField] private DialogueUI dialogueUI;
-
     [Header("View Buttons")]
     [SerializeField] private Button viewLeftButton;
     [SerializeField] private Button viewRightButton;
@@ -58,8 +55,6 @@ public class BedroomLockerController : MonoBehaviour
     private bool lockerUnlocked = false;
     private bool zoomOpen = false;
     private bool catatanCollected = false;
-
-    private int dialogueIndex = 0;
 
     private readonly string[] lockerDialogue =
     {
@@ -140,11 +135,20 @@ public class BedroomLockerController : MonoBehaviour
     {
         lockerOpen = true;
 
-        if (lockerPanel != null) lockerPanel.SetActive(true);
-        if (lemariClosed != null) lemariClosed.SetActive(true);
-        if (lemariOpened != null) lemariOpened.SetActive(false);
-        if (lemariZoom != null) lemariZoom.SetActive(false);
-        if (catatanCikSima != null) catatanCikSima.SetActive(false);
+        if (lockerPanel != null)
+            lockerPanel.SetActive(true);
+
+        if (lemariClosed != null)
+            lemariClosed.SetActive(true);
+
+        if (lemariOpened != null)
+            lemariOpened.SetActive(false);
+
+        if (lemariZoom != null)
+            lemariZoom.SetActive(false);
+
+        if (catatanCikSima != null)
+            catatanCikSima.SetActive(false);
 
         if (lockerDimmer != null)
             lockerDimmer.SetActive(true);
@@ -154,9 +158,7 @@ public class BedroomLockerController : MonoBehaviour
         if (!lockerDialogueShown)
         {
             lockerDialogueShown = true;
-            dialogueIndex = 0;
 
-            // ArrowBack dan tombol angka disembunyikan/dimatikan selama dialog
             SetArrowBack(false);
             SetDigitButtons(false);
 
@@ -164,8 +166,6 @@ public class BedroomLockerController : MonoBehaviour
         }
         else
         {
-            // Dialog sudah pernah selesai,
-            // jadi tombol angka dan ArrowBack boleh digunakan
             SetArrowBack(true);
             SetDigitButtons(true);
         }
@@ -182,6 +182,9 @@ public class BedroomLockerController : MonoBehaviour
             Debug.LogError(
                 "DialogueSystem tidak ditemukan di scene KamarTidur."
             );
+
+            SetArrowBack(true);
+            SetDigitButtons(true);
             return;
         }
 
@@ -195,54 +198,33 @@ public class BedroomLockerController : MonoBehaviour
             Debug.LogWarning(
                 "Dialog Lemari tidak dapat dimulai."
             );
+
+            SetArrowBack(true);
+            SetDigitButtons(true);
         }
-    }
-
-    public void NextLockerDialogue()
-    {
-        if (!lockerOpen) return;
-
-        if (dialogueUI != null && dialogueUI.IsTyping)
-        {
-            dialogueUI.TryCompleteTyping();
-            return;
-        }
-
-        dialogueIndex++;
-
-        if (dialogueIndex < lockerDialogue.Length)
-        {
-            ShowCurrentDialogue();
-            return;
-        }
-
-        if (dialogueUI != null)
-            dialogueUI.Hide();
-
-        // Dialog selesai, ArrowBack boleh digunakan lagi
-        SetArrowBack(true);
-        SetDigitButtons(true);
     }
 
     private void OnEnable()
     {
-        DialogueSystem.DialogueFinished += OnDialogueFinished;
+        GameEvents.DialogueFinished += OnDialogueFinished;
     }
 
     private void OnDisable()
     {
-        DialogueSystem.DialogueFinished -= OnDialogueFinished;
+        GameEvents.DialogueFinished -= OnDialogueFinished;
     }
 
     private void OnDialogueFinished()
     {
-        if (lockerOpen)
-        {
-            SetArrowBack(true);
-            SetDigitButtons(true);
+        if (!lockerOpen)
+            return;
 
-            Debug.Log("Dialog lemari selesai. Tombol angka diaktifkan.");
-        }
+        SetArrowBack(true);
+        SetDigitButtons(true);
+
+        Debug.Log(
+            "Dialog lemari selesai. Tombol angka diaktifkan."
+        );
     }
 
     // =========================================================
@@ -360,9 +342,6 @@ public class BedroomLockerController : MonoBehaviour
     {
         lockerUnlocked = true;
         lockerOpen = false;
-
-        if (dialogueUI != null)
-            dialogueUI.Hide();
 
         if (lockerPanel != null)
             lockerPanel.SetActive(false);
@@ -557,9 +536,6 @@ public class BedroomLockerController : MonoBehaviour
 
         if (lockerPanel != null)
             lockerPanel.SetActive(false);
-
-        if (dialogueUI != null)
-            dialogueUI.Hide();
 
         if (lockerDimmer != null)
             lockerDimmer.SetActive(false);
