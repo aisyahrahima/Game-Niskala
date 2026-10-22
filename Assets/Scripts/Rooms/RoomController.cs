@@ -4,17 +4,31 @@ public class RoomController : MonoBehaviour
 {
     public bool IsBusy { get; private set; }
 
-    public bool TryBeginInteraction()
+    private void OnEnable()
     {
-        if (IsBusy)
-            return false;
-
-        IsBusy = true;
-        return true;
+        GameEvents.InteractionStarted += HandleInteractionStarted;
+        GameEvents.InteractionFinished += HandleInteractionFinished;
     }
 
-    public void EndInteraction()
+    private void OnDisable()
+    {
+        GameEvents.InteractionStarted -= HandleInteractionStarted;
+        GameEvents.InteractionFinished -= HandleInteractionFinished;
+
+        IsBusy = false;
+    }
+
+    private void HandleInteractionStarted()
+    {
+        IsBusy = true;
+
+        Debug.Log("RoomController: Interaksi dimulai.");
+    }
+
+    private void HandleInteractionFinished()
     {
         IsBusy = false;
+
+        Debug.Log("RoomController: Interaksi selesai.");
     }
 }

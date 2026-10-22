@@ -95,7 +95,7 @@ public class BedroomSpecialInteractions : MonoBehaviour
         SetActiveSafe(mirrorZoom, true);
         SetActiveSafe(mirrorZoomBroken, false);
 
-        interactionBusy = true;
+        BeginSpecialInteraction();
         SetArrowBack(false);
 
         if (!mirrorClickedOnce)
@@ -148,7 +148,7 @@ public class BedroomSpecialInteractions : MonoBehaviour
             );
         }
 
-        interactionBusy = false;
+        EndSpecialInteraction();
         SetArrowBack(true);
 
         Debug.Log("Interaksi pertama cermin selesai.");
@@ -219,7 +219,7 @@ public class BedroomSpecialInteractions : MonoBehaviour
             );
         }
 
-        interactionBusy = false;
+        EndSpecialInteraction();
         SetArrowBack(true);
 
         Debug.Log("Cermin sekarang tersimpan dalam kondisi pecah.");
@@ -238,7 +238,7 @@ public class BedroomSpecialInteractions : MonoBehaviour
             return;
 
         scarfAlreadyClicked = true;
-        interactionBusy = true;
+        BeginSpecialInteraction();
 
         // Sembunyikan ArrowBack selama event.
         SetArrowBack(false);
@@ -270,7 +270,7 @@ public class BedroomSpecialInteractions : MonoBehaviour
             );
         }
 
-        interactionBusy = false;
+        EndSpecialInteraction();
 
         // Tampilkan kembali ArrowBack setelah dialog selesai.
         SetArrowBack(true);
@@ -373,6 +373,28 @@ public class BedroomSpecialInteractions : MonoBehaviour
     // =========================================
     // BANTUAN
     // =========================================
+
+    private void BeginSpecialInteraction()
+    {
+        if (interactionBusy)
+            return;
+
+        interactionBusy = true;
+        GameEvents.RaiseInteractionStarted();
+
+        Debug.Log("BedroomSpecialInteractions: Interaksi dimulai.");
+    }
+
+    private void EndSpecialInteraction()
+    {
+        if (!interactionBusy)
+            return;
+
+        interactionBusy = false;
+        GameEvents.RaiseInteractionFinished();
+
+        Debug.Log("BedroomSpecialInteractions: Interaksi selesai.");
+    }
 
     private void SetArrowBack(bool visible)
     {

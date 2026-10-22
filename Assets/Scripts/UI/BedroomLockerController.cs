@@ -419,6 +419,13 @@ public class BedroomLockerController : MonoBehaviour
         if (catatanCikSima != null)
             catatanCikSima.SetActive(false);
 
+        // Tampilkan kondisi lemari yang sudah terbuka.
+        if (lemariClosed != null)
+            lemariClosed.SetActive(false);
+
+        if (lemariOpened != null)
+            lemariOpened.SetActive(true);
+
         if (lockerDimmer != null)
             lockerDimmer.SetActive(false);
 

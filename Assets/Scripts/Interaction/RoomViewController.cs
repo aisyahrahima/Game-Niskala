@@ -27,6 +27,7 @@ public class RoomViewController : MonoBehaviour
     [Header("Interaction Check")]
     [SerializeField] private BedroomSpecialInteractions specialInteractions;
     [SerializeField] private BedroomLockerController lockerController;
+    [SerializeField] private RoomController roomController;
 
     private void Start()
     {
@@ -37,6 +38,12 @@ public class RoomViewController : MonoBehaviour
     {
         if (specialInteractions != null &&
             specialInteractions.IsInteractionBlocked())
+        {
+            return false;
+        }
+
+        if (roomController != null &&
+            roomController.IsBusy)
         {
             return false;
         }
