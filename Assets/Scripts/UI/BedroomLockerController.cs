@@ -56,6 +56,7 @@ public class BedroomLockerController : MonoBehaviour
     private bool lockerUnlocked = false;
     private bool zoomOpen = false;
     private bool catatanCollected = false;
+    private bool interactionEventActive = false;
 
     private readonly string[] lockerDialogue =
     {
@@ -101,6 +102,34 @@ public class BedroomLockerController : MonoBehaviour
         UpdateDigitDisplay();
     }
 
+    private void BeginLockerInteraction()
+    {
+        if (interactionEventActive)
+            return;
+
+        interactionEventActive = true;
+
+        GameEvents.RaiseInteractionStarted();
+
+        Debug.Log(
+            "BedroomLockerController: Interaksi lemari dimulai."
+        );
+    }
+
+    private void EndLockerInteraction()
+    {
+        if (!interactionEventActive)
+            return;
+
+        interactionEventActive = false;
+
+        GameEvents.RaiseInteractionFinished();
+
+        Debug.Log(
+            "BedroomLockerController: Interaksi lemari selesai."
+        );
+    }
+
     // =========================================================
     // KLIK LEMARI
     // =========================================================
@@ -135,6 +164,8 @@ public class BedroomLockerController : MonoBehaviour
     private void OpenLocker()
     {
         lockerOpen = true;
+
+        BeginLockerInteraction();
 
         if (lockerPanel != null)
             lockerPanel.SetActive(true);
@@ -367,6 +398,8 @@ public class BedroomLockerController : MonoBehaviour
     {
         zoomOpen = true;
 
+        BeginLockerInteraction();
+
         if (lockerPanel != null)
             lockerPanel.SetActive(false);
 
@@ -458,6 +491,8 @@ public class BedroomLockerController : MonoBehaviour
 
     private void OpenCatatanCikSimaZoom()
     {
+        BeginLockerInteraction();
+
         if (catatanCikSimaZoom != null)
         {
             catatanCikSimaZoom.SetActive(true);
@@ -507,6 +542,9 @@ public class BedroomLockerController : MonoBehaviour
 
             SetArrowBack(true);
             SetViewButtons(true);
+
+            EndLockerInteraction();
+
             return;
         }
 
@@ -559,6 +597,8 @@ public class BedroomLockerController : MonoBehaviour
         SetViewButtons(true);
         SetDigitButtons(true);
 
+        EndLockerInteraction();
+
         // Kode TIDAK di-reset.
         // currentCode tetap menyimpan angka terakhir.
     }
@@ -591,6 +631,9 @@ public class BedroomLockerController : MonoBehaviour
 
         SetArrowBack(true);
         SetViewButtons(true);
+
+        EndLockerInteraction();
+
     }
 
     // =========================================================
