@@ -117,4 +117,19 @@ public class DialogueSystem : MonoBehaviour
 
         GameEvents.RaiseDialogueFinished();
     }
+
+    private void OnDisable()
+    {
+        // Jika dialog masih aktif saat sistem dinonaktifkan,
+        // selesaikan dialog dan bersihkan statusnya.
+        if (isDialogueActive)
+        {
+            Debug.LogWarning(
+                "DialogueSystem dinonaktifkan saat dialog berlangsung. " +
+                "Dialog akan dihentikan dan dibersihkan."
+            );
+
+            FinishDialogue();
+        }
+    }
 }

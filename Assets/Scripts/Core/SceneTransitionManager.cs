@@ -40,6 +40,9 @@ public class SceneTransitionManager : MonoBehaviour
 
         isTransitioning = true;
 
+        // Beri tahu sistem lain bahwa scene akan berpindah.
+        GameEvents.RaiseSceneTransitionStarted(sceneName);
+
         Debug.Log("Berpindah ke scene: " + sceneName);
 
         SceneManager.LoadScene(

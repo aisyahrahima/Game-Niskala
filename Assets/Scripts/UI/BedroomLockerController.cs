@@ -248,6 +248,11 @@ public class BedroomLockerController : MonoBehaviour
 
     private void OnDisable()
     {
+        if (interactionEventActive)
+        {
+            EndLockerInteraction();
+        }
+
         GameEvents.DialogueFinished -= OnDialogueFinished;
     }
 

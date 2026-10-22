@@ -114,7 +114,56 @@ public class StorageRoomInteraction : MonoBehaviour
 
     private void OnDisable()
     {
+        // 1. Hentikan semua coroutine milik script ini.
+        StopAllCoroutines();
+
+        // 2. Akhiri event interaksi jika masih aktif.
+        EndStorageInteraction();
+
+        // 3. Reset status event yang sedang berjalan.
+        eventRunning = false;
+        isWaitingForRoomDialogue = false;
+        currentEvent = "";
+
+        // 4. Sembunyikan jumpscare dan reset transparansinya.
+        if (jumpscare != null)
+            jumpscare.SetActive(false);
+
+        if (jumpscareCanvasGroup != null)
+            jumpscareCanvasGroup.alpha = 0f;
+
+        // 5. Sembunyikan efek kilatan jendela.
+        if (jendelaCahaya != null)
+            jendelaCahaya.SetActive(false);
+
+        if (jendelaCahayaCanvasGroup != null)
+            jendelaCahayaCanvasGroup.alpha = 0f;
+
+        // 6. Tutup zoom sementara dan tombol investigasi.
+        if (catatanZoom != null)
+            catatanZoom.SetActive(false);
+
+        if (bakulZoom != null)
+            bakulZoom.SetActive(false);
+
+        if (buttonInvestigasiArtefak != null)
+            buttonInvestigasiArtefak.SetActive(false);
+
+        // 7. Pulihkan tampilan Catatan jika sebelumnya sedang dizoom.
+        if (catatan != null)
+            catatan.SetActive(true);
+
+        // 8. Tampilkan kembali tombol kembali.
+        if (arrowBack != null)
+            arrowBack.SetActive(true);
+
+        // 9. Lepaskan langganan event dialog.
         GameEvents.DialogueFinished -= OnDialogueFinished;
+
+        Debug.Log(
+            "StorageRoomInteraction: Status interaksi dan " +
+            "efek sementara telah dibersihkan."
+        );
     }
 
     private void OnDialogueFinished()

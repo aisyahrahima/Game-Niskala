@@ -35,11 +35,59 @@ public class BedroomSpecialInteractions : MonoBehaviour
     [SerializeField] private BedroomLockerController lockerController;
 
     private bool scarfAlreadyClicked;
+    private bool scarfSequenceActive;
     private bool mirrorClickedOnce;
     private bool mirrorIsBroken;
     private bool mirrorZoomOpen;
     private bool scarfZoomOpen;
     private bool interactionBusy;
+
+    private void OnDisable()
+    {
+        // Catat apakah urutan interaksi selendang terhenti.
+        bool scarfWasInterrupted = scarfSequenceActive;
+
+        // Hentikan coroutine milik script ini.
+        StopAllCoroutines();
+
+        // Akhiri event interaksi jika masih aktif.
+        EndSpecialInteraction();
+
+        // Izinkan selendang dicoba kembali jika urutannya terhenti.
+        if (scarfWasInterrupted)
+        {
+            scarfAlreadyClicked = false;
+        }
+
+        scarfSequenceActive = false;
+
+        // Bersihkan tampilan sementara.
+        SetActiveSafe(mirrorJumpscare, false);
+        SetActiveSafe(mirrorZoom, false);
+        SetActiveSafe(mirrorZoomBroken, false);
+        SetActiveSafe(scarfZoom, false);
+
+        if (jumpscareCanvasGroup != null)
+        {
+            jumpscareCanvasGroup.alpha = 0f;
+        }
+
+        // Reset status zoom.
+        mirrorZoomOpen = false;
+        scarfZoomOpen = false;
+
+        // Pulihkan tampilan objek sesuai kondisi terakhir.
+        SetActiveSafe(mirrorRoom, !mirrorIsBroken);
+        SetActiveSafe(mirrorBrokenRoom, mirrorIsBroken);
+        SetActiveSafe(scarfRoom, true);
+
+        SetArrowBack(true);
+
+        Debug.Log(
+            "BedroomSpecialInteractions: OnDisable dipanggil. " +
+            "Coroutine dihentikan dan status interaksi dibersihkan."
+        );
+    }
 
     private void Start()
     {
@@ -238,6 +286,8 @@ public class BedroomSpecialInteractions : MonoBehaviour
             return;
 
         scarfAlreadyClicked = true;
+        scarfSequenceActive = true;
+
         BeginSpecialInteraction();
 
         // Sembunyikan ArrowBack selama event.
@@ -269,6 +319,8 @@ public class BedroomSpecialInteractions : MonoBehaviour
                 "Dialog selendang tidak berhasil dimulai."
             );
         }
+
+        scarfSequenceActive = false;
 
         EndSpecialInteraction();
 
