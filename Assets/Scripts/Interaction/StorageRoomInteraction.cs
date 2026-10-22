@@ -48,6 +48,35 @@ public class StorageRoomInteraction : MonoBehaviour
     private int catatanDialogueIndex;
     private bool bakulUnlocked;
     private bool isWaitingForRoomDialogue;
+    private bool interactionEventActive;
+
+    private void BeginStorageInteraction()
+    {
+        if (interactionEventActive)
+            return;
+
+        interactionEventActive = true;
+
+        GameEvents.RaiseInteractionStarted();
+
+        Debug.Log(
+            "StorageRoomInteraction: Interaksi dimulai."
+        );
+    }
+
+    private void EndStorageInteraction()
+    {
+        if (!interactionEventActive)
+            return;
+
+        interactionEventActive = false;
+
+        GameEvents.RaiseInteractionFinished();
+
+        Debug.Log(
+            "StorageRoomInteraction: Interaksi selesai."
+        );
+    }
 
     private bool IsInteractionBlocked()
     {
@@ -245,12 +274,20 @@ public class StorageRoomInteraction : MonoBehaviour
 
     private void FinishCurrentEvent()
     {
+        // Zoom Catatan masih terbuka setelah dialog selesai.
+        // Karena itu, event interaksinya belum boleh diakhiri.
+        bool keepInteractionForCatatanZoom =
+            currentEvent == "Catatan";
+
         eventRunning = false;
         isWaitingForRoomDialogue = false;
         currentEvent = "";
 
         if (arrowBack != null)
             arrowBack.SetActive(true);
+
+        if (!keepInteractionForCatatanZoom)
+            EndStorageInteraction();
     }
 
     // =====================================================
@@ -272,6 +309,8 @@ public class StorageRoomInteraction : MonoBehaviour
 
         eventRunning = true;
         currentEvent = "Catatan";
+
+        BeginStorageInteraction();
 
         catatan.SetActive(false);
         catatanZoom.SetActive(true);
@@ -311,6 +350,8 @@ public class StorageRoomInteraction : MonoBehaviour
 
         if (arrowBack != null)
             arrowBack.SetActive(true);
+
+        EndStorageInteraction();
     }
 
     // =====================================================
@@ -323,6 +364,8 @@ public class StorageRoomInteraction : MonoBehaviour
             return;
 
         eventRunning = true;
+
+        BeginStorageInteraction();
 
         if (arrowBack != null)
             arrowBack.SetActive(false);
@@ -561,6 +604,8 @@ public class StorageRoomInteraction : MonoBehaviour
         eventRunning = true;
         currentEvent = "BakulTerhalang";
 
+        BeginStorageInteraction();
+
         if (arrowBack != null)
             arrowBack.SetActive(false);
 
@@ -606,6 +651,8 @@ public class StorageRoomInteraction : MonoBehaviour
 
     private void OpenBakulZoom()
     {
+        BeginStorageInteraction();
+
         bakulZoom.SetActive(true);
 
         if (buttonInvestigasiArtefak != null)
@@ -627,6 +674,8 @@ public class StorageRoomInteraction : MonoBehaviour
 
         if (arrowBack != null)
             arrowBack.SetActive(true);
+
+        EndStorageInteraction();
     }
 
     // =====================================================
