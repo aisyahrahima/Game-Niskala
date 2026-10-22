@@ -243,6 +243,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 656873317}
+    - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GoBack
+      objectReference: {fileID: 0}
+    - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: RoomBackButton, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: StorageRoomInteraction, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 8409144829536241517, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
       propertyPath: m_Name
       value: CommonUI
@@ -250,13 +278,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 21149256440255854, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 656873317}
   m_SourcePrefab: {fileID: 100100000, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
 --- !u!224 &656873315 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3937530823372930614, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
   m_PrefabInstance: {fileID: 656873314}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &656873316 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 21149256440255854, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+  m_PrefabInstance: {fileID: 656873314}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &656873317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656873316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43359a259ba60f546a9804bc047a3af4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomBackButton
+  targetSceneName: RuangMakan
 --- !u!1 &1795490506
 GameObject:
   m_ObjectHideFlags: 0
