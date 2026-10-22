@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class RoomController : MonoBehaviour
 {
-    public bool IsBusy { get; private set; }
+    private int activeInteractionCount;
+
+    public bool IsBusy => activeInteractionCount > 0;
 
     private void OnEnable()
     {
@@ -15,20 +17,38 @@ public class RoomController : MonoBehaviour
         GameEvents.InteractionStarted -= HandleInteractionStarted;
         GameEvents.InteractionFinished -= HandleInteractionFinished;
 
-        IsBusy = false;
+        activeInteractionCount = 0;
     }
 
     private void HandleInteractionStarted()
     {
-        IsBusy = true;
+        activeInteractionCount++;
 
-        Debug.Log("RoomController: Interaksi dimulai.");
+        Debug.Log(
+            "RoomController: Interaksi dimulai. " +
+            "Jumlah interaksi aktif: " +
+            activeInteractionCount
+        );
     }
 
     private void HandleInteractionFinished()
     {
-        IsBusy = false;
+        if (activeInteractionCount <= 0)
+        {
+            Debug.LogWarning(
+                "RoomController: InteractionFinished diterima " +
+                "ketika tidak ada interaksi aktif."
+            );
 
-        Debug.Log("RoomController: Interaksi selesai.");
+            return;
+        }
+
+        activeInteractionCount--;
+
+        Debug.Log(
+            "RoomController: Interaksi selesai. " +
+            "Jumlah interaksi aktif: " +
+            activeInteractionCount
+        );
     }
 }
