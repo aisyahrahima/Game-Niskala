@@ -47,6 +47,7 @@ public class StorageRoomInteraction : MonoBehaviour
     private int gentongClickCount;
     private int catatanDialogueIndex;
     private bool bakulUnlocked;
+    private bool isWaitingForRoomDialogue;
 
     private bool IsInteractionBlocked()
     {
@@ -89,8 +90,10 @@ public class StorageRoomInteraction : MonoBehaviour
 
     private void OnDialogueFinished()
     {
-        if (!eventRunning)
+        if (!eventRunning || !isWaitingForRoomDialogue)
             return;
+
+        isWaitingForRoomDialogue = false;
 
         if (currentEvent == "Catatan" ||
             currentEvent.StartsWith("Gentong") ||
@@ -213,9 +216,13 @@ public class StorageRoomInteraction : MonoBehaviour
             Debug.LogError(
                 "DialogueSystem belum dihubungkan di Inspector."
             );
+
+            isWaitingForRoomDialogue = false;
             FinishCurrentEvent();
             return false;
         }
+
+        isWaitingForRoomDialogue = false;
 
         bool started = dialogueSystem.StartDialogue(
             "Arka",
@@ -227,16 +234,19 @@ public class StorageRoomInteraction : MonoBehaviour
             Debug.LogWarning(
                 "Dialog RuangPenyimpanan gagal dimulai."
             );
+
             FinishCurrentEvent();
             return false;
         }
 
+        isWaitingForRoomDialogue = true;
         return true;
     }
 
     private void FinishCurrentEvent()
     {
         eventRunning = false;
+        isWaitingForRoomDialogue = false;
         currentEvent = "";
 
         if (arrowBack != null)

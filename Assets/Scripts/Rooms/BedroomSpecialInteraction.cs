@@ -137,9 +137,16 @@ public class BedroomSpecialInteractions : MonoBehaviour
 
         SetActiveSafe(mirrorJumpscare, false);
 
-        StartDialogue("Bayangan perempuan?");
-
-        yield return WaitForDialogueToFinish();
+        if (StartDialogue("Bayangan perempuan?"))
+        {
+            yield return WaitForDialogueToFinish();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Dialog pertama cermin tidak berhasil dimulai."
+            );
+        }
 
         interactionBusy = false;
         SetArrowBack(true);
@@ -201,9 +208,16 @@ public class BedroomSpecialInteractions : MonoBehaviour
 
         Debug.Log("SFX: suara kaca pecah (belum ada file audio).");
 
-        StartDialogue("Aku tidak bisa berkata-kata");
-
-        yield return WaitForDialogueToFinish();
+        if (StartDialogue("Aku tidak bisa berkata-kata"))
+        {
+            yield return WaitForDialogueToFinish();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Dialog cermin pecah tidak berhasil dimulai."
+            );
+        }
 
         interactionBusy = false;
         SetArrowBack(true);
@@ -244,10 +258,17 @@ public class BedroomSpecialInteractions : MonoBehaviour
         Debug.Log("SFX: suara langkah kaki (belum ada file audio).");
 
         // Mulai dialog setelah suara langkah kaki.
-        StartDialogue("Siapa di sana?");
-
-        // Tunggu sampai dialog benar-benar selesai.
-        yield return WaitForDialogueToFinish();
+        if (StartDialogue("Siapa di sana?"))
+        {
+            // Tunggu sampai dialog benar-benar selesai.
+            yield return WaitForDialogueToFinish();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Dialog selendang tidak berhasil dimulai."
+            );
+        }
 
         interactionBusy = false;
 
@@ -315,14 +336,14 @@ public class BedroomSpecialInteractions : MonoBehaviour
     // DIALOG
     // =========================================
 
-    private void StartDialogue(string line)
+    private bool StartDialogue(string line)
     {
         if (DialogueSystem.Instance == null)
         {
             Debug.LogError(
                 "DialogueSystem tidak ditemukan di scene."
             );
-            return;
+            return false;
         }
 
         bool started = DialogueSystem.Instance.StartDialogue(
@@ -336,6 +357,8 @@ public class BedroomSpecialInteractions : MonoBehaviour
                 "Dialog tidak dimulai. Periksa apakah dialog lain aktif."
             );
         }
+
+        return started;
     }
 
     private IEnumerator WaitForDialogueToFinish()

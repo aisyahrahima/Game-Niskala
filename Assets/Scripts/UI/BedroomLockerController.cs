@@ -51,6 +51,7 @@ public class BedroomLockerController : MonoBehaviour
     private int[] currentCode = { 1, 1, 1, 1 };
 
     private bool lockerDialogueShown = false;
+    private bool lockerDialoguePending = false;
     private bool lockerOpen = false;
     private bool lockerUnlocked = false;
     private bool zoomOpen = false;
@@ -183,10 +184,13 @@ public class BedroomLockerController : MonoBehaviour
                 "DialogueSystem tidak ditemukan di scene KamarTidur."
             );
 
+            lockerDialoguePending = false;
             SetArrowBack(true);
             SetDigitButtons(true);
             return;
         }
+
+        lockerDialoguePending = true;
 
         bool started = DialogueSystem.Instance.StartDialogue(
             "Arka",
@@ -195,6 +199,8 @@ public class BedroomLockerController : MonoBehaviour
 
         if (!started)
         {
+            lockerDialoguePending = false;
+
             Debug.LogWarning(
                 "Dialog Lemari tidak dapat dimulai."
             );
@@ -216,8 +222,10 @@ public class BedroomLockerController : MonoBehaviour
 
     private void OnDialogueFinished()
     {
-        if (!lockerOpen)
+        if (!lockerOpen || !lockerDialoguePending)
             return;
+
+        lockerDialoguePending = false;
 
         SetArrowBack(true);
         SetDigitButtons(true);
