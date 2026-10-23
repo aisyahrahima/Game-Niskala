@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e45876f4e1027ec43a3eac836d15905a
+guid: 24d9960a3de8bea408b31e1baf1c6c46
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8746849996620070482
-    second: Ruangan Tamu _0
+      213: -1641251823741783854
+    second: Ruangan Tamu_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ruangan Tamu _0
+      name: Ruangan Tamu_0
       rect:
         serializedVersion: 2
         x: 0
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: ea185d75542fc9680800000000000000
-      internalID: -8746849996620070482
+      spriteID: 2d0b8ea792a1939e0800000000000000
+      internalID: -1641251823741783854
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Ruangan Tamu _0: -8746849996620070482
+      Ruangan Tamu_0: -1641251823741783854
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
