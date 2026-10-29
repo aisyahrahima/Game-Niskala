@@ -15,6 +15,12 @@ EditorBuildSettings:
     path: Assets/Scenes/ChapterMenu.unity
     guid: 3ed7fd2b84609434cb252f5cad1325ad
   - enabled: 1
+    path: Assets/Scenes/Opening.unity
+    guid: 366c897223df8464ea814be363d47e2a
+  - enabled: 1
+    path: Assets/Scenes/Exterior.unity
+    guid: fc09e8747f562804692f67e0a1fb4b92
+  - enabled: 1
     path: Assets/Scenes/RuangTamu.unity
     guid: 3fc04c1210e8f1d4c8bf893b41f4198e
   - enabled: 1
