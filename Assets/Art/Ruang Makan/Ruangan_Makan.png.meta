@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d90335cc5fc4466479655a83293b077e
+guid: 23883d9cf53387245a0b4969e220dc95
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3385599350155365590
-    second: ruang makan_0
+      213: 3153968841642622080
+    second: Ruangan_Makan_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ruang makan_0
+      name: Ruangan_Makan_0
       rect:
         serializedVersion: 2
         x: 0
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6dccdc9dba01cfe20800000000000000
-      internalID: 3385599350155365590
+      spriteID: 08c32c673f525cb20800000000000000
+      internalID: 3153968841642622080
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ruang makan_0: 3385599350155365590
+      Ruangan_Makan_0: 3153968841642622080
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

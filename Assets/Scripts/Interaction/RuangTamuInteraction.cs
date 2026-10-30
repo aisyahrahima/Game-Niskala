@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class RuangTamuInteraction : MonoBehaviour
+public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 {
     [Header("Dialog")]
     [SerializeField] private DialogueSystem dialogueSystem;
