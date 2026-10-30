@@ -28,6 +28,7 @@ public class RoomViewController : MonoBehaviour
     [SerializeField] private BedroomSpecialInteractions specialInteractions;
     [SerializeField] private BedroomLockerController lockerController;
     [SerializeField] private RoomController roomController;
+    [SerializeField] private RuangTamuInteraction ruangTamuInteraction;
 
     private void Start()
     {
@@ -38,6 +39,12 @@ public class RoomViewController : MonoBehaviour
     {
         if (specialInteractions != null &&
             specialInteractions.IsInteractionBlocked())
+        {
+            return false;
+        }
+
+        if (ruangTamuInteraction != null &&
+        ruangTamuInteraction.IsInteractionBlocked())
         {
             return false;
         }
