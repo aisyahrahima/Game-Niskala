@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 2d7893c861943ca40ae8904612c7d3f7
+guid: adeb5b04ff4f9704da0d8dd8d3d267e1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6475213440978777135
-    second: Sisir_0
+      213: 3552230223991103494
+    second: Sisir_Zoom_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sisir_0
+      name: Sisir_Zoom_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 3
-        width: 117
-        height: 53
+        x: 0
+        y: 2
+        width: 1251
+        height: 841
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f24ff5241549cd950800000000000000
-      internalID: 6475213440978777135
+      spriteID: 6006565719e0c4130800000000000000
+      internalID: 3552230223991103494
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Sisir_0: 6475213440978777135
+      Sisir_Zoom_0: 3552230223991103494
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

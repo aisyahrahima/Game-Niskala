@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -29,6 +30,7 @@ public class RoomViewController : MonoBehaviour
     [SerializeField] private BedroomLockerController lockerController;
     [SerializeField] private RoomController roomController;
     [SerializeField] private RuangTamuInteraction ruangTamuInteraction;
+    [SerializeField] private RuangMakanInteraction ruangMakanInteraction;
 
     private void Start()
     {
@@ -37,32 +39,44 @@ public class RoomViewController : MonoBehaviour
 
     public bool CanChangeView()
     {
+        // Cek interaksi khusus KamarTidur
         if (specialInteractions != null &&
             specialInteractions.IsInteractionBlocked())
         {
             return false;
         }
 
+        // Cek interaksi RuangTamu
         if (ruangTamuInteraction != null &&
-        ruangTamuInteraction.IsInteractionBlocked())
+            ruangTamuInteraction.IsInteractionBlocked())
         {
             return false;
         }
 
+        // Cek apakah RoomController sedang sibuk
         if (roomController != null &&
             roomController.IsBusy)
         {
             return false;
         }
 
+        // Cek apakah tampilan lemari sedang terbuka
         if (lockerController != null &&
             lockerController.IsLockerViewOpen())
         {
             return false;
         }
 
+        // Cek apakah dialog sedang berlangsung
         if (DialogueSystem.Instance != null &&
             DialogueSystem.Instance.IsDialogueActive)
+        {
+            return false;
+        }
+
+        // Cek interaksi RuangMakan
+        if (ruangMakanInteraction != null &&
+            ruangMakanInteraction.IsInteractionBlocked())
         {
             return false;
         }
@@ -150,7 +164,7 @@ public class RoomViewController : MonoBehaviour
 
             float t = Mathf.Clamp01(elapsed / duration);
 
-            // SmoothStep membuat awal dan akhir gerakan lebih halus.
+            // Membuat perpindahan tampilan lebih halus
             t = Mathf.SmoothStep(0f, 1f, t);
 
             roomContent.offsetMin = Vector2.Lerp(

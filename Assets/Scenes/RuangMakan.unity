@@ -238,7 +238,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 24840193}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1606348033}
+        m_TargetAssemblyTypeName: RuangMakanInteraction, Assembly-CSharp
+        m_MethodName: ClickTempayan
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &96290857
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,16 +384,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 188562434}
+      objectReference: {fileID: 1606348033}
     - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoBack
+      value: ClickArrowBack
       objectReference: {fileID: 0}
     - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: RoomBackButton, Assembly-CSharp
+      value: RuangMakanInteraction, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5978287981716301578, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8409144829536241517, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
       propertyPath: m_Name
@@ -394,10 +414,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 21149256440255854, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 188562434}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
 --- !u!224 &188562432 stripped
 RectTransform:
@@ -409,19 +426,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 21149256440255854, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
   m_PrefabInstance: {fileID: 188562431}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &188562434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 188562433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43359a259ba60f546a9804bc047a3af4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RoomBackButton
-  targetSceneName: RuangTamu
 --- !u!114 &188562435 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1106840051104428505, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
@@ -771,7 +775,7 @@ MonoBehaviour:
   targetSceneName: RuangTengah
   transitionEnabled: 1
   dialogueSystem: {fileID: 188562435}
-  interactionController: {fileID: 0}
+  interactionController: {fileID: 1606348033}
 --- !u!114 &577784490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1139,7 +1143,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 619984168}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1606348033}
+        m_TargetAssemblyTypeName: RuangMakanInteraction, Assembly-CSharp
+        m_MethodName: ClickAlatMakan
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &660482589
 GameObject:
   m_ObjectHideFlags: 0
@@ -1309,6 +1325,7 @@ MonoBehaviour:
   lockerController: {fileID: 0}
   roomController: {fileID: 0}
   ruangTamuInteraction: {fileID: 0}
+  ruangMakanInteraction: {fileID: 1606348033}
 --- !u!1 &1017774703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1459,6 +1476,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1268409722}
   m_CullTransparentMesh: 1
+--- !u!1 &1606348032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1606348034}
+  - component: {fileID: 1606348033}
+  m_Layer: 0
+  m_Name: RuangMakanController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1606348033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606348032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77eca12eade77f442bf80a6c66b8d872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RuangMakanInteraction
+  dialogueSystem: {fileID: 188562435}
+  arrowBack: {fileID: 188562433}
+  alatMakan: {fileID: 619984166}
+  alatMakanZoom: {fileID: 390861433}
+  gelas: {fileID: 2128746148}
+  gelasZoom: {fileID: 617184260}
+  tempayan: {fileID: 24840191}
+  tempayanZoom: {fileID: 1017774703}
+--- !u!4 &1606348034
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1606348032}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 349.01678, y: 202.66483, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1703541206
 GameObject:
   m_ObjectHideFlags: 0
@@ -1607,7 +1676,7 @@ MonoBehaviour:
   targetSceneName: RuangPenyimpanan
   transitionEnabled: 1
   dialogueSystem: {fileID: 188562435}
-  interactionController: {fileID: 0}
+  interactionController: {fileID: 1606348033}
 --- !u!1 &1758755932
 GameObject:
   m_ObjectHideFlags: 0
@@ -2073,7 +2142,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2128746150}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1606348033}
+        m_TargetAssemblyTypeName: RuangMakanInteraction, Assembly-CSharp
+        m_MethodName: ClickGelas
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2139736544
 GameObject:
   m_ObjectHideFlags: 0
@@ -2155,4 +2236,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 1758755935}
   - {fileID: 660482593}
+  - {fileID: 1606348034}
   - {fileID: 593706339}

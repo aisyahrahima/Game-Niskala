@@ -369,8 +369,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -83, y: -0.000045776}
-  m_SizeDelta: {x: 464.428, y: 248.801}
+  m_AnchoredPosition: {x: -85.5, y: 1.696}
+  m_SizeDelta: {x: 632.267, y: 427.071}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &70066238
 MonoBehaviour:
@@ -392,7 +392,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: f6b46f18f20687645a5152006471a28a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -706,8 +706,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -423.9, y: -213.3}
-  m_SizeDelta: {x: 109.445, y: 53.825}
+  m_AnchoredPosition: {x: -433, y: -214}
+  m_SizeDelta: {x: 66.112, y: 44.657}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &167882048
 MonoBehaviour:
@@ -729,7 +729,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2d7893c861943ca40ae8904612c7d3f7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: adeb5b04ff4f9704da0d8dd8d3d267e1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -837,8 +837,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -83, y: -0.000045776}
-  m_SizeDelta: {x: 464.428, y: 248.801}
+  m_AnchoredPosition: {x: -87.29, y: 1.696}
+  m_SizeDelta: {x: 632.267, y: 427.071}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &207884931
 MonoBehaviour:
@@ -860,7 +860,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2d7893c861943ca40ae8904612c7d3f7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: adeb5b04ff4f9704da0d8dd8d3d267e1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -945,6 +945,7 @@ MonoBehaviour:
   lockerController: {fileID: 0}
   roomController: {fileID: 0}
   ruangTamuInteraction: {fileID: 1496887217}
+  ruangMakanInteraction: {fileID: 0}
 --- !u!1 &385942756
 GameObject:
   m_ObjectHideFlags: 0
