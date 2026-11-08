@@ -13,11 +13,17 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     [Header("Lukisan")]
     [SerializeField] private GameObject lukisan;
     [SerializeField] private GameObject lukisanZoom;
+    [SerializeField] private GameObject lukisanDimmer;
 
     [Header("Perhiasan")]
     [SerializeField] private GameObject perhiasan;
     [SerializeField] private GameObject perhiasanZoom;
     [SerializeField] private GameObject jumpscare;
+
+    [Header("Animasi Jumpscare")]
+    [SerializeField] private RectTransform jumpscareRect;
+    [SerializeField] private float jumpscareDuration = 1f;
+    [SerializeField] private float jumpscareMoveDistance = 800f;
 
     [Header("Sisir")]
     [SerializeField] private GameObject sisir;
@@ -42,10 +48,12 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     private bool senjataClickedOnce;
 
     private Vector2 originalGameplayPosition;
+    private Vector2 originalJumpscarePosition;
 
     private void Awake()
     {
         SetActiveSafe(lukisanZoom, false);
+        SetActiveSafe(lukisanDimmer, false);
         SetActiveSafe(perhiasanZoom, false);
         SetActiveSafe(sisirZoom, false);
         SetActiveSafe(sisirRambutZoom, false);
@@ -56,6 +64,9 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
         if (gameplay != null)
             originalGameplayPosition = gameplay.anchoredPosition;
+
+        if (jumpscareRect != null)
+            originalJumpscarePosition = jumpscareRect.anchoredPosition;
     }
 
     private void Start()
@@ -114,6 +125,10 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         bool firstClick = !lukisanClickedOnce;
 
         OpenZoom(lukisan, lukisanZoom);
+
+        // Aktifkan latar hitam ketika Lukisan dizoom.
+        if (lukisanDimmer != null)
+            lukisanDimmer.SetActive(true);
 
         if (firstClick)
         {
@@ -176,22 +191,35 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     private IEnumerator PlayPerhiasanEvent()
     {
         Debug.Log("SFX: Efek suara jumpscare Perhiasan.");
+
+        // Jumpscare langsung muncul setelah Perhiasan diklik.
+        if (jumpscare != null)
+        {
+            if (jumpscareRect != null)
+                jumpscareRect.anchoredPosition = originalJumpscarePosition;
+
+            jumpscare.SetActive(true);
+        }
+
+        Debug.Log("Jumpscare: Tangan tiba-tiba menempel di layar pemain.");
+
+        // Efek getaran layar berlangsung bersamaan dengan jumpscare.
         Debug.Log("Efek getaran layar dimulai.");
-        Debug.Log("Jumpscare: Siluet perempuan muncul.");
 
         yield return StartCoroutine(ShakeScreen());
 
-        if (jumpscare != null)
+        // Tangan bergeser ke bawah sebelum menghilang.
+        if (jumpscare != null && jumpscare.activeSelf)
         {
-            jumpscare.SetActive(true);
-            yield return new WaitForSecondsRealtime(0.7f);
+            yield return StartCoroutine(MoveJumpscareDown());
+
             jumpscare.SetActive(false);
         }
 
         Debug.Log("Jumpscare Perhiasan selesai.");
 
-        // Jeda setelah event sebelum dialog.
-        yield return new WaitForSecondsRealtime(2f);
+        // Jeda setelah jumpscare sebelum dialog.
+        yield return new WaitForSecondsRealtime(1f);
 
         yield return StartDialogue("Apa itu...?");
 
@@ -199,6 +227,43 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         EndInteraction();
 
         SetArrowBack(true);
+    }
+
+    private IEnumerator MoveJumpscareDown()
+    {
+        if (jumpscareRect == null)
+        {
+            Debug.LogWarning("Jumpscare RectTransform belum dihubungkan.");
+            yield break;
+        }
+
+        Vector2 startPosition = jumpscareRect.anchoredPosition;
+
+        Vector2 targetPosition = startPosition +
+            new Vector2(0f, -jumpscareMoveDistance);
+
+        float elapsed = 0f;
+        float duration = Mathf.Max(0.01f, jumpscareDuration);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            // Gerakan dimulai dan berakhir secara halus.
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            jumpscareRect.anchoredPosition = Vector2.Lerp(
+                startPosition,
+                targetPosition,
+                t
+            );
+
+            yield return null;
+        }
+
+        jumpscareRect.anchoredPosition = targetPosition;
     }
 
     private IEnumerator ShakeScreen()
@@ -364,6 +429,9 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         {
             lukisanZoom.SetActive(false);
             SetActiveSafe(lukisan, true);
+
+            // Matikan latar hitam setelah zoom Lukisan ditutup.
+            SetActiveSafe(lukisanDimmer, false);
         }
 
         if (perhiasanZoom != null && perhiasanZoom.activeSelf)

@@ -1686,6 +1686,7 @@ MonoBehaviour:
   lockerController: {fileID: 1980448205}
   roomController: {fileID: 327858962}
   ruangTamuInteraction: {fileID: 0}
+  ruangMakanInteraction: {fileID: 0}
 --- !u!1 &791570629
 GameObject:
   m_ObjectHideFlags: 0
