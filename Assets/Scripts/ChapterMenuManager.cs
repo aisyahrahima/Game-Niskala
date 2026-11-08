@@ -15,4 +15,18 @@ public class ChapterMenuManager : MonoBehaviour
 
         SceneTransitionManager.Instance.LoadScene("Opening");
     }
+
+    public void BackToMainMenu()
+    {
+        if (SceneTransitionManager.Instance == null)
+        {
+            Debug.LogError(
+                "SceneTransitionManager tidak ditemukan."
+            );
+
+            return;
+        }
+
+        SceneTransitionManager.Instance.LoadScene("MainMenu");
+    }
 }
