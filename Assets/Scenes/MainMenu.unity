@@ -663,7 +663,7 @@ GameObject:
   - component: {fileID: 237625267}
   - component: {fileID: 237625269}
   m_Layer: 5
-  m_Name: YaKeluarButton
+  m_Name: KeluarButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -708,7 +708,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ya, Keluar
+  m_text: Keluar
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4647cef048614df4a8e7e00b48c9ebc8, type: 2}
   m_sharedMaterial: {fileID: 3877601965901299301, guid: 4647cef048614df4a8e7e00b48c9ebc8, type: 2}
@@ -1107,7 +1107,7 @@ GameObject:
   - component: {fileID: 281716265}
   - component: {fileID: 281716267}
   m_Layer: 5
-  m_Name: BatalKeluarButton
+  m_Name: BatalButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3872,7 +3872,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Apakah Anda yakin ingin keluar dari permainan?
+  m_text: Apakah Anda yakin ingin keluar?
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4647cef048614df4a8e7e00b48c9ebc8, type: 2}
   m_sharedMaterial: {fileID: 3877601965901299301, guid: 4647cef048614df4a8e7e00b48c9ebc8, type: 2}

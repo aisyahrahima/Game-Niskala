@@ -69,7 +69,7 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
     private IEnumerator PlayAlatMakanEvent()
     {
         // Beri waktu untuk suara sebelum dialog.
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSeconds(2f);
 
         yield return StartDialogue(
             "Delapan orang...",
@@ -134,14 +134,14 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
         Debug.Log("SFX: Suara tetesan air.");
 
         // Dialog pertama.
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSeconds(2f);
 
         yield return StartDialogue("Kosong...");
 
         // Suara bisikan muncul setelah dialog pertama selesai.
         Debug.Log("SFX: Suara perempuan berbisik 'Air... haus...'");
 
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSeconds(1f);
 
         // Dialog kedua.
         yield return StartDialogue(

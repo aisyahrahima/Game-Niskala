@@ -160,7 +160,7 @@ public class RoomViewController : MonoBehaviour
 
         while (elapsed < duration)
         {
-            elapsed += Time.unscaledDeltaTime;
+            elapsed += Time.deltaTime;
 
             float t = Mathf.Clamp01(elapsed / duration);
 

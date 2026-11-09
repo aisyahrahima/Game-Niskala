@@ -11,42 +11,73 @@ public class MenuPopupController : MonoBehaviour
     {
         // Semua popup tertutup saat permainan dimulai.
         CloseAllPopups();
+
+        // Pastikan gameplay berjalan saat scene dimulai.
+        UpdatePauseState();
     }
 
     public void OpenMenu()
     {
         CloseAllPopups();
-        menuPopup.SetActive(true);
+
+        if (menuPopup != null)
+            menuPopup.SetActive(true);
+
+        UpdatePauseState();
     }
 
     public void ContinueGame()
     {
         CloseAllPopups();
+
+        UpdatePauseState();
     }
 
     public void OpenSettings()
     {
-        menuPopup.SetActive(false);
-        settingsPopup.SetActive(true);
+        if (menuPopup != null)
+            menuPopup.SetActive(false);
+
+        if (settingsPopup != null)
+            settingsPopup.SetActive(true);
+
+        UpdatePauseState();
     }
 
     public void BackToMenu()
     {
-        settingsPopup.SetActive(false);
-        exitConfirmPopup.SetActive(false);
-        menuPopup.SetActive(true);
+        if (settingsPopup != null)
+            settingsPopup.SetActive(false);
+
+        if (exitConfirmPopup != null)
+            exitConfirmPopup.SetActive(false);
+
+        if (menuPopup != null)
+            menuPopup.SetActive(true);
+
+        UpdatePauseState();
     }
 
     public void OpenExitConfirmation()
     {
-        menuPopup.SetActive(false);
-        exitConfirmPopup.SetActive(true);
+        if (menuPopup != null)
+            menuPopup.SetActive(false);
+
+        if (exitConfirmPopup != null)
+            exitConfirmPopup.SetActive(true);
+
+        UpdatePauseState();
     }
 
     public void CancelExit()
     {
-        exitConfirmPopup.SetActive(false);
-        menuPopup.SetActive(true);
+        if (exitConfirmPopup != null)
+            exitConfirmPopup.SetActive(false);
+
+        if (menuPopup != null)
+            menuPopup.SetActive(true);
+
+        UpdatePauseState();
     }
 
     public void ConfirmExit()
@@ -58,8 +89,31 @@ public class MenuPopupController : MonoBehaviour
 
     private void CloseAllPopups()
     {
-        menuPopup.SetActive(false);
-        settingsPopup.SetActive(false);
-        exitConfirmPopup.SetActive(false);
+        if (menuPopup != null)
+            menuPopup.SetActive(false);
+
+        if (settingsPopup != null)
+            settingsPopup.SetActive(false);
+
+        if (exitConfirmPopup != null)
+            exitConfirmPopup.SetActive(false);
+    }
+
+    private void UpdatePauseState()
+    {
+        // Periksa apakah minimal satu popup sedang aktif.
+        bool isPopupOpen =
+            (menuPopup != null && menuPopup.activeSelf) ||
+            (settingsPopup != null && settingsPopup.activeSelf) ||
+            (exitConfirmPopup != null && exitConfirmPopup.activeSelf);
+
+        // Hentikan atau jalankan kembali gameplay.
+        Time.timeScale = isPopupOpen ? 0f : 1f;
+
+        Debug.Log(
+            isPopupOpen
+                ? "GAMEPLAY PAUSED"
+                : "GAMEPLAY RESUMED"
+        );
     }
 }

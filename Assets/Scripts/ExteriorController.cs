@@ -50,7 +50,7 @@ public class ExteriorController : MonoBehaviour
     private IEnumerator ExteriorSequence()
     {
         // Jeda sebelum dialog pembuka Exterior.
-        yield return new WaitForSecondsRealtime(dialogueStartDelay);
+        yield return new WaitForSeconds(dialogueStartDelay);
 
         Debug.Log("Dialog pembuka Exterior dimulai.");
 

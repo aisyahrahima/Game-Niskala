@@ -84,7 +84,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         BeginInteraction();
 
         // Jeda 2 detik sebelum dialog pembuka.
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSeconds(2f);
 
         Debug.Log("SFX: Suara pintu terkunci.");
 
@@ -149,7 +149,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     private IEnumerator PlayLukisanDialogue()
     {
         // Memberikan waktu untuk event suara tertawa.
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSeconds(2f);
 
         yield return StartDialogue(
             "Darimana suara itu berasal?"
@@ -219,7 +219,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         Debug.Log("Jumpscare Perhiasan selesai.");
 
         // Jeda setelah jumpscare sebelum dialog.
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSeconds(1f);
 
         yield return StartDialogue("Apa itu...?");
 
@@ -247,7 +247,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
         while (elapsed < duration)
         {
-            elapsed += Time.unscaledDeltaTime;
+            elapsed += Time.deltaTime;
 
             float t = Mathf.Clamp01(elapsed / duration);
 
@@ -288,7 +288,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
             gameplay.anchoredPosition =
                 originalGameplayPosition + new Vector2(x, y);
 
-            elapsed += Time.unscaledDeltaTime;
+            elapsed += Time.deltaTime;
             yield return null;
         }
 
@@ -324,7 +324,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
     private IEnumerator PlaySisirEvent()
     {
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSeconds(0.5f);
 
         if (sisirZoom != null)
             sisirZoom.SetActive(false);
@@ -334,7 +334,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
         Debug.Log("Tampilan Sisir_Rambut_Zoom muncul.");
 
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSeconds(1f);
 
         if (sisirRambutZoom != null)
             sisirRambutZoom.SetActive(false);
@@ -345,7 +345,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         Debug.Log("Tampilan Sisir_Zoom kembali.");
 
         // Jeda setelah pergantian tampilan sebelum dialog.
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSeconds(2f);
 
         yield return StartDialogue(
             "Kenapa tiba-tiba ada rambut?"

@@ -252,7 +252,7 @@ public class StorageRoomInteraction : MonoBehaviour
                 jendelaCahayaCanvasGroup.alpha = 1f;
             }
 
-            yield return new WaitForSecondsRealtime(flashDuration);
+            yield return new WaitForSeconds(flashDuration);
 
             // Cahaya menghilang sesaat.
             if (jendelaCahayaCanvasGroup != null)
@@ -262,7 +262,7 @@ public class StorageRoomInteraction : MonoBehaviour
             else
             {
                 jendelaCahaya.SetActive(false);
-                yield return new WaitForSecondsRealtime(interval);
+                yield return new WaitForSeconds(interval);
 
                 if (i < flashes - 1)
                     jendelaCahaya.SetActive(true);
@@ -271,7 +271,7 @@ public class StorageRoomInteraction : MonoBehaviour
             }
 
             if (i < flashes - 1)
-                yield return new WaitForSecondsRealtime(interval);
+                yield return new WaitForSeconds(interval);
         }
 
         // Pastikan gambar benar-benar tidak terlihat setelah efek selesai.
@@ -372,7 +372,7 @@ public class StorageRoomInteraction : MonoBehaviour
 
     private IEnumerator StartCatatanDialogue()
     {
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSeconds(2f);
 
         if (!eventRunning || currentEvent != "Catatan")
             yield break;
@@ -520,7 +520,7 @@ public class StorageRoomInteraction : MonoBehaviour
 
         while (elapsed < fadeIn)
         {
-            elapsed += Time.unscaledDeltaTime;
+            elapsed += Time.deltaTime;
 
             jumpscareCanvasGroup.alpha =
                 Mathf.Clamp01(elapsed / fadeIn);
@@ -531,7 +531,7 @@ public class StorageRoomInteraction : MonoBehaviour
         jumpscareCanvasGroup.alpha = 1f;
 
         // Tahan jumpscare agar pemain sempat melihatnya.
-        yield return new WaitForSecondsRealtime(hold);
+        yield return new WaitForSeconds(hold);
 
         Debug.Log("JUMPSCARE FADE OUT");
 
@@ -540,7 +540,7 @@ public class StorageRoomInteraction : MonoBehaviour
 
         while (elapsed < fadeOut)
         {
-            elapsed += Time.unscaledDeltaTime;
+            elapsed += Time.deltaTime;
 
             jumpscareCanvasGroup.alpha =
                 1f - Mathf.Clamp01(elapsed / fadeOut);

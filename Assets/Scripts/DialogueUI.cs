@@ -91,7 +91,7 @@ public class DialogueUI : MonoBehaviour
         foreach (char character in currentLine)
         {
             dialogueText.text += character;
-            yield return new WaitForSecondsRealtime(characterDelay);
+            yield return new WaitForSeconds(characterDelay);
         }
 
         isTyping = false;
