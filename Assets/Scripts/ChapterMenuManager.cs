@@ -4,6 +4,9 @@ public class ChapterMenuManager : MonoBehaviour
 {
     public void SelectChapter1()
     {
+        // Memulai permainan baru dengan progres kosong.
+        NiskalaProgress.ResetAll();
+
         if (SceneTransitionManager.Instance == null)
         {
             Debug.LogError(

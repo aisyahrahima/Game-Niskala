@@ -91,17 +91,24 @@ public class BedroomSpecialInteractions : MonoBehaviour
 
     private void Start()
     {
-        SetActiveSafe(mirrorRoom, true);
-        SetActiveSafe(mirrorBrokenRoom, false);
+        mirrorClickedOnce =
+            NiskalaProgress.mirrorClickedOnce;
+
+        mirrorIsBroken =
+            NiskalaProgress.mirrorIsBroken;
+
+        scarfAlreadyClicked =
+            NiskalaProgress.scarfAlreadyClicked;
+
+        SetActiveSafe(mirrorRoom, !mirrorIsBroken);
+        SetActiveSafe(mirrorBrokenRoom, mirrorIsBroken);
 
         SetActiveSafe(mirrorZoom, false);
         SetActiveSafe(mirrorZoomBroken, false);
         SetActiveSafe(mirrorJumpscare, false);
 
         if (jumpscareCanvasGroup != null)
-        {
             jumpscareCanvasGroup.alpha = 0f;
-        }
 
         SetActiveSafe(scarfRoom, true);
         SetActiveSafe(scarfZoom, false);
@@ -149,6 +156,7 @@ public class BedroomSpecialInteractions : MonoBehaviour
         if (!mirrorClickedOnce)
         {
             mirrorClickedOnce = true;
+            NiskalaProgress.mirrorClickedOnce = true;
             StartCoroutine(FirstMirrorSequence());
         }
         else
@@ -250,6 +258,7 @@ public class BedroomSpecialInteractions : MonoBehaviour
         yield return new WaitForSeconds(glassBreakDelay);
 
         mirrorIsBroken = true;
+        NiskalaProgress.mirrorIsBroken = true;
 
         SetActiveSafe(mirrorZoom, false);
         SetActiveSafe(mirrorZoomBroken, true);
@@ -286,6 +295,8 @@ public class BedroomSpecialInteractions : MonoBehaviour
             return;
 
         scarfAlreadyClicked = true;
+        NiskalaProgress.scarfAlreadyClicked = true;
+
         scarfSequenceActive = true;
 
         BeginSpecialInteraction();

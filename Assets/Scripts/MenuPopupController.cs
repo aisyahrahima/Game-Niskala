@@ -82,15 +82,20 @@ public class MenuPopupController : MonoBehaviour
 
     public void ConfirmExit()
     {
-        Debug.Log("Pemain memilih kembali ke MainMenu tanpa menyimpan progress.");
+        Debug.Log(
+            "Pemain memilih kembali ke MainMenu tanpa menyimpan progress."
+        );
 
-        // Pulihkan waktu permainan sebelum berpindah scene.
         Time.timeScale = 1f;
 
-        // Kembali ke MainMenu.
+        // Hapus seluruh progres sesi permainan.
+        NiskalaProgress.ResetAll();
+
         if (SceneTransitionManager.Instance == null)
         {
-            Debug.LogError("SceneTransitionManager tidak ditemukan.");
+            Debug.LogError(
+                "SceneTransitionManager tidak ditemukan."
+            );
             return;
         }
 

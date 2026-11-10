@@ -71,7 +71,33 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
     private void Start()
     {
-        StartCoroutine(OpeningSequence());
+        // Pulihkan progres interaksi objek.
+        lukisanClickedOnce =
+            NiskalaProgress.lukisanClickedOnce;
+
+        perhiasanClickedOnce =
+            NiskalaProgress.perhiasanClickedOnce;
+
+        sisirClickedOnce =
+            NiskalaProgress.sisirClickedOnce;
+
+        senjataClickedOnce =
+            NiskalaProgress.senjataClickedOnce;
+
+        // Periksa apakah dialog pembuka sudah pernah ditampilkan.
+        if (!NiskalaProgress.ruangTamuOpeningDialogueShown)
+        {
+            // Simpan status agar dialog tidak muncul kembali.
+            NiskalaProgress.ruangTamuOpeningDialogueShown = true;
+
+            StartCoroutine(OpeningSequence());
+        }
+        else
+        {
+            Debug.Log(
+                "Dialog pembuka Ruang Tamu sudah pernah ditampilkan."
+            );
+        }
     }
 
     // =========================================
@@ -133,6 +159,8 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         if (firstClick)
         {
             lukisanClickedOnce = true;
+            NiskalaProgress.lukisanClickedOnce = true;
+
             interactionBusy = true;
             BeginInteraction();
 
@@ -177,6 +205,8 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         if (firstClick)
         {
             perhiasanClickedOnce = true;
+            NiskalaProgress.perhiasanClickedOnce = true;
+
             interactionBusy = true;
             BeginInteraction();
 
@@ -311,6 +341,8 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         if (firstClick)
         {
             sisirClickedOnce = true;
+            NiskalaProgress.sisirClickedOnce = true;
+
             interactionBusy = true;
             BeginInteraction();
 
@@ -373,6 +405,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         if (firstClick)
         {
             senjataClickedOnce = true;
+            NiskalaProgress.senjataClickedOnce = true;
 
             Debug.Log("SFX: Suara langkah kaki prajurit.");
         }

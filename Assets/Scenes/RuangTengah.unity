@@ -842,6 +842,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomBackButton
   targetSceneName: RuangMakan
+--- !u!1 &656873318 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2861109337018450221, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+  m_PrefabInstance: {fileID: 656873314}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &656873319 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3416455618536356345, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+  m_PrefabInstance: {fileID: 656873314}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &656873320 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4807833543613592616, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+  m_PrefabInstance: {fileID: 656873314}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1097760859
 GameObject:
   m_ObjectHideFlags: 0
@@ -1203,6 +1218,7 @@ GameObject:
   - component: {fileID: 1795490509}
   - component: {fileID: 1795490508}
   - component: {fileID: 1795490507}
+  - component: {fileID: 1795490511}
   m_Layer: 5
   m_Name: Canvas_Gameplay
   m_TagString: Untagged
@@ -1294,6 +1310,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1795490511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1795490506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3484dcaaddf78d3499c6c85c37533115, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryUIController
+  tepakSirihIcon: {fileID: 656873320}
+  bakulIcon: {fileID: 656873319}
+  catatanIcon: {fileID: 656873318}
+  storageController: {fileID: 0}
+  bedroomController: {fileID: 0}
 --- !u!1 &1823708014
 GameObject:
   m_ObjectHideFlags: 0

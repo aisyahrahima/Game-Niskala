@@ -31,6 +31,15 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
 
     private void Awake()
     {
+        alatMakanClickedOnce =
+            NiskalaProgress.alatMakanClickedOnce;
+
+        gelasClickedOnce =
+            NiskalaProgress.gelasClickedOnce;
+
+        tempayanClickedOnce =
+            NiskalaProgress.tempayanClickedOnce;
+
         SetActiveSafe(alatMakanZoom, false);
         SetActiveSafe(gelasZoom, false);
         SetActiveSafe(tempayanZoom, false);
@@ -52,6 +61,8 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
         if (!alatMakanClickedOnce)
         {
             alatMakanClickedOnce = true;
+            NiskalaProgress.alatMakanClickedOnce = true;
+
             interactionBusy = true;
 
             BeginInteraction();
@@ -96,6 +107,7 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
         if (!gelasClickedOnce)
         {
             gelasClickedOnce = true;
+            NiskalaProgress.gelasClickedOnce = true;
 
             Debug.Log("SFX: Suara benda pecah.");
         }
@@ -117,6 +129,8 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
         if (!tempayanClickedOnce)
         {
             tempayanClickedOnce = true;
+            NiskalaProgress.tempayanClickedOnce = true;
+
             interactionBusy = true;
 
             BeginInteraction();

@@ -46,6 +46,9 @@ public class BedroomLockerController : MonoBehaviour
     [Header("Interaksi Tambahan Kamar")]
     [SerializeField] private BedroomSpecialInteractions specialInteractions;
 
+    [Header("Inventory UI")]
+    [SerializeField] private InventoryUIController inventoryUIController;
+
     private readonly int[] correctCode = { 7, 3, 1, 8 };
 
     private int[] currentCode = { 1, 1, 1, 1 };
@@ -57,6 +60,38 @@ public class BedroomLockerController : MonoBehaviour
     private bool zoomOpen = false;
     private bool catatanCollected = false;
     private bool interactionEventActive = false;
+
+    private void Start()
+    {
+        // Pulihkan kode terakhir.
+        for (int i = 0; i < currentCode.Length; i++)
+        {
+            currentCode[i] = NiskalaProgress.lockerCode[i];
+        }
+
+        // Pulihkan status puzzle.
+        lockerDialogueShown =
+            NiskalaProgress.lockerDialogueShown;
+
+        lockerUnlocked =
+            NiskalaProgress.lockerUnlocked;
+
+        catatanCollected =
+            NiskalaProgress.catatanCikSimaCollected;
+
+        // Pulihkan tampilan lemari.
+        if (lockerUnlocked)
+        {
+            lemariClosed.SetActive(false);
+            lemariOpened.SetActive(true);
+        }
+
+        // Catatan yang sudah diambil tidak boleh muncul lagi.
+        if (catatanCollected && catatanCikSima != null)
+            catatanCikSima.SetActive(false);
+
+        UpdateDigitDisplay();
+    }
 
     private readonly string[] lockerDialogue =
     {
@@ -190,6 +225,7 @@ public class BedroomLockerController : MonoBehaviour
         if (!lockerDialogueShown)
         {
             lockerDialogueShown = true;
+            NiskalaProgress.lockerDialogueShown = true;
 
             SetArrowBack(false);
             SetDigitButtons(false);
@@ -300,6 +336,12 @@ public class BedroomLockerController : MonoBehaviour
             currentCode[slotIndex] = 9;
 
         UpdateDigitDisplay();
+
+        for (int i = 0; i < currentCode.Length; i++)
+        {
+            NiskalaProgress.lockerCode[i] = currentCode[i];
+        }
+
         CheckCode();
     }
 
@@ -385,6 +427,7 @@ public class BedroomLockerController : MonoBehaviour
     private void UnlockLocker()
     {
         lockerUnlocked = true;
+        NiskalaProgress.lockerUnlocked = true;
         lockerOpen = false;
 
         if (lockerPanel != null)
@@ -438,6 +481,10 @@ public class BedroomLockerController : MonoBehaviour
             return;
 
         catatanCollected = true;
+        NiskalaProgress.catatanCikSimaCollected = true;
+
+        if (inventoryUIController != null)
+            inventoryUIController.RefreshInventory();
 
         // Sembunyikan catatan dari tampilan lemari.
         if (catatanCikSima != null)

@@ -42,6 +42,9 @@ public class StorageRoomInteraction : MonoBehaviour
     [SerializeField] private GameObject bakulInventory;
     [SerializeField] private GameObject buttonInvestigasiArtefak;
 
+    [Header("Inventory UI")]
+    [SerializeField] private InventoryUIController inventoryUIController;
+
     private bool eventRunning;
     private string currentEvent = "";
     private int gentongClickCount;
@@ -49,6 +52,39 @@ public class StorageRoomInteraction : MonoBehaviour
     private bool bakulUnlocked;
     private bool isWaitingForRoomDialogue;
     private bool interactionEventActive;
+
+    private void Start()
+    {
+        // Pulihkan jumlah klik Gentong.
+        gentongClickCount = NiskalaProgress.gentongClickCount;
+
+        // Pulihkan status Bakul.
+        bakulUnlocked = NiskalaProgress.bakulUnlocked;
+
+        // Pulihkan posisi Gentong jika sudah pernah bergeser.
+        if (NiskalaProgress.gentongShifted)
+        {
+            if (gentongRectTransform != null)
+            {
+                gentongRectTransform.anchoredPosition =
+                    gentongShiftedPosition;
+            }
+
+            if (gentongCanvasGroup != null)
+                gentongCanvasGroup.alpha = 1f;
+        }
+
+        // Bakul sudah terlihat sejak awal,
+        // kecuali jika sudah diambil pemain.
+        if (bakul != null)
+        {
+            bakul.SetActive(!NiskalaProgress.bakulCollected);
+        }
+
+        Debug.Log(
+            "Progres Ruang Penyimpanan berhasil dipulihkan."
+        );
+    }
 
     private void BeginStorageInteraction()
     {
@@ -421,6 +457,8 @@ public class StorageRoomInteraction : MonoBehaviour
 
         gentongClickCount++;
 
+        NiskalaProgress.gentongClickCount = gentongClickCount;
+
         currentEvent = "Gentong" + gentongClickCount;
 
         Debug.Log("Gentong diklik: " + gentongClickCount);
@@ -479,6 +517,10 @@ public class StorageRoomInteraction : MonoBehaviour
                 yield return StartCoroutine(ShiftGentong());
 
                 bakulUnlocked = true;
+
+                NiskalaProgress.bakulUnlocked = true;
+                NiskalaProgress.gentongShifted = true;
+
                 bakul.SetActive(true);
 
                 Debug.Log("Gentong bergeser. Bakul terbuka.");
@@ -683,9 +725,13 @@ public class StorageRoomInteraction : MonoBehaviour
         // Bakul di ruangan menghilang setelah diambil.
         bakul.SetActive(false);
 
-        // Bakul masuk ke inventory.
-        bakulInventory.SetActive(true);
+        // Simpan status pengambilan Bakul.
+        NiskalaProgress.bakulCollected = true;
 
+        if (inventoryUIController != null)
+            inventoryUIController.RefreshInventory();
+
+        // Buka tampilan zoom Bakul.
         OpenBakulZoom();
     }
 
