@@ -242,7 +242,8 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
 
         zoomOpen = false;
 
-        SetArrowBack(false);
+        // Tampilkan kembali ArrowBack setelah Zoom ditutup.
+        SetArrowBack(true);
     }
 
     // =========================================
