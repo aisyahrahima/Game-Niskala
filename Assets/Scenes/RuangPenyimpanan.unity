@@ -131,7 +131,6 @@ GameObject:
   - component: {fileID: 128499977}
   - component: {fileID: 128499976}
   - component: {fileID: 128499978}
-  - component: {fileID: 128499979}
   m_Layer: 5
   m_Name: Catatan
   m_TagString: Untagged
@@ -252,18 +251,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &128499979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 128499974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6770f187f1e929940b0dc3c45af0b61e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CursorHover
 --- !u!1 &132679001
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +351,6 @@ GameObject:
   - component: {fileID: 420533328}
   - component: {fileID: 420533327}
   - component: {fileID: 420533329}
-  - component: {fileID: 420533330}
   m_Layer: 5
   m_Name: Bakul
   m_TagString: Untagged
@@ -485,18 +471,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &420533330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 420533325}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6770f187f1e929940b0dc3c45af0b61e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CursorHover
 --- !u!1 &452686918
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,7 +776,6 @@ GameObject:
   - component: {fileID: 840164813}
   - component: {fileID: 840164815}
   - component: {fileID: 840164816}
-  - component: {fileID: 840164817}
   m_Layer: 5
   m_Name: Gentong
   m_TagString: Untagged
@@ -935,18 +908,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &840164817
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 840164811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6770f187f1e929940b0dc3c45af0b61e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CursorHover
 --- !u!1 &877233954
 GameObject:
   m_ObjectHideFlags: 0
