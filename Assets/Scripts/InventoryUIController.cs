@@ -11,6 +11,7 @@ public class InventoryUIController : MonoBehaviour
     [Header("Room Controllers")]
     [SerializeField] private StorageRoomInteraction storageController;
     [SerializeField] private BedroomLockerController bedroomController;
+    [SerializeField] private RuangTengahInteraction roomTengahController;
 
     private void Start()
     {
@@ -18,6 +19,7 @@ public class InventoryUIController : MonoBehaviour
 
         SetupBakulButton();
         SetupCatatanButton();
+        SetupTepakSirihButton();
     }
 
     public void RefreshInventory()
@@ -27,6 +29,15 @@ public class InventoryUIController : MonoBehaviour
             tepakSirihIcon.SetActive(
                 NiskalaProgress.tepakSirihCollected
             );
+
+            Button button = tepakSirihIcon.GetComponent<Button>();
+
+            if (button != null)
+            {
+                button.interactable =
+                    NiskalaProgress.tepakSirihCollected &&
+                    roomTengahController != null;
+            }
         }
 
         if (bakulIcon != null)
@@ -112,6 +123,33 @@ public class InventoryUIController : MonoBehaviour
         {
             button.onClick.AddListener(
                 bedroomController.ClickCatatanCikSimaInventory
+            );
+        }
+    }
+
+    private void SetupTepakSirihButton()
+    {
+        if (tepakSirihIcon == null)
+            return;
+
+        Button button = tepakSirihIcon.GetComponent<Button>();
+
+        if (button == null)
+        {
+            Debug.LogWarning(
+                "Tepak_Sirih_Inventory belum memiliki Button."
+            );
+            return;
+        }
+
+        button.interactable =
+            NiskalaProgress.tepakSirihCollected &&
+            roomTengahController != null;
+
+        if (roomTengahController != null)
+        {
+            button.onClick.AddListener(
+                roomTengahController.ClickTepakSirihInventory
             );
         }
     }

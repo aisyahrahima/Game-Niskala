@@ -61,7 +61,8 @@ public static class NiskalaProgress
 
     public static bool patungClickedOnce;
     public static bool kainClickedOnce;
-
+    public static bool tepakSirihPuzzleCompleted;
+    public static bool tepakSirihIntroShown;
 
     // =========================================
     // RESET SELURUH PROGRES
@@ -104,5 +105,7 @@ public static class NiskalaProgress
         // Ruang Tengah
         patungClickedOnce = false;
         kainClickedOnce = false;
+        tepakSirihPuzzleCompleted = false;
+        tepakSirihIntroShown = false;
     }
 }

@@ -20,6 +20,15 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
     [SerializeField] private GameObject kain;
     [SerializeField] private GameObject kainZoom;
 
+    [Header("Tepak Sirih")]
+    [SerializeField] private GameObject tepakSirih;
+    [SerializeField] private GameObject messyTepakSirihZoom;
+    [SerializeField] private GameObject tepakSirihZoom;
+    [SerializeField] private GameObject tepakSirihInventory;
+    [SerializeField] private GameObject buttonInvestigasiArtefak;
+    [SerializeField] private InventoryUIController inventoryUIController;
+    [SerializeField] private TepakSirihPuzzle tepakSirihPuzzle;
+
     [Header("Pengaturan Event")]
     [SerializeField] private float eventDelay = 1f;
 
@@ -41,6 +50,19 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
 
         // ArrowBack ditampilkan saat pertama masuk ruangan.
         SetArrowBack(true);
+
+        if (NiskalaProgress.tepakSirihCollected)
+        {
+            SetActiveSafe(tepakSirih, false);
+            SetActiveSafe(messyTepakSirihZoom, false);
+            SetActiveSafe(tepakSirihZoom, false);
+        }
+        else
+        {
+            SetActiveSafe(tepakSirih, true);
+            SetActiveSafe(messyTepakSirihZoom, false);
+            SetActiveSafe(tepakSirihZoom, false);
+        }
     }
 
     // =========================================
@@ -155,6 +177,146 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
         Debug.Log("Event Kain Ruang Tengah selesai.");
     }
 
+    // =====================================================
+    // TEPAK SIRIH
+    // =====================================================
+
+    public void ClickTepakSirih()
+    {
+        if (IsInteractionBlocked())
+            return;
+
+        if (NiskalaProgress.tepakSirihCollected)
+        {
+            OpenTepakSirihZoom();
+            return;
+        }
+
+        if (NiskalaProgress.tepakSirihPuzzleCompleted)
+        {
+            OnTepakSirihPuzzleCompleted();
+            return;
+        }
+
+        if (messyTepakSirihZoom == null ||
+            tepakSirih == null ||
+            tepakSirihPuzzle == null)
+        {
+            Debug.LogError(
+                "Referensi Tepak Sirih belum lengkap."
+            );
+            return;
+        }
+
+        tepakSirih.SetActive(false);
+        messyTepakSirihZoom.SetActive(true);
+
+        zoomOpen = true;
+
+        // Nonaktifkan drag selama dialog berlangsung.
+        tepakSirihPuzzle.SetPuzzleInteractable(false);
+
+        if (!NiskalaProgress.tepakSirihIntroShown)
+        {
+            NiskalaProgress.tepakSirihIntroShown = true;
+
+            interactionBusy = true;
+
+            BeginInteraction();
+
+            SetArrowBack(false);
+
+            StartCoroutine(PlayTepakSirihIntro());
+        }
+        else
+        {
+            // Jika dialog sudah pernah ditampilkan,
+            // puzzle langsung dapat dimainkan.
+            tepakSirihPuzzle.SetPuzzleInteractable(true);
+
+            SetArrowBack(true);
+        }
+
+        Debug.Log("Puzzle Tepak Sirih dibuka.");
+    }
+
+    private IEnumerator PlayTepakSirihIntro()
+    {
+        yield return StartDialogue(
+            "Tepak Sirih?",
+            "Seharusnya aku bisa menyusunnya"
+        );
+
+        // Dialog sudah selesai.
+        interactionBusy = false;
+
+        EndInteraction();
+
+        // Sekarang objek puzzle dapat di-drag.
+        if (tepakSirihPuzzle != null)
+        {
+            tepakSirihPuzzle.SetPuzzleInteractable(true);
+        }
+
+        // Tampilkan kembali ArrowBack.
+        SetArrowBack(true);
+
+        Debug.Log("Dialog pembuka Tepak Sirih selesai.");
+    }
+
+    public void OnTepakSirihPuzzleCompleted()
+    {
+        NiskalaProgress.tepakSirihPuzzleCompleted = true;
+        NiskalaProgress.tepakSirihCollected = true;
+
+        if (messyTepakSirihZoom != null)
+            messyTepakSirihZoom.SetActive(false);
+
+        if (tepakSirih != null)
+            tepakSirih.SetActive(false);
+
+        if (tepakSirihZoom != null)
+            tepakSirihZoom.SetActive(true);
+
+        if (tepakSirihInventory != null)
+            tepakSirihInventory.SetActive(true);
+
+        if (buttonInvestigasiArtefak != null)
+            buttonInvestigasiArtefak.SetActive(true);
+
+        if (inventoryUIController != null)
+            inventoryUIController.RefreshInventory();
+
+        zoomOpen = true;
+
+        Debug.Log("Tepak Sirih berhasil diperoleh dan masuk inventory.");
+    }
+
+    public void ClickTepakSirihInventory()
+    {
+        if (!NiskalaProgress.tepakSirihCollected)
+            return;
+
+        if (IsInteractionBlocked())
+            return;
+
+        OpenTepakSirihZoom();
+    }
+
+    private void OpenTepakSirihZoom()
+    {
+        if (tepakSirihZoom != null)
+            tepakSirihZoom.SetActive(true);
+
+        if (buttonInvestigasiArtefak != null)
+            buttonInvestigasiArtefak.SetActive(true);
+
+        zoomOpen = true;
+        SetArrowBack(true);
+
+        Debug.Log("Tepak Sirih dibuka dari inventory.");
+    }
+
     // =========================================
     // ZOOM
     // =========================================
@@ -202,6 +364,25 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
         {
             kainZoom.SetActive(false);
             SetActiveSafe(kain, true);
+        }
+
+        if (messyTepakSirihZoom != null &&
+            messyTepakSirihZoom.activeSelf)
+        {
+            messyTepakSirihZoom.SetActive(false);
+
+            if (!NiskalaProgress.tepakSirihCollected)
+                SetActiveSafe(tepakSirih, true);
+        }
+
+        if (tepakSirihZoom != null &&
+            tepakSirihZoom.activeSelf)
+        {
+            tepakSirihZoom.SetActive(false);
+
+            // Sembunyikan tombol investigasi
+            // ketika tampilan Tepak Sirih ditutup.
+            SetActiveSafe(buttonInvestigasiArtefak, false);
         }
 
         zoomOpen = false;
