@@ -55,6 +55,13 @@ public static class NiskalaProgress
     public static bool gelasClickedOnce;
     public static bool tempayanClickedOnce;
 
+    // =========================================
+    // RUANG TENGAH
+    // =========================================
+
+    public static bool patungClickedOnce;
+    public static bool kainClickedOnce;
+
 
     // =========================================
     // RESET SELURUH PROGRES
@@ -93,5 +100,9 @@ public static class NiskalaProgress
         alatMakanClickedOnce = false;
         gelasClickedOnce = false;
         tempayanClickedOnce = false;
+
+        // Ruang Tengah
+        patungClickedOnce = false;
+        kainClickedOnce = false;
     }
 }

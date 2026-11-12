@@ -31,6 +31,7 @@ public class RoomViewController : MonoBehaviour
     [SerializeField] private RoomController roomController;
     [SerializeField] private RuangTamuInteraction ruangTamuInteraction;
     [SerializeField] private RuangMakanInteraction ruangMakanInteraction;
+    [SerializeField] private RuangTengahInteraction ruangTengahInteraction;
 
     private void Start()
     {
@@ -77,6 +78,13 @@ public class RoomViewController : MonoBehaviour
         // Cek interaksi RuangMakan
         if (ruangMakanInteraction != null &&
             ruangMakanInteraction.IsInteractionBlocked())
+        {
+            return false;
+        }
+
+        // Cek interaksi Ruang Tengah.
+        if (ruangTengahInteraction != null &&
+            ruangTengahInteraction.IsInteractionBlocked())
         {
             return false;
         }
