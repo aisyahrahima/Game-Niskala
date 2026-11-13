@@ -7,6 +7,10 @@ public static class NiskalaProgress
     public static bool tepakSirihCollected;
     public static bool bakulCollected;
     public static bool catatanCikSimaCollected;
+    // Status investigasi artefak
+    public static bool tepakSirihInvestigated;
+    public static bool bakulInvestigated;
+    public static bool catatanCikSimaInvestigated;
 
 
     // =========================================
@@ -74,6 +78,11 @@ public static class NiskalaProgress
         tepakSirihCollected = false;
         bakulCollected = false;
         catatanCikSimaCollected = false;
+
+        // Status investigasi artefak
+        tepakSirihInvestigated = false;
+        bakulInvestigated = false;
+        catatanCikSimaInvestigated = false;
 
         // Ruang Penyimpanan
         gentongClickCount = 0;

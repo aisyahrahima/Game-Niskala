@@ -119,21 +119,29 @@ public class StorageRoomInteraction : MonoBehaviour
 
     private bool IsInteractionBlocked()
     {
-        // Jangan izinkan interaksi saat event atau dialog berlangsung.
+        // Blokir interaksi saat Zoom artefak terbuka.
+        if (artifactZoomController != null &&
+            artifactZoomController.IsArtifactZoomOpen)
+        {
+            return true;
+        }
+
+        // Jangan izinkan interaksi saat event berlangsung.
         if (eventRunning)
             return true;
 
+        // Jangan izinkan interaksi saat dialog berlangsung.
         if (dialogueSystem != null &&
             dialogueSystem.IsDialogueActive)
         {
             return true;
         }
 
-        // Jangan izinkan interaksi saat zoom Catatan terbuka.
+        // Jangan izinkan interaksi saat Zoom Catatan terbuka.
         if (catatanZoom != null && catatanZoom.activeSelf)
             return true;
 
-        // Jangan izinkan interaksi objek lain saat zoom Bakul terbuka.
+        // Jangan izinkan interaksi saat Zoom Bakul terbuka.
         if (bakulZoom != null && bakulZoom.activeSelf)
             return true;
 

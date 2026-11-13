@@ -35,6 +35,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RuangTengah.unity
     guid: cb0eebdaa7484e9428a605fd9ab12832
+  - enabled: 1
+    path: Assets/Scenes/LoreFragmentA.unity
+    guid: fd861b9916b0ff6489f782019d74acc5
+  - enabled: 1
+    path: Assets/Scenes/LoreFragmentB.unity
+    guid: 25e7e400f491f0f4e8b378b7850c9ea0
+  - enabled: 1
+    path: Assets/Scenes/LoreFragmentC.unity
+    guid: eee32d8140e74434fb42f9bb13ae7d65
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

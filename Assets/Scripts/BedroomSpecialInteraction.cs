@@ -34,6 +34,9 @@ public class BedroomSpecialInteractions : MonoBehaviour
     [Header("Controller Lemari")]
     [SerializeField] private BedroomLockerController lockerController;
 
+    [Header("Artifact Zoom")]
+    [SerializeField] private ArtifactZoomController artifactZoomController;
+
     private bool scarfAlreadyClicked;
     private bool scarfSequenceActive;
     private bool mirrorClickedOnce;
@@ -473,6 +476,12 @@ public class BedroomSpecialInteractions : MonoBehaviour
 
     public bool IsInteractionBlocked()
     {
+        if (artifactZoomController != null &&
+            artifactZoomController.IsArtifactZoomOpen)
+        {
+            return true;
+        }
+
         // Event atau dialog khusus masih berjalan.
         if (interactionBusy)
             return true;

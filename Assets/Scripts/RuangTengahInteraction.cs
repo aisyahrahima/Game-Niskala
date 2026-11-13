@@ -498,11 +498,18 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
 
     public bool IsInteractionBlocked()
     {
+        // Blokir interaksi saat Zoom artefak terbuka.
+        if (artifactZoomController != null &&
+            artifactZoomController.IsArtifactZoomOpen)
+        {
+            return true;
+        }
+
         // Blokir saat event sedang berlangsung.
         if (interactionBusy)
             return true;
 
-        // Blokir saat Zoom terbuka.
+        // Blokir saat Zoom objek ruangan terbuka.
         if (zoomOpen)
             return true;
 
