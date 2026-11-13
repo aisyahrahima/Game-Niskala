@@ -45,6 +45,9 @@ public class StorageRoomInteraction : MonoBehaviour
     [Header("Inventory UI")]
     [SerializeField] private InventoryUIController inventoryUIController;
 
+    [Header("Artifact Zoom")]
+    [SerializeField] private ArtifactZoomController artifactZoomController;
+
     private bool eventRunning;
     private string currentEvent = "";
     private int gentongClickCount;
@@ -782,7 +785,14 @@ public class StorageRoomInteraction : MonoBehaviour
         if (eventRunning)
             return;
 
-        // Prioritas 1: tutup zoom Bakul.
+        // Prioritas pertama: tutup zoom inventory.
+        if (artifactZoomController != null &&
+            artifactZoomController.TryCloseArtifactZoom())
+        {
+            return;
+        }
+
+        // Prioritas berikutnya: tutup zoom Bakul.
         if (bakulZoom != null && bakulZoom.activeSelf)
         {
             CloseBakulZoom();

@@ -49,6 +49,9 @@ public class BedroomLockerController : MonoBehaviour
     [Header("Inventory UI")]
     [SerializeField] private InventoryUIController inventoryUIController;
 
+    [Header("Artifact Zoom")]
+    [SerializeField] private ArtifactZoomController artifactZoomController;
+
     private readonly int[] correctCode = { 7, 3, 1, 8 };
 
     private int[] currentCode = { 1, 1, 1, 1 };
@@ -577,6 +580,13 @@ public class BedroomLockerController : MonoBehaviour
 
     public void ClickArrowBack()
     {
+        // Prioritas pertama: tutup zoom dari inventory.
+        if (artifactZoomController != null &&
+            artifactZoomController.TryCloseArtifactZoom())
+        {
+            return;
+        }
+
         if (specialInteractions != null &&
             specialInteractions.TryCloseSpecialZoom())
         {

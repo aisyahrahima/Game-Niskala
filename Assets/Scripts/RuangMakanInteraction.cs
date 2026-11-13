@@ -10,6 +10,9 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
     [Header("Arrow Back")]
     [SerializeField] private GameObject arrowBack;
 
+    [Header("Artifact Zoom")]
+    [SerializeField] private ArtifactZoomController artifactZoomController;
+
     [Header("Alat Makan")]
     [SerializeField] private GameObject alatMakan;
     [SerializeField] private GameObject alatMakanZoom;
@@ -199,6 +202,13 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
     {
         if (interactionBusy)
             return;
+
+        // Tutup zoom inventory terlebih dahulu.
+        if (artifactZoomController != null &&
+            artifactZoomController.TryCloseArtifactZoom())
+        {
+            return;
+        }
 
         // Jika zoom sedang terbuka, tutup zoom terlebih dahulu.
         if (zoomOpen)

@@ -32,6 +32,7 @@ public class RoomViewController : MonoBehaviour
     [SerializeField] private RuangTamuInteraction ruangTamuInteraction;
     [SerializeField] private RuangMakanInteraction ruangMakanInteraction;
     [SerializeField] private RuangTengahInteraction ruangTengahInteraction;
+    [SerializeField] private ArtifactZoomController artifactZoomController;
 
     private void Start()
     {
@@ -40,6 +41,13 @@ public class RoomViewController : MonoBehaviour
 
     public bool CanChangeView()
     {
+        // Blokir perpindahan tampilan saat zoom artefak terbuka.
+        if (artifactZoomController != null &&
+            artifactZoomController.IsArtifactZoomOpen)
+        {
+            return false;
+        }
+
         // Cek interaksi khusus KamarTidur
         if (specialInteractions != null &&
             specialInteractions.IsInteractionBlocked())

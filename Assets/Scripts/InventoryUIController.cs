@@ -8,19 +8,23 @@ public class InventoryUIController : MonoBehaviour
     [SerializeField] private GameObject bakulIcon;
     [SerializeField] private GameObject catatanIcon;
 
-    [Header("Room Controllers")]
-    [SerializeField] private StorageRoomInteraction storageController;
-    [SerializeField] private BedroomLockerController bedroomController;
-    [SerializeField] private RuangTengahInteraction roomTengahController;
+    [Header("Artifact Zoom Controller")]
+    [SerializeField] private ArtifactZoomController artifactZoomController;
 
     private void Start()
     {
+        // Atur tampilan inventory sesuai progres.
         RefreshInventory();
 
+        // Hubungkan ketiga tombol inventory.
+        SetupTepakSirihButton();
         SetupBakulButton();
         SetupCatatanButton();
-        SetupTepakSirihButton();
     }
+
+    // =========================================
+    // REFRESH INVENTORY
+    // =========================================
 
     public void RefreshInventory()
     {
@@ -30,13 +34,14 @@ public class InventoryUIController : MonoBehaviour
                 NiskalaProgress.tepakSirihCollected
             );
 
-            Button button = tepakSirihIcon.GetComponent<Button>();
+            Button button =
+                tepakSirihIcon.GetComponent<Button>();
 
             if (button != null)
             {
                 button.interactable =
                     NiskalaProgress.tepakSirihCollected &&
-                    roomTengahController != null;
+                    artifactZoomController != null;
             }
         }
 
@@ -46,13 +51,14 @@ public class InventoryUIController : MonoBehaviour
                 NiskalaProgress.bakulCollected
             );
 
-            Button button = bakulIcon.GetComponent<Button>();
+            Button button =
+                bakulIcon.GetComponent<Button>();
 
             if (button != null)
             {
                 button.interactable =
                     NiskalaProgress.bakulCollected &&
-                    storageController != null;
+                    artifactZoomController != null;
             }
         }
 
@@ -62,77 +68,32 @@ public class InventoryUIController : MonoBehaviour
                 NiskalaProgress.catatanCikSimaCollected
             );
 
-            Button button = catatanIcon.GetComponent<Button>();
+            Button button =
+                catatanIcon.GetComponent<Button>();
 
             if (button != null)
             {
                 button.interactable =
                     NiskalaProgress.catatanCikSimaCollected &&
-                    bedroomController != null;
+                    artifactZoomController != null;
             }
         }
     }
 
-    private void SetupBakulButton()
-    {
-        if (bakulIcon == null)
-            return;
-
-        Button button = bakulIcon.GetComponent<Button>();
-
-        if (button == null)
-        {
-            Debug.LogWarning(
-                "Bakul_Inventory belum memiliki Button."
-            );
-            return;
-        }
-
-        button.interactable =
-            NiskalaProgress.bakulCollected &&
-            storageController != null;
-
-        if (storageController != null)
-        {
-            button.onClick.AddListener(
-                storageController.ClickBakulInventory
-            );
-        }
-    }
-
-    private void SetupCatatanButton()
-    {
-        if (catatanIcon == null)
-            return;
-
-        Button button = catatanIcon.GetComponent<Button>();
-
-        if (button == null)
-        {
-            Debug.LogWarning(
-                "Catatan_CikSima_Inventory belum memiliki Button."
-            );
-            return;
-        }
-
-        button.interactable =
-            NiskalaProgress.catatanCikSimaCollected &&
-            bedroomController != null;
-
-        if (bedroomController != null)
-        {
-            button.onClick.AddListener(
-                bedroomController.ClickCatatanCikSimaInventory
-            );
-        }
-    }
+    // =========================================
+    // SETUP BUTTON TEPAK SIRIH
+    // =========================================
 
     private void SetupTepakSirihButton()
     {
-        if (tepakSirihIcon == null)
+        if (tepakSirihIcon == null ||
+            artifactZoomController == null)
+        {
             return;
+        }
 
-        Button button = tepakSirihIcon.GetComponent<Button>();
+        Button button =
+            tepakSirihIcon.GetComponent<Button>();
 
         if (button == null)
         {
@@ -142,15 +103,76 @@ public class InventoryUIController : MonoBehaviour
             return;
         }
 
-        button.interactable =
-            NiskalaProgress.tepakSirihCollected &&
-            roomTengahController != null;
+        button.onClick.RemoveListener(
+            artifactZoomController.OpenTepakSirihZoom
+        );
 
-        if (roomTengahController != null)
+        button.onClick.AddListener(
+            artifactZoomController.OpenTepakSirihZoom
+        );
+    }
+
+    // =========================================
+    // SETUP BUTTON BAKUL
+    // =========================================
+
+    private void SetupBakulButton()
+    {
+        if (bakulIcon == null ||
+            artifactZoomController == null)
         {
-            button.onClick.AddListener(
-                roomTengahController.ClickTepakSirihInventory
-            );
+            return;
         }
+
+        Button button =
+            bakulIcon.GetComponent<Button>();
+
+        if (button == null)
+        {
+            Debug.LogWarning(
+                "Bakul_Inventory belum memiliki Button."
+            );
+            return;
+        }
+
+        button.onClick.RemoveListener(
+            artifactZoomController.OpenBakulZoom
+        );
+
+        button.onClick.AddListener(
+            artifactZoomController.OpenBakulZoom
+        );
+    }
+
+    // =========================================
+    // SETUP BUTTON CATATAN CIK SIMA
+    // =========================================
+
+    private void SetupCatatanButton()
+    {
+        if (catatanIcon == null ||
+            artifactZoomController == null)
+        {
+            return;
+        }
+
+        Button button =
+            catatanIcon.GetComponent<Button>();
+
+        if (button == null)
+        {
+            Debug.LogWarning(
+                "Catatan_CikSima_Inventory belum memiliki Button."
+            );
+            return;
+        }
+
+        button.onClick.RemoveListener(
+            artifactZoomController.OpenCatatanCikSimaZoom
+        );
+
+        button.onClick.AddListener(
+            artifactZoomController.OpenCatatanCikSimaZoom
+        );
     }
 }

@@ -10,6 +10,9 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     [Header("Arrow Back")]
     [SerializeField] private GameObject arrowBack;
 
+    [Header("Artifact Zoom")]
+    [SerializeField] private ArtifactZoomController artifactZoomController;
+
     [Header("Lukisan")]
     [SerializeField] private GameObject lukisan;
     [SerializeField] private GameObject lukisanZoom;
@@ -445,6 +448,13 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     {
         if (interactionBusy)
             return;
+
+        // Prioritaskan penutupan zoom dari inventory.
+        if (artifactZoomController != null &&
+            artifactZoomController.TryCloseArtifactZoom())
+        {
+            return;
+        }
 
         if (!zoomOpen)
             return;

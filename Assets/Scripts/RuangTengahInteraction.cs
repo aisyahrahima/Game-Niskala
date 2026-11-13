@@ -9,6 +9,9 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
     [Header("Arrow Back")]
     [SerializeField] private GameObject arrowBack;
 
+    [Header("Artifact Zoom")]
+    [SerializeField] private ArtifactZoomController artifactZoomController;
+
     [Header("Pengaturan Perpindahan Ruangan")]
     [SerializeField] private string previousSceneName = "RuangMakan";
 
@@ -403,14 +406,27 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
         if (interactionBusy)
             return;
 
-        // Jika Zoom terbuka, tutup Zoom terlebih dahulu.
+        // Tutup Zoom artefak inventory terlebih dahulu.
+        if (artifactZoomController != null &&
+            artifactZoomController.TryCloseArtifactZoom())
+        {
+            // Pastikan status Zoom Ruang Tengah ikut diperbarui.
+            zoomOpen = false;
+
+            // ArrowBack tetap ditampilkan untuk kembali ke ruangan sebelumnya.
+            SetArrowBack(true);
+
+            return;
+        }
+
+        // Jika Zoom objek ruangan masih terbuka, tutup Zoom terlebih dahulu.
         if (zoomOpen)
         {
             CloseAllZoom();
             return;
         }
 
-        // Jika tidak ada Zoom, kembali ke Ruang Makan.
+        // Jika tidak ada Zoom yang terbuka, kembali ke Ruang Makan.
         if (SceneTransitionManager.Instance != null)
         {
             SceneTransitionManager.Instance.LoadScene(
