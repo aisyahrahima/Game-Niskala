@@ -294,8 +294,7 @@ public class LoreOrderPuzzleController : MonoBehaviour
     {
         string[] lines =
         {
-            "Kurasa ini sudah sesuai.",
-            "Sekarang aku tahu apa yang telah terjadi."
+            "Kurasa ini sudah sesuai."
         };
 
         bool started = dialogueSystem.StartDialogue(
