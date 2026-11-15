@@ -165,6 +165,28 @@ public class ArtifactZoomController : MonoBehaviour
             return;
         }
 
+        // Periksa apakah ketiga artefak sudah diinvestigasi.
+        bool allArtifactsInvestigated =
+            NiskalaProgress.tepakSirihInvestigated &&
+            NiskalaProgress.bakulInvestigated &&
+            NiskalaProgress.catatanCikSimaInvestigated;
+
+        // Jika ini investigasi artefak ketiga,
+        // simpan ruangan tempat investigasi dilakukan.
+        if (allArtifactsInvestigated)
+        {
+            LoreOrderFlow.returnRoomAfterFullLore =
+                SceneManager.GetActiveScene().name;
+
+            LoreOrderFlow.pendingFullLoreReturn = true;
+
+            Debug.Log(
+                "Ketiga artefak sudah diinvestigasi. " +
+                "Ruangan terakhir: " +
+                LoreOrderFlow.returnRoomAfterFullLore
+            );
+        }
+
         // Simpan kondisi ArrowBack sebelum berpindah scene.
         ArtifactLoreFlow.arrowBackPreviousState =
             arrowBackStateSaved
@@ -264,10 +286,11 @@ public class ArtifactZoomController : MonoBehaviour
 
     private IEnumerator PlayArtifactReturnDialogue()
     {
-        // Tunggu sampai DialogueSystem tersedia di scene asal.
+        // Tunggu sampai DialogueSystem tersedia.
         int waitFrame = 0;
 
-        while (DialogueSystem.Instance == null && waitFrame < 120)
+        while (DialogueSystem.Instance == null &&
+               waitFrame < 120)
         {
             waitFrame++;
             yield return null;
@@ -279,7 +302,6 @@ public class ArtifactZoomController : MonoBehaviour
                 "DialogueSystem tidak ditemukan setelah kembali dari LoreFragment."
             );
 
-            // Aktifkan kembali ArrowBack jika DialogueSystem tidak ditemukan.
             if (arrowBack != null)
                 arrowBack.SetActive(true);
 
@@ -288,6 +310,7 @@ public class ArtifactZoomController : MonoBehaviour
 
         string[] lines = null;
 
+        // Tentukan dialog berdasarkan artefak.
         switch (ArtifactLoreFlow.artifactID)
         {
             case "TepakSirih":
@@ -328,7 +351,7 @@ public class ArtifactZoomController : MonoBehaviour
             yield break;
         }
 
-        // Nonaktifkan ArrowBack sebelum dialog dimulai.
+        // Nonaktifkan ArrowBack selama dialog.
         if (arrowBack != null)
             arrowBack.SetActive(false);
 
@@ -343,25 +366,43 @@ public class ArtifactZoomController : MonoBehaviour
                 "Dialog setelah LoreFragment gagal dimulai."
             );
 
-            // Aktifkan kembali ArrowBack jika dialog gagal dimulai.
             if (arrowBack != null)
                 arrowBack.SetActive(true);
 
             yield break;
         }
 
-        // Tunggu sampai seluruh dialog selesai.
+        // Tunggu sampai dialog selesai.
         while (DialogueSystem.Instance != null &&
                DialogueSystem.Instance.IsDialogueActive)
         {
             yield return null;
         }
 
-        // Aktifkan kembali ArrowBack setelah dialog selesai.
+        // Aktifkan kembali ArrowBack.
+        // Pemain harus menutup zoom secara manual.
         if (arrowBack != null)
             arrowBack.SetActive(true);
 
-        // Bersihkan status setelah dialog selesai.
+        // Periksa apakah ketiga artefak sudah diinvestigasi.
+        bool allArtifactsInvestigated =
+            NiskalaProgress.tepakSirihInvestigated &&
+            NiskalaProgress.bakulInvestigated &&
+            NiskalaProgress.catatanCikSimaInvestigated;
+
+        // Tandai bahwa pemain harus menutup zoom
+        // sebelum melanjutkan ke LoreOrder.
+        if (allArtifactsInvestigated)
+        {
+            LoreOrderFlow.pendingLoreOrderIntro = true;
+
+            Debug.Log(
+                "Ketiga artefak sudah diinvestigasi. " +
+                "Menunggu pemain menutup Zoom artefak."
+            );
+        }
+
+        // Bersihkan data investigasi LoreFragment.
         ArtifactLoreFlow.Clear();
 
         Debug.Log(
@@ -431,8 +472,6 @@ public class ArtifactZoomController : MonoBehaviour
     public bool TryCloseArtifactZoom()
     {
         // Cari objek zoom yang aktif.
-        // Berguna jika sebelumnya zoom diaktifkan
-        // langsung oleh controller ruangan.
         if (activeZoom == null || !activeZoom.activeSelf)
         {
             activeZoom = FindActiveArtifactZoom();
@@ -441,9 +480,10 @@ public class ArtifactZoomController : MonoBehaviour
         if (activeZoom == null)
             return false;
 
+        // Tutup seluruh Zoom artefak.
         CloseCurrentArtifactZoom();
 
-        // Kembalikan ArrowBack ke kondisi sebelum zoom.
+        // Kembalikan ArrowBack ke kondisi sebelum Zoom dibuka.
         if (arrowBack != null && arrowBackStateSaved)
         {
             arrowBack.SetActive(arrowBackPreviousState);
@@ -453,7 +493,99 @@ public class ArtifactZoomController : MonoBehaviour
 
         Debug.Log("Artifact Zoom berhasil ditutup.");
 
+        // Jika ketiga artefak sudah diinvestigasi,
+        // mulai dialog pengantar menuju LoreOrder.
+        if (LoreOrderFlow.pendingLoreOrderIntro)
+        {
+            StartCoroutine(PlayLoreOrderTransitionDialogue());
+        }
+
         return true;
+    }
+
+    private IEnumerator PlayLoreOrderTransitionDialogue()
+    {
+        // Pastikan Zoom sudah benar-benar tertutup.
+        if (IsAnyArtifactZoomActive())
+            yield break;
+
+        // Nonaktifkan ArrowBack selama dialog berlangsung.
+        if (arrowBack != null)
+            arrowBack.SetActive(false);
+
+        // Tunggu sampai DialogueSystem tersedia.
+        int waitFrame = 0;
+
+        while (DialogueSystem.Instance == null &&
+               waitFrame < 120)
+        {
+            waitFrame++;
+            yield return null;
+        }
+
+        if (DialogueSystem.Instance == null)
+        {
+            Debug.LogError(
+                "DialogueSystem tidak ditemukan untuk dialog pengantar LoreOrder."
+            );
+
+            if (arrowBack != null)
+                arrowBack.SetActive(true);
+
+            yield break;
+        }
+
+        string[] lines =
+        {
+        "Aku sudah menemukan tiga artefak yang tampaknya saling berkaitan.",
+        "Setiap benda mengungkap sedikit demi sedikit kejadian di masa lalu."
+    };
+
+        bool started = DialogueSystem.Instance.StartDialogue(
+            "Arka",
+            lines
+        );
+
+        if (!started)
+        {
+            Debug.LogError(
+                "Dialog pengantar LoreOrder gagal dimulai."
+            );
+
+            if (arrowBack != null)
+                arrowBack.SetActive(true);
+
+            yield break;
+        }
+
+        // Tunggu sampai kedua dialog selesai.
+        while (DialogueSystem.Instance != null &&
+               DialogueSystem.Instance.IsDialogueActive)
+        {
+            yield return null;
+        }
+
+        Debug.Log(
+            "Dialog pengantar LoreOrder selesai. Berpindah scene."
+        );
+
+        // Bersihkan penanda agar dialog tidak terulang.
+        LoreOrderFlow.pendingLoreOrderIntro = false;
+
+        // Pindah ke scene LoreOrder.
+        if (SceneTransitionManager.Instance != null)
+        {
+            SceneTransitionManager.Instance.LoadScene("LoreOrder");
+        }
+        else
+        {
+            Debug.LogError(
+                "SceneTransitionManager tidak ditemukan."
+            );
+
+            if (arrowBack != null)
+                arrowBack.SetActive(true);
+        }
     }
 
     private void CloseCurrentArtifactZoom()

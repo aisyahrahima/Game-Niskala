@@ -328,6 +328,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+--- !u!114 &70477112 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1106840051104428505, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+  m_PrefabInstance: {fileID: 70477111}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292443d6bfa912d4dafead3ec34346e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueSystem
 --- !u!1 &131719400
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,6 +775,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 251685235}
   m_CullTransparentMesh: 1
+--- !u!1 &350922509
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 350922511}
+  - component: {fileID: 350922510}
+  m_Layer: 0
+  m_Name: LoreOrderManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &350922510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350922509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f058fd7cd43dfb4e9042522247f226e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoreOrderPuzzleController
+  dialogueSystem: {fileID: 70477112}
+  dragItems:
+  - {fileID: 1544530551}
+  - {fileID: 1279755755}
+  - {fileID: 757656623}
+  dropZones:
+  - {fileID: 1722324054}
+  - {fileID: 1192735156}
+  - {fileID: 1803939659}
+  buttonPeriksa: {fileID: 648871681}
+  fullLoreSceneName: FullLore
+--- !u!4 &350922511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 350922509}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 343.02158, y: 223.65956, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &360381640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1298,7 +1364,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 648871684}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 350922510}
+        m_TargetAssemblyTypeName: LoreOrderPuzzleController, Assembly-CSharp
+        m_MethodName: CheckPuzzle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &648871684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1709,6 +1787,7 @@ GameObject:
   m_Component:
   - component: {fileID: 757656621}
   - component: {fileID: 757656622}
+  - component: {fileID: 757656623}
   m_Layer: 5
   m_Name: Teks3
   m_TagString: Untagged
@@ -1745,6 +1824,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 757656620}
   m_CullTransparentMesh: 1
+--- !u!114 &757656623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757656620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5c2cbf2cc9e974e88483b6bd6199b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoreOrderDragItem
+  itemID: Teks3
+  puzzleController: {fileID: 350922510}
 --- !u!1 &785606125
 GameObject:
   m_ObjectHideFlags: 0
@@ -2181,6 +2274,7 @@ GameObject:
   - component: {fileID: 1192735153}
   - component: {fileID: 1192735155}
   - component: {fileID: 1192735154}
+  - component: {fileID: 1192735156}
   m_Layer: 5
   m_Name: DropZone_Teks2
   m_TagString: Untagged
@@ -2245,6 +2339,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1192735152}
   m_CullTransparentMesh: 1
+--- !u!114 &1192735156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1192735152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec521e83f77bd364da528f3cbd7ba013, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoreOrderDropZone
+  expectedItemID: Teks2
+  puzzleController: {fileID: 350922510}
 --- !u!224 &1259700548 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3937530823372930614, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
@@ -2260,6 +2368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1279755753}
   - component: {fileID: 1279755754}
+  - component: {fileID: 1279755755}
   m_Layer: 5
   m_Name: Teks2
   m_TagString: Untagged
@@ -2296,6 +2405,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1279755752}
   m_CullTransparentMesh: 1
+--- !u!114 &1279755755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279755752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5c2cbf2cc9e974e88483b6bd6199b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoreOrderDragItem
+  itemID: Teks2
+  puzzleController: {fileID: 350922510}
 --- !u!1 &1378083075
 GameObject:
   m_ObjectHideFlags: 0
@@ -2482,6 +2605,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1544530549}
   - component: {fileID: 1544530550}
+  - component: {fileID: 1544530551}
   m_Layer: 5
   m_Name: Teks1
   m_TagString: Untagged
@@ -2518,6 +2642,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1544530548}
   m_CullTransparentMesh: 1
+--- !u!114 &1544530551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544530548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5c2cbf2cc9e974e88483b6bd6199b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoreOrderDragItem
+  itemID: Teks1
+  puzzleController: {fileID: 350922510}
 --- !u!1 &1561704072
 GameObject:
   m_ObjectHideFlags: 0
@@ -2775,6 +2913,7 @@ GameObject:
   - component: {fileID: 1722324051}
   - component: {fileID: 1722324053}
   - component: {fileID: 1722324052}
+  - component: {fileID: 1722324054}
   m_Layer: 5
   m_Name: DropZone_Teks1
   m_TagString: Untagged
@@ -2839,6 +2978,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1722324050}
   m_CullTransparentMesh: 1
+--- !u!114 &1722324054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722324050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec521e83f77bd364da528f3cbd7ba013, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoreOrderDropZone
+  expectedItemID: Teks1
+  puzzleController: {fileID: 350922510}
 --- !u!1 &1803939655
 GameObject:
   m_ObjectHideFlags: 0
@@ -2850,6 +3003,7 @@ GameObject:
   - component: {fileID: 1803939656}
   - component: {fileID: 1803939658}
   - component: {fileID: 1803939657}
+  - component: {fileID: 1803939659}
   m_Layer: 5
   m_Name: DropZone_Teks3
   m_TagString: Untagged
@@ -2914,6 +3068,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1803939655}
   m_CullTransparentMesh: 1
+--- !u!114 &1803939659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803939655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec521e83f77bd364da528f3cbd7ba013, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoreOrderDropZone
+  expectedItemID: Teks3
+  puzzleController: {fileID: 350922510}
 --- !u!1 &1806388715
 GameObject:
   m_ObjectHideFlags: 0
@@ -3194,4 +3362,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 1656013931}
   - {fileID: 360381644}
+  - {fileID: 350922511}
   - {fileID: 1561704075}

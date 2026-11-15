@@ -116,5 +116,9 @@ public static class NiskalaProgress
         kainClickedOnce = false;
         tepakSirihPuzzleCompleted = false;
         tepakSirihIntroShown = false;
+
+        // Reset alur investigasi dan LoreOrder.
+        ArtifactLoreFlow.Clear();
+        LoreOrderFlow.Clear();
     }
 }
