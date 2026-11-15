@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class StorageRoomInteraction : MonoBehaviour
+public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
 {
     [Header("Catatan")]
     [SerializeField] private GameObject catatan;
@@ -117,7 +117,7 @@ public class StorageRoomInteraction : MonoBehaviour
         );
     }
 
-    private bool IsInteractionBlocked()
+    public bool IsInteractionBlocked()
     {
         // Blokir interaksi saat Zoom artefak terbuka.
         if (artifactZoomController != null &&

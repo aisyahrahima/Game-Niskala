@@ -13,6 +13,10 @@ public class ArtifactZoomController : MonoBehaviour
     [SerializeField] private GameObject buttonInvestigasiArtefak;
     [SerializeField] private GameObject arrowBack;
 
+    [Header("Interaction Check")]
+    [SerializeField] private RoomController roomController;
+    [SerializeField] private MonoBehaviour roomInteractionController;
+
     private GameObject activeZoom;
 
     // Menyimpan kondisi ArrowBack sebelum zoom dibuka.
@@ -417,6 +421,40 @@ public class ArtifactZoomController : MonoBehaviour
 
     private void OpenArtifactZoom(GameObject zoomObject)
     {
+        // Blokir jika interaksi ruangan masih berlangsung.
+        if (roomController != null &&
+            roomController.IsBusy)
+        {
+            Debug.Log(
+                "Artefak inventory tidak dapat dibuka karena interaksi masih berlangsung."
+            );
+            return;
+        }
+
+        // Periksa apakah zoom atau interaksi objek ruangan masih aktif.
+        if (roomInteractionController != null)
+        {
+            IInteractionBlocker blocker =
+                roomInteractionController as IInteractionBlocker;
+
+            if (blocker == null)
+            {
+                Debug.LogError(
+                    "Room Interaction Controller tidak memiliki IInteractionBlocker."
+                );
+                return;
+            }
+
+            if (blocker.IsInteractionBlocked())
+            {
+                Debug.Log(
+                    "Artefak inventory tidak dapat dibuka karena zoom atau interaksi ruangan masih aktif."
+                );
+                return;
+            }
+        }
+
+        // Blokir jika dialog masih berlangsung.
         if (DialogueSystem.Instance != null &&
             DialogueSystem.Instance.IsDialogueActive)
         {
@@ -431,8 +469,7 @@ public class ArtifactZoomController : MonoBehaviour
             return;
         }
 
-        // Jika belum ada zoom yang terbuka,
-        // simpan kondisi awal ArrowBack.
+        // Simpan kondisi ArrowBack sebelum Zoom dibuka.
         if (!IsAnyArtifactZoomActive())
         {
             if (arrowBack != null)
@@ -444,8 +481,7 @@ public class ArtifactZoomController : MonoBehaviour
             }
         }
 
-        // Tutup zoom sebelumnya tanpa mengubah
-        // kondisi ArrowBack yang sudah disimpan.
+        // Tutup Zoom sebelumnya.
         CloseCurrentArtifactZoom();
 
         activeZoom = zoomObject;
@@ -455,8 +491,6 @@ public class ArtifactZoomController : MonoBehaviour
         if (buttonInvestigasiArtefak != null)
             buttonInvestigasiArtefak.SetActive(true);
 
-        // ArrowBack harus muncul selama zoom terbuka,
-        // termasuk ketika artefak dibuka di Ruang Tamu.
         if (arrowBack != null)
             arrowBack.SetActive(true);
 

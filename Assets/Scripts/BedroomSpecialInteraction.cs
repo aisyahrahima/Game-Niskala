@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class BedroomSpecialInteractions : MonoBehaviour
+public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
 {
     [Header("Cermin di Kamar")]
     [SerializeField] private GameObject mirrorRoom;

@@ -83,7 +83,10 @@ public class FullLorePlayer : MonoBehaviour
             "FullLore selesai. Kembali ke: " + targetScene
         );
 
-        // Bersihkan data setelah nama scene tujuan disimpan.
+        // Tandai bahwa pemain baru saja kembali dari FullLore.
+        NiskalaProgress.pendingFullLoreIntro = true;
+
+        // Bersihkan data perpindahan FullLore.
         LoreOrderFlow.Clear();
 
         if (SceneTransitionManager.Instance != null)

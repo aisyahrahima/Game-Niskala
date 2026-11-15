@@ -69,6 +69,12 @@ public static class NiskalaProgress
     public static bool tepakSirihIntroShown;
 
     // =========================================
+    // FINAL LORE INTRO
+    // =========================================
+
+    public static bool pendingFullLoreIntro;
+
+    // =========================================
     // RESET SELURUH PROGRES
     // =========================================
 
@@ -120,5 +126,7 @@ public static class NiskalaProgress
         // Reset alur investigasi dan LoreOrder.
         ArtifactLoreFlow.Clear();
         LoreOrderFlow.Clear();
+
+        pendingFullLoreIntro = false;
     }
 }
