@@ -1272,6 +1272,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2028413676}
     m_Modifications:
+    - target: {fileID: 346256660473863897, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1131987862048730757, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2394473815048997839, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1280,9 +1288,25 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2646358614770886372, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3161208300457738604, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3808856097278655863, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
       propertyPath: m_Name
       value: ChaseHideMayang
+      objectReference: {fileID: 0}
+    - target: {fileID: 3973882012257356159, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7034197190081927766, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7201696713031593166, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
       propertyPath: m_IsActive
@@ -1362,11 +1386,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7448371827145086305, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 40.341278
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7448371827145086305, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -30.035614
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7448371827145086305, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

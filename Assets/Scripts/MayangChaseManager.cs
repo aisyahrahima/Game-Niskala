@@ -14,6 +14,7 @@ public class MayangChaseManager : MonoBehaviour
     private bool chaseRunning;
     private bool isDangerPhase;
     private bool isPlayerHiding;
+    private bool failureSequenceActive;
 
     public bool IsChaseRunning => chaseRunning;
     public bool IsDangerPhase => isDangerPhase;
@@ -60,6 +61,7 @@ public class MayangChaseManager : MonoBehaviour
         chaseRunning = true;
         isDangerPhase = false;
         isPlayerHiding = false;
+        failureSequenceActive = false;
         phaseTimer = safeDuration;
 
         OnPhaseChanged?.Invoke(isDangerPhase);
@@ -89,26 +91,26 @@ public class MayangChaseManager : MonoBehaviour
             OnPhaseChanged?.Invoke(isDangerPhase);
 
             Debug.Log("Fase bahaya dimulai.");
-        }
-        else
-        {
-            // Fase bahaya berakhir.
-            // Periksa apakah Arka sedang bersembunyi.
 
+            // Periksa status persembunyian
+            // tepat ketika fase bahaya dimulai.
             if (!isPlayerHiding)
             {
-                Debug.Log("Arka tidak bersembunyi!");
+                Debug.Log("Arka tertangkap Mayang!");
 
                 StopChase();
 
-                OnChaseFailed?.Invoke();
+                failureSequenceActive = true;
 
-                HandleChaseFailed();
+                // Memulai animasi jumpscare.
+                OnChaseFailed?.Invoke();
 
                 return;
             }
-
-            // Arka berhasil selamat.
+        }
+        else
+        {
+            // Fase bahaya selesai dan Arka berhasil selamat.
             isDangerPhase = false;
             phaseTimer = safeDuration;
 
@@ -117,6 +119,18 @@ public class MayangChaseManager : MonoBehaviour
             Debug.Log("Arka berhasil selamat dari Mayang.");
             Debug.Log("Fase aman dimulai kembali.");
         }
+    }
+
+    public void CompleteChaseFailure()
+    {
+        if (!failureSequenceActive)
+            return;
+
+        failureSequenceActive = false;
+
+        Debug.Log("Animasi jumpscare selesai.");
+
+        HandleChaseFailed();
     }
 
     private void HandleChaseFailed()
