@@ -102,6 +102,9 @@ public class MayangChaseManager : MonoBehaviour
                 StopChase();
 
                 OnChaseFailed?.Invoke();
+
+                HandleChaseFailed();
+
                 return;
             }
 
@@ -113,6 +116,43 @@ public class MayangChaseManager : MonoBehaviour
 
             Debug.Log("Arka berhasil selamat dari Mayang.");
             Debug.Log("Fase aman dimulai kembali.");
+        }
+    }
+
+    private void HandleChaseFailed()
+    {
+        // Ambil nama scene checkpoint.
+        string checkpoint =
+            NiskalaProgress.chaseCheckpointScene;
+
+        // Pastikan checkpoint tersedia.
+        if (string.IsNullOrWhiteSpace(checkpoint))
+        {
+            Debug.LogError(
+                "Checkpoint pengejaran belum ditentukan."
+            );
+
+            return;
+        }
+
+        // Tandai bahwa pemain harus mengulang pengejaran.
+        NiskalaProgress.pendingChaseRetryIntro = true;
+
+        Debug.Log(
+            "Arka tertangkap. Kembali ke checkpoint: " +
+            checkpoint
+        );
+
+        // Kembali ke scene checkpoint.
+        if (SceneTransitionManager.Instance != null)
+        {
+            SceneTransitionManager.Instance.LoadScene(checkpoint);
+        }
+        else
+        {
+            Debug.LogError(
+                "SceneTransitionManager tidak ditemukan."
+            );
         }
     }
 
