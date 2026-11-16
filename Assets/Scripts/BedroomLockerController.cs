@@ -52,6 +52,9 @@ public class BedroomLockerController : MonoBehaviour
     [Header("Artifact Zoom")]
     [SerializeField] private ArtifactZoomController artifactZoomController;
 
+    [Header("Mayang Hide Spot")]
+    [SerializeField] private MayangHideSpot mayangHideSpot;
+
     private readonly int[] correctCode = { 7, 3, 1, 8 };
 
     private int[] currentCode = { 1, 1, 1, 1 };
@@ -580,6 +583,13 @@ public class BedroomLockerController : MonoBehaviour
 
     public void ClickArrowBack()
     {
+        // Jika Arka sedang bersembunyi, keluar dari POV terlebih dahulu.
+        if (mayangHideSpot != null && mayangHideSpot.IsHiding)
+        {
+            mayangHideSpot.ExitHideSpot();
+            return;
+        }
+
         // Prioritas pertama: tutup zoom dari inventory.
         if (artifactZoomController != null &&
             artifactZoomController.TryCloseArtifactZoom())

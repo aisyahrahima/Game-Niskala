@@ -592,10 +592,14 @@ public class ArtifactZoomController : MonoBehaviour
             yield break;
         }
 
-        // Tunggu sampai kedua dialog selesai.
+        // Tunggu sampai dialog selesai.
+        // Pastikan ArrowBack tetap nonaktif selama dialog berlangsung.
         while (DialogueSystem.Instance != null &&
                DialogueSystem.Instance.IsDialogueActive)
         {
+            if (arrowBack != null)
+                arrowBack.SetActive(false);
+
             yield return null;
         }
 

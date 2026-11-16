@@ -1,7 +1,7 @@
-
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class FullLoreReturnController : MonoBehaviour
 {
@@ -39,12 +39,32 @@ public class FullLoreReturnController : MonoBehaviour
 
     private void Start()
     {
+        dialogueSystem = DialogueSystem.Instance;
+
+        // Jika pemain baru saja tertangkap,
+        // tampilkan Petunjuk tanpa mengulang dialog cerita.
+        if (NiskalaProgress.pendingChaseRetryIntro)
+        {
+            NiskalaProgress.pendingChaseRetryIntro = false;
+
+            SetGameplayLocked(true);
+
+            if (arrowBack != null)
+                arrowBack.SetActive(false);
+
+            if (petunjuk != null)
+                petunjuk.SetActive(true);
+
+            Debug.Log("Pemain mengulang pengejaran. Menunggu tombol Mengerti.");
+
+            return;
+        }
+
+        // Jika bukan kembali dari FullLore, tidak perlu menjalankan intro.
         if (!NiskalaProgress.pendingFullLoreIntro)
             return;
 
         NiskalaProgress.pendingFullLoreIntro = false;
-
-        dialogueSystem = DialogueSystem.Instance;
 
         StartCoroutine(PlayFullLoreReturnSequence());
     }
@@ -225,15 +245,44 @@ public class FullLoreReturnController : MonoBehaviour
 
     private void OnButtonMengerti()
     {
+        // 1. Tutup pop-up Petunjuk.
         if (petunjuk != null)
             petunjuk.SetActive(false);
 
-        // Gameplay dapat dimainkan kembali.
+        // 2. Buka kembali gameplay.
         SetGameplayLocked(false);
+
+        // 3. Tampilkan ArrowBack hanya jika ada ruangan sebelumnya.
+        if (arrowBack != null)
+        {
+            string currentScene =
+                SceneManager.GetActiveScene().name;
+
+            arrowBack.SetActive(currentScene != "RuangTamu");
+        }
+
+        // 4. Simpan scene sebagai checkpoint.
+        NiskalaProgress.chaseCheckpointScene =
+            SceneManager.GetActiveScene().name;
+
+        // 5. Mulai pengejaran Mayang.
+        if (MayangChaseManager.Instance != null)
+        {
+            MayangChaseManager.Instance.StartChase();
+        }
+        else
+        {
+            Debug.LogError(
+                "MayangChaseManager tidak ditemukan."
+            );
+        }
 
         introRunning = false;
 
-        Debug.Log("Petunjuk ditutup. Gameplay dapat dilanjutkan.");
+        Debug.Log(
+            "Pengejaran dimulai dari checkpoint: " +
+            NiskalaProgress.chaseCheckpointScene
+        );
     }
 
     private void OnDestroy()

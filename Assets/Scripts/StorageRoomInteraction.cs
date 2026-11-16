@@ -89,7 +89,7 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
         );
     }
 
-    private void BeginStorageInteraction()
+    private void BeginStorageInteraction(string interactionName)
     {
         if (interactionEventActive)
             return;
@@ -99,7 +99,8 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
         GameEvents.RaiseInteractionStarted();
 
         Debug.Log(
-            "StorageRoomInteraction: Interaksi dimulai."
+            "StorageRoomInteraction: Interaksi dimulai - " +
+            interactionName
         );
     }
 
@@ -406,7 +407,7 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
         eventRunning = true;
         currentEvent = "Catatan";
 
-        BeginStorageInteraction();
+        BeginStorageInteraction("Catatan");
 
         catatan.SetActive(false);
         catatanZoom.SetActive(true);
@@ -461,7 +462,7 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
 
         eventRunning = true;
 
-        BeginStorageInteraction();
+        BeginStorageInteraction("Gentong");
 
         if (arrowBack != null)
             arrowBack.SetActive(false);
@@ -706,7 +707,7 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
         eventRunning = true;
         currentEvent = "BakulTerhalang";
 
-        BeginStorageInteraction();
+        BeginStorageInteraction("BakulTerhalang");
 
         if (arrowBack != null)
             arrowBack.SetActive(false);
@@ -757,7 +758,7 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
 
     private void OpenBakulZoom()
     {
-        BeginStorageInteraction();
+        BeginStorageInteraction("BakulZoom");
 
         bakulZoom.SetActive(true);
 
@@ -793,28 +794,28 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
         if (eventRunning)
             return;
 
-        // Prioritas pertama: tutup zoom inventory.
-        if (artifactZoomController != null &&
-            artifactZoomController.TryCloseArtifactZoom())
-        {
-            return;
-        }
-
-        // Prioritas berikutnya: tutup zoom Bakul.
+        // Prioritas 1: tutup Zoom Bakul.
         if (bakulZoom != null && bakulZoom.activeSelf)
         {
             CloseBakulZoom();
             return;
         }
 
-        // Prioritas 2: tutup zoom Catatan.
+        // Prioritas 2: tutup Zoom Catatan.
         if (catatanZoom != null && catatanZoom.activeSelf)
         {
             CloseCatatanZoom();
             return;
         }
 
-        // Prioritas 3: kembali ke Ruang Makan.
+        // Prioritas 3: tutup Zoom artefak inventory.
+        if (artifactZoomController != null &&
+            artifactZoomController.TryCloseArtifactZoom())
+        {
+            return;
+        }
+
+        // Prioritas 4: kembali ke Ruang Makan.
         if (SceneTransitionManager.Instance != null)
         {
             SceneTransitionManager.Instance.LoadScene("RuangMakan");

@@ -75,6 +75,22 @@ public static class NiskalaProgress
     public static bool pendingFullLoreIntro;
 
     // =========================================
+    // PENGEMBALIAN ARTEFAK
+    // =========================================
+
+    public static bool tepakSirihReturned;
+    public static bool bakulReturned;
+    public static bool catatanCikSimaReturned;
+
+    // =========================================
+    // PENGULANGAN PENGEJARAN
+    // =========================================
+
+    public static string chaseCheckpointScene;
+    public static bool pendingChaseRetryIntro;
+    public static bool chaseStarted;
+
+    // =========================================
     // RESET SELURUH PROGRES
     // =========================================
 
@@ -128,5 +144,13 @@ public static class NiskalaProgress
         LoreOrderFlow.Clear();
 
         pendingFullLoreIntro = false;
+
+        tepakSirihReturned = false;
+        bakulReturned = false;
+        catatanCikSimaReturned = false;
+
+        chaseCheckpointScene = "";
+        pendingChaseRetryIntro = false;
+        chaseStarted = false;
     }
 }

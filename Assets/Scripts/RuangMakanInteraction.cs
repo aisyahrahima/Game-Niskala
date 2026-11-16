@@ -25,6 +25,9 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
     [SerializeField] private GameObject tempayan;
     [SerializeField] private GameObject tempayanZoom;
 
+    [Header("Mayang Hide Spot")]
+    [SerializeField] private MayangHideSpot mayangHideSpot;
+
     private bool interactionBusy;
     private bool zoomOpen;
 
@@ -200,6 +203,13 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
 
     public void ClickArrowBack()
     {
+        // Jika Arka sedang bersembunyi, keluar dari POV terlebih dahulu.
+        if (mayangHideSpot != null && mayangHideSpot.IsHiding)
+        {
+            mayangHideSpot.ExitHideSpot();
+            return;
+        }
+
         if (interactionBusy)
             return;
 

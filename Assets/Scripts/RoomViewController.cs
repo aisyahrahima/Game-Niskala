@@ -33,6 +33,7 @@ public class RoomViewController : MonoBehaviour
     [SerializeField] private RuangMakanInteraction ruangMakanInteraction;
     [SerializeField] private RuangTengahInteraction ruangTengahInteraction;
     [SerializeField] private ArtifactZoomController artifactZoomController;
+    [SerializeField] private MayangHideSpot mayangHideSpot;
 
     private void Start()
     {
@@ -44,6 +45,13 @@ public class RoomViewController : MonoBehaviour
         // Blokir perpindahan tampilan saat zoom artefak terbuka.
         if (artifactZoomController != null &&
             artifactZoomController.IsArtifactZoomOpen)
+        {
+            return false;
+        }
+
+        // Blokir perpindahan tampilan ketika Arka bersembunyi.
+        if (mayangHideSpot != null &&
+            mayangHideSpot.IsHiding)
         {
             return false;
         }
