@@ -27,6 +27,10 @@ public class MayangCaptureJumpscare : MonoBehaviour
     [SerializeField] private float shakeDuration = 0.8f;
     [SerializeField] private float shakeStrength = 22f;
 
+    [Header("Penguncian Interaksi")]
+    [SerializeField] private CanvasGroup gameplayCanvasGroup;
+    [SerializeField] private CanvasGroup inventoryCanvasGroup;
+
     private MayangChaseManager chaseManager;
     private Coroutine jumpscareCoroutine;
     private Vector2 ancangHomePosition;
@@ -82,6 +86,9 @@ public class MayangCaptureJumpscare : MonoBehaviour
             return;
 
         isPlaying = true;
+
+        // Kunci seluruh interaksi gameplay.
+        LockGameplayInteractions();
 
         jumpscareCoroutine = StartCoroutine(
             PlayJumpscareSequence()
@@ -263,5 +270,22 @@ public class MayangCaptureJumpscare : MonoBehaviour
 
         if (gelapCanvasGroup != null)
             gelapCanvasGroup.alpha = 0f;
+    }
+
+    private void LockGameplayInteractions()
+    {
+        if (gameplayCanvasGroup != null)
+        {
+            gameplayCanvasGroup.interactable = false;
+            gameplayCanvasGroup.blocksRaycasts = false;
+        }
+
+        if (inventoryCanvasGroup != null)
+        {
+            inventoryCanvasGroup.interactable = false;
+            inventoryCanvasGroup.blocksRaycasts = false;
+        }
+
+        Debug.Log("Seluruh interaksi gameplay dikunci selama jumpscare.");
     }
 }
