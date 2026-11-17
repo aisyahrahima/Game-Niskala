@@ -169,6 +169,15 @@ public class MayangChaseManager : MonoBehaviour
             return;
         }
 
+        // Reset seluruh status pengembalian artefak.
+        NiskalaProgress.tepakSirihReturned = false;
+        NiskalaProgress.bakulReturned = false;
+        NiskalaProgress.catatanCikSimaReturned = false;
+
+        Debug.Log(
+            "Seluruh status pengembalian artefak direset."
+        );
+
         // Tandai bahwa pemain harus mengulang pengejaran.
         NiskalaProgress.pendingChaseRetryIntro = true;
 

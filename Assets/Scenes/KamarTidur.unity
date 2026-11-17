@@ -2318,6 +2318,7 @@ GameObject:
   - component: {fileID: 904628310}
   - component: {fileID: 904628309}
   - component: {fileID: 904628311}
+  - component: {fileID: 904628312}
   m_Layer: 0
   m_Name: Lemari_Opened
   m_TagString: Untagged
@@ -2438,6 +2439,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &904628312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904628307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02b713303cf0f544aacec9807703d523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactReturnDropZone
+  acceptedArtifactID: CatatanCikSima
+  resultObject: {fileID: 372381090}
+  targetToDeactivate: {fileID: 904628307}
+  disableTargetButtonDuringChase: 1
 --- !u!1 &906967994
 GameObject:
   m_ObjectHideFlags: 0

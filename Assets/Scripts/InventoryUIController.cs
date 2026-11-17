@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,15 +12,27 @@ public class InventoryUIController : MonoBehaviour
     [Header("Artifact Zoom Controller")]
     [SerializeField] private ArtifactZoomController artifactZoomController;
 
+    private bool lastChaseStarted;
+
     private void Start()
     {
-        // Atur tampilan inventory sesuai progres.
         RefreshInventory();
 
-        // Hubungkan ketiga tombol inventory.
         SetupTepakSirihButton();
         SetupBakulButton();
         SetupCatatanButton();
+
+        lastChaseStarted = NiskalaProgress.chaseStarted;
+    }
+
+    private void Update()
+    {
+        // Perbarui inventory ketika status pengejaran berubah.
+        if (lastChaseStarted != NiskalaProgress.chaseStarted)
+        {
+            lastChaseStarted = NiskalaProgress.chaseStarted;
+            RefreshInventory();
+        }
     }
 
     // =========================================
@@ -31,51 +44,57 @@ public class InventoryUIController : MonoBehaviour
         if (tepakSirihIcon != null)
         {
             tepakSirihIcon.SetActive(
-                NiskalaProgress.tepakSirihCollected
+                NiskalaProgress.tepakSirihCollected &&
+                !NiskalaProgress.tepakSirihReturned
             );
 
-            Button button =
-                tepakSirihIcon.GetComponent<Button>();
+            Button button = tepakSirihIcon.GetComponent<Button>();
 
             if (button != null)
             {
                 button.interactable =
                     NiskalaProgress.tepakSirihCollected &&
-                    artifactZoomController != null;
+                    !NiskalaProgress.tepakSirihReturned &&
+                    artifactZoomController != null &&
+                    !NiskalaProgress.chaseStarted;
             }
         }
 
         if (bakulIcon != null)
         {
             bakulIcon.SetActive(
-                NiskalaProgress.bakulCollected
+                NiskalaProgress.bakulCollected &&
+                !NiskalaProgress.bakulReturned
             );
 
-            Button button =
-                bakulIcon.GetComponent<Button>();
+            Button button = bakulIcon.GetComponent<Button>();
 
             if (button != null)
             {
                 button.interactable =
                     NiskalaProgress.bakulCollected &&
-                    artifactZoomController != null;
+                    !NiskalaProgress.bakulReturned &&
+                    artifactZoomController != null &&
+                    !NiskalaProgress.chaseStarted;
             }
         }
 
         if (catatanIcon != null)
         {
             catatanIcon.SetActive(
-                NiskalaProgress.catatanCikSimaCollected
+                NiskalaProgress.catatanCikSimaCollected &&
+                !NiskalaProgress.catatanCikSimaReturned
             );
 
-            Button button =
-                catatanIcon.GetComponent<Button>();
+            Button button = catatanIcon.GetComponent<Button>();
 
             if (button != null)
             {
                 button.interactable =
                     NiskalaProgress.catatanCikSimaCollected &&
-                    artifactZoomController != null;
+                    !NiskalaProgress.catatanCikSimaReturned &&
+                    artifactZoomController != null &&
+                    !NiskalaProgress.chaseStarted;
             }
         }
     }
@@ -92,8 +111,7 @@ public class InventoryUIController : MonoBehaviour
             return;
         }
 
-        Button button =
-            tepakSirihIcon.GetComponent<Button>();
+        Button button = tepakSirihIcon.GetComponent<Button>();
 
         if (button == null)
         {
@@ -124,8 +142,7 @@ public class InventoryUIController : MonoBehaviour
             return;
         }
 
-        Button button =
-            bakulIcon.GetComponent<Button>();
+        Button button = bakulIcon.GetComponent<Button>();
 
         if (button == null)
         {
@@ -156,8 +173,7 @@ public class InventoryUIController : MonoBehaviour
             return;
         }
 
-        Button button =
-            catatanIcon.GetComponent<Button>();
+        Button button = catatanIcon.GetComponent<Button>();
 
         if (button == null)
         {

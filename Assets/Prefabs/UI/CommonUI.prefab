@@ -1969,6 +1969,7 @@ GameObject:
   - component: {fileID: 2778261515571065717}
   - component: {fileID: 3791779291964202186}
   - component: {fileID: 8079028039816509343}
+  - component: {fileID: 4934980113675239814}
   m_Layer: 5
   m_Name: Catatan_CikSima_Inventory
   m_TagString: Untagged
@@ -2089,6 +2090,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4934980113675239814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2861109337018450221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dedd15424bbed7843ba192a8aab1c9cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactReturnDragItem
+  artifactID: CatatanCikSima
 --- !u!1 &2878146755615440046
 GameObject:
   m_ObjectHideFlags: 0
@@ -2287,6 +2301,7 @@ GameObject:
   - component: {fileID: 923096090250309521}
   - component: {fileID: 5381524933438335286}
   - component: {fileID: 6971470683292258119}
+  - component: {fileID: 7396608290378174983}
   m_Layer: 5
   m_Name: Bakul_Inventory
   m_TagString: Untagged
@@ -2407,6 +2422,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7396608290378174983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3416455618536356345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dedd15424bbed7843ba192a8aab1c9cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactReturnDragItem
+  artifactID: Bakul
 --- !u!1 &3896179912320082682
 GameObject:
   m_ObjectHideFlags: 0
@@ -2865,6 +2893,7 @@ GameObject:
   - component: {fileID: 1501383223356747856}
   - component: {fileID: 8289965384670267932}
   - component: {fileID: 4229925476156524345}
+  - component: {fileID: 7821734087327794142}
   m_Layer: 5
   m_Name: Tepak_Sirih_Inventory
   m_TagString: Untagged
@@ -2973,6 +3002,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7821734087327794142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4807833543613592616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dedd15424bbed7843ba192a8aab1c9cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArtifactReturnDragItem
+  artifactID: TepakSirih
 --- !u!1 &4829171634071594378
 GameObject:
   m_ObjectHideFlags: 0

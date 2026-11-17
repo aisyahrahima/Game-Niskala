@@ -282,6 +282,8 @@ public class FullLoreReturnController : MonoBehaviour
         NiskalaProgress.chaseCheckpointScene =
             SceneManager.GetActiveScene().name;
 
+        NiskalaProgress.chaseStarted = true;
+
         // 5. Mulai pengejaran Mayang.
         if (MayangChaseManager.Instance != null)
         {
