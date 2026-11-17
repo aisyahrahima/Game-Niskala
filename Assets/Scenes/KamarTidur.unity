@@ -1699,6 +1699,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7671037687464523138, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: arrowBack
+      value: 
+      objectReference: {fileID: 1805288154}
+    - target: {fileID: 7671037687464523138, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
       propertyPath: gameplayCanvasGroup
       value: 
       objectReference: {fileID: 1463051932}
@@ -5491,8 +5495,9 @@ MonoBehaviour:
   mayangCanvasGroup: {fileID: 532988710}
   fadeDuration: 0.5
   nonKeyObjects:
-  - {fileID: 904628307}
   - {fileID: 170082573}
+  - {fileID: 241142408}
+  - {fileID: 1163149537}
   - {fileID: 2085651670}
   gameplayCanvasGroup: {fileID: 1463051932}
   inventoryCanvasGroup: {fileID: 1805288153}

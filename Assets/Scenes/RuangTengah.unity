@@ -1111,6 +1111,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7671037687464523138, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: arrowBack
+      value: 
+      objectReference: {fileID: 656873316}
+    - target: {fileID: 7671037687464523138, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
       propertyPath: gameplayCanvasGroup
       value: 
       objectReference: {fileID: 4412999}
@@ -3519,6 +3523,7 @@ MonoBehaviour:
   nonKeyObjects:
   - {fileID: 1915866513}
   - {fileID: 56191726}
+  - {fileID: 417624741}
   gameplayCanvasGroup: {fileID: 4412999}
   inventoryCanvasGroup: {fileID: 656873317}
 --- !u!1001 &1850354556

@@ -30,6 +30,7 @@ public class MayangCaptureJumpscare : MonoBehaviour
     [Header("Penguncian Interaksi")]
     [SerializeField] private CanvasGroup gameplayCanvasGroup;
     [SerializeField] private CanvasGroup inventoryCanvasGroup;
+    [SerializeField] private GameObject arrowBack;
 
     private MayangChaseManager chaseManager;
     private Coroutine jumpscareCoroutine;
@@ -89,6 +90,10 @@ public class MayangCaptureJumpscare : MonoBehaviour
 
         // Kunci seluruh interaksi gameplay.
         LockGameplayInteractions();
+
+        // Sembunyikan ArrowBack selama jumpscare.
+        if (arrowBack != null)
+            arrowBack.SetActive(false);
 
         jumpscareCoroutine = StartCoroutine(
             PlayJumpscareSequence()

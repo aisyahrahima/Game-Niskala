@@ -49,6 +49,9 @@ public class FullLoreReturnController : MonoBehaviour
 
             SetGameplayLocked(true);
 
+            // Kunci kembali interaksi objek non-key.
+            DisableNonKeyObjects();
+
             if (arrowBack != null)
                 arrowBack.SetActive(false);
 
@@ -58,6 +61,20 @@ public class FullLoreReturnController : MonoBehaviour
             Debug.Log("Pemain mengulang pengejaran. Menunggu tombol Mengerti.");
 
             return;
+        }
+
+        // Jika pemain berpindah ke ruangan lain
+        // ketika pengejaran masih berlangsung,
+        // kunci juga objek non-key di ruangan tersebut.
+        if (MayangChaseManager.Instance != null &&
+            MayangChaseManager.Instance.IsChaseRunning)
+        {
+            DisableNonKeyObjects();
+
+            Debug.Log(
+                "Objek non-key dikunci di scene: " +
+                SceneManager.GetActiveScene().name
+            );
         }
 
         // Jika bukan kembali dari FullLore, tidak perlu menjalankan intro.
