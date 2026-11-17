@@ -17,6 +17,9 @@ public class ArtifactReturnDropZone : MonoBehaviour, IDropHandler
     [Header("Pengaturan Tambahan")]
     [SerializeField] private bool disableTargetButtonDuringChase;
 
+    [Header("Final Ending")]
+    [SerializeField] private FullLoreReturnController fullLoreReturnController;
+
     private Button targetButton;
     private bool visualStateInitialized;
     private bool lastReturnedState;
@@ -81,12 +84,26 @@ public class ArtifactReturnDropZone : MonoBehaviour, IDropHandler
         if (!allReturned)
             return;
 
+        // Hentikan status pengejaran.
         NiskalaProgress.chaseStarted = false;
 
         if (MayangChaseManager.Instance != null)
             MayangChaseManager.Instance.StopChase();
 
         Debug.Log("Semua artefak berhasil dikembalikan.");
+
+        // Mulai final ending.
+        if (fullLoreReturnController != null)
+        {
+            fullLoreReturnController.BeginArtifactReturnEnding();
+        }
+        else
+        {
+            Debug.LogError(
+                "FullLoreReturnController belum dihubungkan " +
+                "pada ArtifactReturnDropZone."
+            );
+        }
     }
 
     private void LateUpdate()

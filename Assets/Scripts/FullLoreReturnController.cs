@@ -22,8 +22,30 @@ public class FullLoreReturnController : MonoBehaviour
     [SerializeField] private CanvasGroup gameplayCanvasGroup;
     [SerializeField] private CanvasGroup inventoryCanvasGroup;
 
+    // =========================================
+    // FINAL ENDING - MAYANG
+    // =========================================
+
+    [Header("Final Ending - Mayang")]
+    [SerializeField] private GameObject mayangFinalRoot;
+    [SerializeField] private GameObject mayangDiam;
+    [SerializeField] private GameObject mayangBicara;
+    [SerializeField] private GameObject mayangSenyum;
+    [SerializeField] private CanvasGroup mayangFinalCanvasGroup;
+    [SerializeField] private float finalMayangFadeDuration = 0.5f;
+
+    // =========================================
+    // FINAL ENDING - TRANSISI
+    // =========================================
+
+    [Header("Final Ending - Transisi")]
+    [SerializeField] private CanvasGroup endingFadeCanvasGroup;
+    [SerializeField] private float endingFadeDuration = 1f;
+    [SerializeField] private string endingSceneName = "Ending";
+
     private DialogueSystem dialogueSystem;
     private bool introRunning;
+    private bool endingSequenceRunning;
 
     private void Awake()
     {
@@ -165,6 +187,320 @@ public class FullLoreReturnController : MonoBehaviour
             petunjuk.SetActive(true);
 
         Debug.Log("Dialog pengenalan Mayang selesai. Menunggu Button Mengerti.");
+    }
+
+    public void BeginArtifactReturnEnding()
+    {
+        if (endingSequenceRunning)
+            return;
+
+        StartCoroutine(PlayArtifactReturnEndingSequence());
+    }
+
+    private IEnumerator PlayArtifactReturnEndingSequence()
+    {
+        if (endingSequenceRunning)
+            yield break;
+
+        endingSequenceRunning = true;
+
+        // Beri kesempatan proses drag artefak selesai.
+        yield return null;
+
+        // 1. Kunci seluruh interaksi gameplay.
+        SetGameplayLocked(true);
+        DisableNonKeyObjects();
+
+        // Nonaktifkan ArrowBack.
+        if (arrowBack != null)
+            arrowBack.SetActive(false);
+
+        Debug.Log("Final ending dimulai.");
+
+        // =========================================
+        // 2. LAYAR PERLAHAN MENGGELAP
+        // =========================================
+
+        yield return StartCoroutine(FadeEndingScreen());
+
+        // Tunggu selama 1.5 detik dalam keadaan gelap.
+        yield return new WaitForSeconds(1.5f);
+
+        // =========================================
+        // 3. MAYANG MUNCUL
+        // =========================================
+
+        if (mayangFinalRoot != null)
+            mayangFinalRoot.SetActive(true);
+
+        SetFinalMayangVisual(mayangDiam);
+
+        // Mayang muncul dengan fade-in.
+        yield return StartCoroutine(
+            FadeFinalMayang(0f, 1f)
+        );
+
+        // Layar perlahan kembali terang.
+        yield return StartCoroutine(
+            FadeEndingScreenFromBlack()
+        );
+
+        // =========================================
+        // 3. DIALOG ARKA
+        // =========================================
+
+        SetFinalMayangVisual(mayangDiam);
+
+        yield return StartDialogue(
+            "Arka",
+            "Aku mengembalikan semuanya.",
+            "Aku tidak datang untuk mengambil atau merusak apapun.",
+            "Aku hanya ingin tahu apa yang sebenarnya terjadi di tempat ini."
+        );
+
+        // =========================================
+        // 4. DIALOG MAYANG PERTAMA
+        // =========================================
+
+        yield return new WaitForSeconds(1f);
+
+        yield return StartMayangFinalDialogue(
+            "Sekarang aku tahu niatmu.",
+            "Pergilah."
+        );
+
+        // =========================================
+        // 5. DIALOG ARKA
+        // =========================================
+
+        SetFinalMayangVisual(mayangDiam);
+
+        yield return StartDialogue(
+            "Arka",
+            "Terima kasih."
+        );
+
+        // =========================================
+        // 6. DIALOG MAYANG KEDUA
+        // =========================================
+
+        yield return StartMayangFinalDialogue(
+            "Dan ingat...",
+            "Kisah yang kau temukan di sini adalah bagian dari tempat ini.",
+            "Jangan biarkan kisah itu hilang."
+        );
+
+        // =========================================
+        // 7. MAYANG TERSENYUM DAN MENGHILANG
+        // =========================================
+
+        SetFinalMayangVisual(mayangSenyum);
+
+        yield return StartCoroutine(
+            FadeFinalMayang(1f, 0f)
+        );
+
+        if (mayangFinalRoot != null)
+            mayangFinalRoot.SetActive(false);
+
+        // =========================================
+        // 8. DIALOG TERAKHIR ARKA
+        // =========================================
+
+        yield return StartDialogue(
+            "Arka",
+            "Aku akan mengingatnya.",
+            "Semoga kalian beristirahat dengan tenang."
+        );
+
+        // =========================================
+        // 9. LAYAR MENGHITAM
+        // =========================================
+
+        yield return StartCoroutine(FadeEndingScreen());
+
+        // =========================================
+        // 10. PINDAH KE SCENE ENDING
+        // =========================================
+
+        if (SceneTransitionManager.Instance != null)
+        {
+            SceneTransitionManager.Instance.LoadScene(
+                endingSceneName
+            );
+        }
+        else
+        {
+            Debug.LogError(
+                "SceneTransitionManager tidak ditemukan."
+            );
+        }
+    }
+
+    private IEnumerator StartMayangFinalDialogue(params string[] lines)
+    {
+        if (dialogueSystem == null)
+            dialogueSystem = DialogueSystem.Instance;
+
+        if (dialogueSystem == null)
+        {
+            Debug.LogError("DialogueSystem tidak ditemukan.");
+            yield break;
+        }
+
+        bool started = dialogueSystem.StartDialogue(
+            "Mayang",
+            lines
+        );
+
+        if (!started)
+        {
+            Debug.LogError("Dialog Mayang gagal dimulai.");
+            yield break;
+        }
+
+        float switchTimer = 0f;
+        bool isSpeaking = false;
+
+        while (dialogueSystem != null &&
+               dialogueSystem.IsDialogueActive)
+        {
+            switchTimer += Time.deltaTime;
+
+            // Ganti visual setiap 0.35 detik.
+            if (switchTimer >= 0.35f)
+            {
+                switchTimer = 0f;
+                isSpeaking = !isSpeaking;
+
+                SetFinalMayangVisual(
+                    isSpeaking ? mayangBicara : mayangDiam
+                );
+            }
+
+            yield return null;
+        }
+
+        // Setelah dialog selesai, Mayang kembali diam.
+        SetFinalMayangVisual(mayangDiam);
+    }
+
+    private IEnumerator FadeFinalMayang(
+    float startAlpha,
+    float targetAlpha)
+    {
+        if (mayangFinalCanvasGroup == null)
+        {
+            Debug.LogError(
+                "CanvasGroup Final Mayang belum dihubungkan."
+            );
+            yield break;
+        }
+
+        float elapsed = 0f;
+        float duration = Mathf.Max(
+            0.01f,
+            finalMayangFadeDuration
+        );
+
+        mayangFinalCanvasGroup.alpha = startAlpha;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+
+            mayangFinalCanvasGroup.alpha = Mathf.Lerp(
+                startAlpha,
+                targetAlpha,
+                Mathf.Clamp01(elapsed / duration)
+            );
+
+            yield return null;
+        }
+
+        mayangFinalCanvasGroup.alpha = targetAlpha;
+    }
+
+    private IEnumerator FadeEndingScreen()
+    {
+        if (endingFadeCanvasGroup == null)
+        {
+            Debug.LogError(
+                "Ending Fade CanvasGroup belum dihubungkan."
+            );
+            yield break;
+        }
+
+        endingFadeCanvasGroup.gameObject.SetActive(true);
+        endingFadeCanvasGroup.alpha = 0f;
+
+        float elapsed = 0f;
+        float duration = Mathf.Max(
+            0.01f,
+            endingFadeDuration
+        );
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+
+            endingFadeCanvasGroup.alpha = Mathf.Lerp(
+                0f,
+                1f,
+                Mathf.Clamp01(elapsed / duration)
+            );
+
+            yield return null;
+        }
+
+        endingFadeCanvasGroup.alpha = 1f;
+    }
+
+    private IEnumerator FadeEndingScreenFromBlack()
+    {
+        if (endingFadeCanvasGroup == null)
+        {
+            Debug.LogError(
+                "Ending Fade CanvasGroup belum dihubungkan."
+            );
+            yield break;
+        }
+
+        float elapsed = 0f;
+        float duration = Mathf.Max(
+            0.01f,
+            endingFadeDuration
+        );
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+
+            endingFadeCanvasGroup.alpha = Mathf.Lerp(
+                1f,
+                0f,
+                Mathf.Clamp01(elapsed / duration)
+            );
+
+            yield return null;
+        }
+
+        endingFadeCanvasGroup.alpha = 0f;
+    }
+
+    private void SetFinalMayangVisual(GameObject activeVisual)
+    {
+        if (mayangDiam != null)
+            mayangDiam.SetActive(false);
+
+        if (mayangBicara != null)
+            mayangBicara.SetActive(false);
+
+        if (mayangSenyum != null)
+            mayangSenyum.SetActive(false);
+
+        if (activeVisual != null)
+            activeVisual.SetActive(true);
     }
 
     private IEnumerator StartDialogue(

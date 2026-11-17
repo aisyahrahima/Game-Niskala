@@ -311,6 +311,7 @@ GameObject:
   - component: {fileID: 7448371827145086305}
   - component: {fileID: 76188073760932845}
   - component: {fileID: 7671037687464523138}
+  - component: {fileID: 7575773716139250513}
   m_Layer: 0
   m_Name: ChaseHideMayang
   m_TagString: Untagged
@@ -377,6 +378,21 @@ MonoBehaviour:
   finalFadeDuration: 0.3
   shakeDuration: 0.8
   shakeStrength: 22
+  gameplayCanvasGroup: {fileID: 0}
+  inventoryCanvasGroup: {fileID: 0}
+  arrowBack: {fileID: 0}
+--- !u!225 &7575773716139250513
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3808856097278655863}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3973882012257356159
 GameObject:
   m_ObjectHideFlags: 0
