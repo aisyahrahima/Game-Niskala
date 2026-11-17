@@ -124,7 +124,7 @@ public class MayangCaptureJumpscare : MonoBehaviour
 
         while (elapsed < riseDuration)
         {
-            float delta = Time.unscaledDeltaTime;
+            float delta = Time.deltaTime;
 
             elapsed += delta;
             flickerTimer += delta;
@@ -167,7 +167,7 @@ public class MayangCaptureJumpscare : MonoBehaviour
         if (gelapCanvasGroup != null)
             gelapCanvasGroup.alpha = 1f;
 
-        yield return new WaitForSecondsRealtime(
+        yield return new WaitForSeconds(
             blackoutDuration
         );
 
@@ -214,7 +214,7 @@ public class MayangCaptureJumpscare : MonoBehaviour
 
         while (elapsed < shakeDuration)
         {
-            elapsed += Time.unscaledDeltaTime;
+            elapsed += Time.deltaTime;
 
             Vector2 shakeOffset =
                 Random.insideUnitCircle * shakeStrength;
@@ -239,7 +239,7 @@ public class MayangCaptureJumpscare : MonoBehaviour
 
         while (elapsed < finalFadeDuration)
         {
-            elapsed += Time.unscaledDeltaTime;
+            elapsed += Time.deltaTime;
 
             gelapCanvasGroup.alpha = Mathf.Lerp(
                 startAlpha,

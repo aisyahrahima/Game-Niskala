@@ -18,6 +18,7 @@ public class ArtifactZoomController : MonoBehaviour
     [SerializeField] private MonoBehaviour roomInteractionController;
 
     private GameObject activeZoom;
+    private bool loreOrderTransitionRunning;
 
     // Menyimpan kondisi ArrowBack sebelum zoom dibuka.
     private bool arrowBackPreviousState;
@@ -513,6 +514,22 @@ public class ArtifactZoomController : MonoBehaviour
     // TUTUP ZOOM
     // =========================================
 
+    public void TryStartPendingLoreOrderTransition()
+    {
+        if (!LoreOrderFlow.pendingLoreOrderIntro)
+            return;
+
+        // Pastikan seluruh Zoom artefak sudah tertutup.
+        if (IsAnyArtifactZoomActive())
+            return;
+
+        // Hindari dialog dimulai lebih dari satu kali.
+        if (loreOrderTransitionRunning)
+            return;
+
+        StartCoroutine(PlayLoreOrderTransitionDialogue());
+    }
+
     public bool TryCloseArtifactZoom()
     {
         // Cari objek zoom yang aktif.
@@ -537,12 +554,7 @@ public class ArtifactZoomController : MonoBehaviour
 
         Debug.Log("Artifact Zoom berhasil ditutup.");
 
-        // Jika ketiga artefak sudah diinvestigasi,
-        // mulai dialog pengantar menuju LoreOrder.
-        if (LoreOrderFlow.pendingLoreOrderIntro)
-        {
-            StartCoroutine(PlayLoreOrderTransitionDialogue());
-        }
+        TryStartPendingLoreOrderTransition();
 
         return true;
     }
@@ -552,6 +564,12 @@ public class ArtifactZoomController : MonoBehaviour
         // Pastikan Zoom sudah benar-benar tertutup.
         if (IsAnyArtifactZoomActive())
             yield break;
+
+        // Hindari menjalankan dialog lebih dari satu kali.
+        if (loreOrderTransitionRunning)
+            yield break;
+
+        loreOrderTransitionRunning = true;
 
         // Nonaktifkan ArrowBack selama dialog berlangsung.
         if (arrowBack != null)
@@ -576,6 +594,7 @@ public class ArtifactZoomController : MonoBehaviour
             if (arrowBack != null)
                 arrowBack.SetActive(true);
 
+            loreOrderTransitionRunning = false;
             yield break;
         }
 
@@ -583,7 +602,7 @@ public class ArtifactZoomController : MonoBehaviour
         {
         "Aku sudah menemukan tiga artefak yang tampaknya saling berkaitan.",
         "Setiap benda mengungkap sedikit demi sedikit kejadian di masa lalu."
-    };
+        };
 
         bool started = DialogueSystem.Instance.StartDialogue(
             "Arka",
@@ -599,6 +618,7 @@ public class ArtifactZoomController : MonoBehaviour
             if (arrowBack != null)
                 arrowBack.SetActive(true);
 
+            loreOrderTransitionRunning = false;
             yield break;
         }
 
@@ -630,6 +650,8 @@ public class ArtifactZoomController : MonoBehaviour
             Debug.LogError(
                 "SceneTransitionManager tidak ditemukan."
             );
+
+            loreOrderTransitionRunning = false;
 
             if (arrowBack != null)
                 arrowBack.SetActive(true);

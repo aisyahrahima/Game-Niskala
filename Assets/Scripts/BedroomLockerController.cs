@@ -609,6 +609,13 @@ public class BedroomLockerController : MonoBehaviour
             // dapat digunakan kembali.
             EndLockerInteraction();
 
+            // Periksa apakah dialog pengantar LoreOrder
+            // perlu dijalankan setelah Zoom ditutup.
+            if (artifactZoomController != null)
+            {
+                artifactZoomController.TryStartPendingLoreOrderTransition();
+            }
+
             Debug.Log(
                 "Zoom Catatan Cik Sima ditutup."
             );

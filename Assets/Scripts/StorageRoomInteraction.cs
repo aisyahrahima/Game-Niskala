@@ -783,6 +783,13 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
             arrowBack.SetActive(true);
 
         EndStorageInteraction();
+
+        // Periksa apakah dialog pengantar LoreOrder
+        // perlu dijalankan setelah Zoom ditutup.
+        if (artifactZoomController != null)
+        {
+            artifactZoomController.TryStartPendingLoreOrderTransition();
+        }
     }
 
     // =====================================================
