@@ -1701,7 +1701,7 @@ MonoBehaviour:
   - {fileID: 2128746148}
   - {fileID: 619984166}
   - {fileID: 24840191}
-  gameplayCanvasGroup: {fileID: 0}
+  gameplayCanvasGroup: {fileID: 96290859}
   inventoryCanvasGroup: {fileID: 1198187923}
 --- !u!1 &674886030
 GameObject:
