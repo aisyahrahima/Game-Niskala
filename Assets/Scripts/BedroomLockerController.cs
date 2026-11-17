@@ -583,26 +583,16 @@ public class BedroomLockerController : MonoBehaviour
 
     public void ClickArrowBack()
     {
-        // Jika Arka sedang bersembunyi, keluar dari POV terlebih dahulu.
+        // Jika Arka sedang bersembunyi,
+        // keluar dari POV terlebih dahulu.
         if (mayangHideSpot != null && mayangHideSpot.IsHiding)
         {
             mayangHideSpot.ExitHideSpot();
             return;
         }
 
-        // Prioritas pertama: tutup zoom dari inventory.
-        if (artifactZoomController != null &&
-            artifactZoomController.TryCloseArtifactZoom())
-        {
-            return;
-        }
-
-        if (specialInteractions != null &&
-            specialInteractions.TryCloseSpecialZoom())
-        {
-            return;
-        }
-
+        // Prioritas 1:
+        // Tutup Zoom Catatan Cik Sima terlebih dahulu.
         if (catatanCikSimaZoom != null &&
             catatanCikSimaZoom.activeSelf &&
             !zoomOpen)
@@ -615,29 +605,50 @@ public class BedroomLockerController : MonoBehaviour
             SetArrowBack(true);
             SetViewButtons(true);
 
+            // Akhiri interaksi agar gameplay
+            // dapat digunakan kembali.
             EndLockerInteraction();
+
+            Debug.Log(
+                "Zoom Catatan Cik Sima ditutup."
+            );
 
             return;
         }
 
-        // Prioritas 1:
-        // kalau Lemari Zoom terbuka, tutup zoom.
+        // Prioritas 2:
+        // Tutup Zoom artefak dari inventory.
+        if (artifactZoomController != null &&
+            artifactZoomController.TryCloseArtifactZoom())
+        {
+            return;
+        }
+
+        // Prioritas 3:
+        // Tutup Zoom khusus lainnya.
+        if (specialInteractions != null &&
+            specialInteractions.TryCloseSpecialZoom())
+        {
+            return;
+        }
+
+        // Prioritas 4:
+        // Tutup Zoom Lemari.
         if (zoomOpen)
         {
             CloseLemariZoom();
             return;
         }
 
-        // Prioritas 2:
-        // kalau Locker sedang terbuka, tutup Locker.
+        // Prioritas 5:
+        // Tutup Locker.
         if (lockerOpen)
         {
             CloseLocker();
             return;
         }
 
-        // Prioritas 3:
-        // kalau tidak ada tampilan khusus,
+        // Jika tidak ada tampilan khusus,
         // kembali ke RuangTamu.
         if (SceneTransitionManager.Instance != null)
         {

@@ -78,6 +78,34 @@ public class MayangChaseManager : MonoBehaviour
             "Status persembunyian Arka: " +
             (isPlayerHiding ? "Bersembunyi" : "Tidak bersembunyi")
         );
+
+        // Jika Arka keluar saat fase bahaya berlangsung,
+        // langsung picu kegagalan pengejaran.
+        if (!isPlayerHiding &&
+            chaseRunning &&
+            isDangerPhase)
+        {
+            TriggerChaseFailure();
+        }
+    }
+
+    private void TriggerChaseFailure()
+    {
+        // Pastikan pengejaran masih berjalan
+        // dan kegagalan belum pernah dipicu.
+        if (!chaseRunning || failureSequenceActive)
+            return;
+
+        Debug.Log("Arka tertangkap Mayang!");
+
+        // Hentikan pengejaran.
+        StopChase();
+
+        // Tandai bahwa animasi kegagalan sedang berlangsung.
+        failureSequenceActive = true;
+
+        // Jalankan animasi jumpscare.
+        OnChaseFailed?.Invoke();
     }
 
     private void ChangePhase()
@@ -92,19 +120,11 @@ public class MayangChaseManager : MonoBehaviour
 
             Debug.Log("Fase bahaya dimulai.");
 
-            // Periksa status persembunyian
-            // tepat ketika fase bahaya dimulai.
+            // Periksa apakah Arka bersembunyi
+            // ketika fase bahaya dimulai.
             if (!isPlayerHiding)
             {
-                Debug.Log("Arka tertangkap Mayang!");
-
-                StopChase();
-
-                failureSequenceActive = true;
-
-                // Memulai animasi jumpscare.
-                OnChaseFailed?.Invoke();
-
+                TriggerChaseFailure();
                 return;
             }
         }
@@ -160,7 +180,7 @@ public class MayangChaseManager : MonoBehaviour
         // Kembali ke scene checkpoint.
         if (SceneTransitionManager.Instance != null)
         {
-            SceneTransitionManager.Instance.LoadScene(checkpoint);
+            SceneTransitionManager.Instance.ReloadScene(checkpoint);
         }
         else
         {

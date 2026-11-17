@@ -51,6 +51,30 @@ public class SceneTransitionManager : MonoBehaviour
         );
     }
 
+    public void ReloadScene(string sceneName)
+    {
+        if (isTransitioning)
+            return;
+
+        if (string.IsNullOrWhiteSpace(sceneName))
+        {
+            Debug.LogError("Nama scene untuk reload belum diisi.");
+            return;
+        }
+
+        isTransitioning = true;
+
+        // Beri tahu sistem lain bahwa scene akan dimuat ulang.
+        GameEvents.RaiseSceneTransitionStarted(sceneName);
+
+        Debug.Log("Memuat ulang scene checkpoint: " + sceneName);
+
+        SceneManager.LoadScene(
+            sceneName,
+            LoadSceneMode.Single
+        );
+    }
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;

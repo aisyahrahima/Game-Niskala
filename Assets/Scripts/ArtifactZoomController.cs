@@ -69,12 +69,6 @@ public class ArtifactZoomController : MonoBehaviour
             return;
 
         OpenArtifactZoom(tepakSirihZoom);
-
-        if (NiskalaProgress.tepakSirihInvestigated &&
-        buttonInvestigasiArtefak != null)
-        {
-            buttonInvestigasiArtefak.SetActive(false);
-        }
     }
 
     public void OpenBakulZoom()
@@ -83,12 +77,6 @@ public class ArtifactZoomController : MonoBehaviour
             return;
 
         OpenArtifactZoom(bakulZoom);
-
-        if (NiskalaProgress.bakulInvestigated &&
-        buttonInvestigasiArtefak != null)
-        {
-            buttonInvestigasiArtefak.SetActive(false);
-        }
     }
 
     public void OpenCatatanCikSimaZoom()
@@ -97,12 +85,6 @@ public class ArtifactZoomController : MonoBehaviour
             return;
 
         OpenArtifactZoom(catatanCikSimaZoom);
-
-        if (NiskalaProgress.catatanCikSimaInvestigated &&
-        buttonInvestigasiArtefak != null)
-        {
-            buttonInvestigasiArtefak.SetActive(false);
-        }
     }
 
     // =========================================
@@ -488,8 +470,36 @@ public class ArtifactZoomController : MonoBehaviour
 
         activeZoom.SetActive(true);
 
+        // Periksa apakah artefak yang sedang dibuka
+        // sudah pernah diinvestigasi.
+        bool isInvestigated = false;
+
+        if (activeZoom == tepakSirihZoom)
+        {
+            isInvestigated = NiskalaProgress.tepakSirihInvestigated;
+        }
+        else if (activeZoom == bakulZoom)
+        {
+            isInvestigated = NiskalaProgress.bakulInvestigated;
+        }
+        else if (activeZoom == catatanCikSimaZoom)
+        {
+            isInvestigated = NiskalaProgress.catatanCikSimaInvestigated;
+        }
+
+        // Tampilkan tombol hanya jika artefak
+        // belum pernah diinvestigasi.
         if (buttonInvestigasiArtefak != null)
-            buttonInvestigasiArtefak.SetActive(true);
+        {
+            buttonInvestigasiArtefak.SetActive(!isInvestigated);
+        }
+
+        if (arrowBack != null)
+            arrowBack.SetActive(true);
+
+        Debug.Log(
+            "Artifact Zoom dibuka: " + activeZoom.name
+        );
 
         if (arrowBack != null)
             arrowBack.SetActive(true);
