@@ -7,6 +7,25 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     [Header("Dialog")]
     [SerializeField] private DialogueSystem dialogueSystem;
 
+    [Header("Audio RuangTamu")]
+    [SerializeField] private AudioSource ambienceSource;
+
+    [Header("Jumpscare Audio")]
+    public AudioSource jumpscareSource;
+    public AudioClip jumpscareSound;
+
+    [Header("Jumpscare Audio 2 - Sisir")]
+    public AudioSource jumpscareSource2;
+    public AudioClip jumpscareSound2;
+
+    [Header("Audio Interaksi")]
+    [SerializeField] private AudioSource interactionSource;
+    [SerializeField] private AudioClip doorLockedSound;
+    [SerializeField] private AudioClip doorClosedSound;
+    [SerializeField] private AudioClip femaleLaughSound;
+    [SerializeField] private AudioClip slamSound;
+    [SerializeField] private AudioClip soldierFootstepsSound;
+
     [Header("Arrow Back")]
     [SerializeField] private GameObject arrowBack;
 
@@ -74,6 +93,8 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
     private void Start()
     {
+          StartRoomAudio();
+
         // Pulihkan progres interaksi objek.
         lukisanClickedOnce =
             NiskalaProgress.lukisanClickedOnce;
@@ -104,6 +125,24 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     }
 
     // =========================================
+    // AUDIO RUANG TAMU
+    // =========================================
+
+    private void StartRoomAudio()
+    {
+        // Memutar Mysterious Ambience.
+        if (ambienceSource != null)
+        {
+            ambienceSource.loop = true;
+            ambienceSource.Play();
+        }
+        else
+        {
+            Debug.LogWarning("Ambience RuangTamu belum dihubungkan.");
+        }
+    }
+
+    // =========================================
     // DIALOG PEMBUKA RUANG TAMU
     // =========================================
 
@@ -112,11 +151,26 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         interactionBusy = true;
         BeginInteraction();
 
-        // Jeda 2 detik sebelum dialog pembuka.
-        yield return new WaitForSeconds(2f);
+         yield return new WaitForSeconds(0.5f);
 
-        Debug.Log("SFX: Suara pintu terkunci.");
+         // Suara pintu tertutup.
+        if (interactionSource != null && doorClosedSound != null)
+        {
+            interactionSource.PlayOneShot(doorClosedSound);
+            yield return new WaitForSeconds(doorClosedSound.length);
+        }
 
+        // Suara pintu terkunci.
+        if (interactionSource != null && doorLockedSound != null)
+        {
+            interactionSource.PlayOneShot(doorLockedSound);
+            yield return new WaitForSeconds(doorLockedSound.length);
+        }
+
+        // Jeda 1.5 detik sebelum dialog pembuka.
+        yield return new WaitForSeconds(1.5f);
+
+       
         if (dialogueSystem != null)
         {
             bool started = dialogueSystem.StartDialogue(
@@ -177,10 +231,16 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         }
     }
 
-    private IEnumerator PlayLukisanDialogue()
+        private IEnumerator PlayLukisanDialogue()
     {
-        // Memberikan waktu untuk event suara tertawa.
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
+        // Memutar suara perempuan tertawa.
+        if (interactionSource != null && femaleLaughSound != null)
+        {
+            interactionSource.PlayOneShot(femaleLaughSound);
+
+            yield return new WaitForSeconds(femaleLaughSound.length);
+        }
 
         yield return StartDialogue(
             "Darimana suara itu berasal?"
@@ -223,7 +283,16 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
     private IEnumerator PlayPerhiasanEvent()
     {
-        Debug.Log("SFX: Efek suara jumpscare Perhiasan.");
+       // Memutar suara jumpscare Perhiasan.
+        if (interactionSource != null && slamSound != null)
+        {
+            interactionSource.PlayOneShot(slamSound);
+        }
+        yield return new WaitForSeconds(0.05f);
+        if (jumpscareSource != null && jumpscareSound != null)
+        {
+            jumpscareSource.PlayOneShot(jumpscareSound);
+        }
 
         // Jumpscare langsung muncul setelah Perhiasan diklik.
         if (jumpscare != null)
@@ -369,6 +438,12 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
         Debug.Log("Tampilan Sisir_Rambut_Zoom muncul.");
 
+        // Memutar jumpscare sound 2 khusus sisir.
+       if (jumpscareSource2 != null && jumpscareSound2 != null)
+        {
+            jumpscareSource2.PlayOneShot(jumpscareSound2);
+        }
+
         yield return new WaitForSeconds(1f);
 
         if (sisirRambutZoom != null)
@@ -380,7 +455,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         Debug.Log("Tampilan Sisir_Zoom kembali.");
 
         // Jeda setelah pergantian tampilan sebelum dialog.
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         yield return StartDialogue(
             "Kenapa tiba-tiba ada rambut?"
@@ -391,6 +466,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
         SetArrowBack(true);
     }
+
 
     // =========================================
     // SENJATA
@@ -410,10 +486,29 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
             senjataClickedOnce = true;
             NiskalaProgress.senjataClickedOnce = true;
 
-            Debug.Log("SFX: Suara langkah kaki prajurit.");
+            interactionBusy = true;
+            BeginInteraction();
+
+            StartCoroutine(PlaySenjataSound());
+        }
+        else
+        {
+            SetArrowBack(true);
+        }
+    }
+
+    private IEnumerator PlaySenjataSound()
+    {
+        if (interactionSource != null && soldierFootstepsSound != null)
+        {
+            interactionSource.PlayOneShot(soldierFootstepsSound);
+
+            yield return new WaitForSeconds(soldierFootstepsSound.length);
         }
 
-        // Senjata tidak memiliki event berdurasi atau dialog.
+        interactionBusy = false;
+        EndInteraction();
+
         SetArrowBack(true);
     }
 

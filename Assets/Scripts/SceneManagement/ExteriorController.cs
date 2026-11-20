@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,14 @@ public class ExteriorController : MonoBehaviour
     [Header("Pengaturan Scene")]
     [SerializeField] private string nextSceneName = "RuangTamu";
     [SerializeField] private float dialogueStartDelay = 2f;
+
+    [Header("Audio Ambience")]
+    [SerializeField] private AudioSource ambienceMalamSource;
+    [SerializeField] private AudioSource ambienceGledekSource;
+
+    [Header("Audio Interaksi")]
+    [SerializeField] private AudioSource interactionSource;
+    [SerializeField] private AudioClip doorOpenSound;
 
     private bool dialogueFinished;
     private bool isTransitioning;
@@ -42,6 +51,20 @@ public class ExteriorController : MonoBehaviour
                 "EnterButton belum dihubungkan pada ExteriorController."
             );
             return;
+        }
+
+        // Memulai ambience malam.
+        if (ambienceMalamSource != null)
+        {
+            ambienceMalamSource.loop = true;
+            ambienceMalamSource.Play();
+        }
+
+        // Memulai ambience gledek.
+        if (ambienceGledekSource != null)
+        {
+            ambienceGledekSource.loop = true;
+            ambienceGledekSource.Play();
         }
 
         StartCoroutine(ExteriorSequence());
@@ -85,12 +108,30 @@ public class ExteriorController : MonoBehaviour
         Debug.Log("Dialog Exterior selesai. EnterButton ditampilkan.");
     }
 
-    public void EnterBuilding()
+        public void EnterBuilding()
     {
         if (!dialogueFinished || isTransitioning)
             return;
 
         isTransitioning = true;
+
+        StartCoroutine(EnterBuildingSequence());
+    }
+
+    private IEnumerator EnterBuildingSequence()
+    {
+        if (ambienceMalamSource != null)
+            ambienceMalamSource.Stop();
+
+        if (ambienceGledekSource != null)
+            ambienceGledekSource.Stop();
+
+        if (interactionSource != null && doorOpenSound != null)
+        {
+            interactionSource.PlayOneShot(doorOpenSound);
+
+            yield return new WaitForSeconds(doorOpenSound.length);
+        }
 
         if (SceneTransitionManager.Instance != null)
         {
@@ -110,5 +151,12 @@ public class ExteriorController : MonoBehaviour
     {
         if (enterButton != null)
             enterButton.onClick.RemoveListener(EnterBuilding);
+
+        // Memastikan ambience berhenti saat scene dihancurkan.
+        if (ambienceMalamSource != null)
+            ambienceMalamSource.Stop();
+
+        if (ambienceGledekSource != null)
+            ambienceGledekSource.Stop();
     }
 }

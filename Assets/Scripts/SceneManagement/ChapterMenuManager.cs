@@ -3,21 +3,26 @@ using UnityEngine;
 public class ChapterMenuManager : MonoBehaviour
 {
     public void SelectChapter1()
+{
+    if (MainMenuBGM.Instance != null)
     {
-        // Memulai permainan baru dengan progres kosong.
-        NiskalaProgress.ResetAll();
-
-        if (SceneTransitionManager.Instance == null)
-        {
-            Debug.LogError(
-                "SceneTransitionManager tidak ditemukan."
-            );
-
-            return;
-        }
-
-        SceneTransitionManager.Instance.LoadScene("Opening");
+        MainMenuBGM.Instance.StopBGM();
     }
+
+    // Memulai permainan baru dengan progres kosong.
+    NiskalaProgress.ResetAll();
+
+    if (SceneTransitionManager.Instance == null)
+    {
+        Debug.LogError(
+            "SceneTransitionManager tidak ditemukan."
+        );
+
+        return;
+    }
+
+    SceneTransitionManager.Instance.LoadScene("Opening");
+}
 
     public void BackToMainMenu()
     {
