@@ -13,7 +13,7 @@ public class MayangCaptureJumpscare : MonoBehaviour
 
     [Header("Gerakan Ancang-Ancang")]
     [SerializeField] private float riseDistance = 900f;
-    [SerializeField] private float riseDuration = 1.5f;
+    [SerializeField] private float riseDuration = 2f;
 
     [Header("Efek Lampu Berkedip")]
     [SerializeField] private float flickerInterval = 0.09f;
@@ -102,6 +102,10 @@ public class MayangCaptureJumpscare : MonoBehaviour
 
     private IEnumerator PlayJumpscareSequence()
     {
+        // Hentikan BGM pengejaran sebelum ancang-ancang dimulai.
+        if (chaseManager != null)
+            chaseManager.StopChaseBGM();
+
         // Persiapkan objek jumpscare.
         if (jumpscareGelap != null)
             jumpscareGelap.SetActive(true);
@@ -120,6 +124,12 @@ public class MayangCaptureJumpscare : MonoBehaviour
                 ancangHomePosition +
                 Vector2.down * riseDistance;
         }
+
+        // play audio pas lg mau muncul ancang-ancang
+        if (chaseManager != null)
+            chaseManager.PlayAncangAncangSound();
+        else
+            Debug.LogError("MayangChaseManager tidak ditemukan!");
 
         // 1. Ancang-ancang bergerak dari bawah ke atas
         // sambil menampilkan efek lampu berkedip.
@@ -182,6 +192,14 @@ public class MayangCaptureJumpscare : MonoBehaviour
 
         if (jumpscareMulai != null)
             jumpscareMulai.SetActive(true);
+
+        // stop audio ancang
+        if (chaseManager != null)
+            chaseManager.StopAncangAncangSound();
+
+        // play audio jumsker 
+        if (chaseManager != null)
+            chaseManager.PlayJumpscareSound();
 
         // 4. Ruangan kembali terang.
         if (gelapCanvasGroup != null)
@@ -255,7 +273,7 @@ public class MayangCaptureJumpscare : MonoBehaviour
             yield return null;
         }
 
-        gelapCanvasGroup.alpha = 1f;
+        gelapCanvasGroup.alpha = 2f;
     }
 
     private void ResetJumpscare()

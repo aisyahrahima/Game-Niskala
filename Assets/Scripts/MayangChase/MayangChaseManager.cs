@@ -10,11 +10,19 @@ public class MayangChaseManager : MonoBehaviour
     [SerializeField] private float safeDuration = 10f;
     [SerializeField] private float dangerDuration = 8f;
 
+    [Header("Mayang Chase Audio")]
+    [SerializeField] private AudioSource chaseBGMSource;
+    [SerializeField] private AudioSource heartbeatSource;
+    [SerializeField] private AudioSource warningSource;
+    [SerializeField] private AudioSource ancangAncangSource;
+    [SerializeField] private AudioSource jumpscareSource;
+
     private float phaseTimer;
     private bool chaseRunning;
     private bool isDangerPhase;
     private bool isPlayerHiding;
     private bool failureSequenceActive;
+    private bool warningPlayedThisSafePhase = false;
 
     public bool IsChaseRunning => chaseRunning;
     public bool IsDangerPhase => isDangerPhase;
@@ -47,6 +55,17 @@ public class MayangChaseManager : MonoBehaviour
 
         phaseTimer -= Time.deltaTime;
 
+        // Putar warning saat fase aman hampir berakhir.
+        if (!isDangerPhase &&
+            !warningPlayedThisSafePhase &&
+            phaseTimer <= 3f)
+        {
+            if (warningSource != null)
+                warningSource.Play();
+
+            warningPlayedThisSafePhase = true;
+        }
+
         if (phaseTimer <= 0f)
         {
             ChangePhase();
@@ -62,9 +81,22 @@ public class MayangChaseManager : MonoBehaviour
         isDangerPhase = false;
         isPlayerHiding = false;
         failureSequenceActive = false;
+        warningPlayedThisSafePhase = false;
+        if (warningSource != null && warningSource.isPlaying)
+            warningSource.Stop();
         phaseTimer = safeDuration;
 
         OnPhaseChanged?.Invoke(isDangerPhase);
+
+        // Hentikan ambience hujan jika berada di Ruang Penyimpanan.
+        if (StorageRainAmbience.Instance != null)
+        {
+            StorageRainAmbience.Instance.StopRain();
+        }
+
+        // Putar musik latar pengejaran.
+        if (chaseBGMSource != null)
+            chaseBGMSource.Play();
 
         Debug.Log("Pengejaran Mayang dimulai.");
         Debug.Log("Fase aman: " + safeDuration + " detik.");
@@ -118,6 +150,14 @@ public class MayangChaseManager : MonoBehaviour
 
             OnPhaseChanged?.Invoke(isDangerPhase);
 
+            // Putar suara detak jantung.
+            if (heartbeatSource != null && !heartbeatSource.isPlaying)
+                heartbeatSource.Play();
+
+            // Hentikan warning sound.
+            if (warningSource != null && warningSource.isPlaying)
+                warningSource.Stop();
+
             Debug.Log("Fase bahaya dimulai.");
 
             // Periksa apakah Arka bersembunyi
@@ -135,6 +175,13 @@ public class MayangChaseManager : MonoBehaviour
             phaseTimer = safeDuration;
 
             OnPhaseChanged?.Invoke(isDangerPhase);
+
+            // Hentikan suara detak jantung.
+            if (heartbeatSource != null && heartbeatSource.isPlaying)
+                heartbeatSource.Stop();
+
+            // Reset warning untuk fase aman berikutnya.
+            warningPlayedThisSafePhase = false;
 
             Debug.Log("Arka berhasil selamat dari Mayang.");
             Debug.Log("Fase aman dimulai kembali.");
@@ -204,6 +251,48 @@ public class MayangChaseManager : MonoBehaviour
         chaseRunning = false;
         phaseTimer = 0f;
 
+        // Hentikan BGM pengejaran.
+        if (chaseBGMSource != null && chaseBGMSource.isPlaying)
+            chaseBGMSource.Stop();
+
+        // Hentikan warning.
+        if (warningSource != null && warningSource.isPlaying)
+            warningSource.Stop();
+
+        // Hentikan heartbeat.
+        if (heartbeatSource != null && heartbeatSource.isPlaying)
+            heartbeatSource.Stop();
+
         Debug.Log("Pengejaran Mayang dihentikan.");
     }
+
+    public void PlayJumpscareSound()
+    {
+        if (jumpscareSource != null)
+            jumpscareSource.Play();
+    }
+
+    public void PlayAncangAncangSound()
+    {
+        if (ancangAncangSource != null)
+            ancangAncangSource.Play();
+    }
+
+    public void StopAncangAncangSound()
+    {
+        if (ancangAncangSource != null &&
+            ancangAncangSource.isPlaying)
+        {
+            ancangAncangSource.Stop();
+        }
+    }
+
+    public void StopChaseBGM()
+    {
+        if (chaseBGMSource != null && chaseBGMSource.isPlaying)
+        {
+            chaseBGMSource.Stop();
+        }
+    }
+
 }

@@ -23,6 +23,10 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
     [SerializeField] private GameObject kain;
     [SerializeField] private GameObject kainZoom;
 
+    [Header("Kain Audio")]
+    [SerializeField] private AudioSource kainAudioSource;
+    [SerializeField] private AudioClip bisikanPerempuan;
+
     [Header("Tepak Sirih")]
     [SerializeField] private GameObject tepakSirih;
     [SerializeField] private GameObject messyTepakSirihZoom;
@@ -31,6 +35,11 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
     [SerializeField] private GameObject buttonInvestigasiArtefak;
     [SerializeField] private InventoryUIController inventoryUIController;
     [SerializeField] private TepakSirihPuzzle tepakSirihPuzzle;
+
+    [Header("TepakSirihAudioSource")]
+    [SerializeField] private AudioSource tepakSirihAudioSource;
+    [SerializeField] private AudioClip tepakSirihOpenSound;
+    [SerializeField] private AudioClip tepakSirihPickupSound;
 
     [Header("Pengaturan Event")]
     [SerializeField] private float eventDelay = 1f;
@@ -160,8 +169,12 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
         // Jeda sebelum suara bisikan.
         yield return new WaitForSeconds(eventDelay);
 
-        // Sementara suara masih menggunakan Debug.Log.
-        Debug.Log("SFX: Suara bisikan perempuan.");
+        // Putar suara bisikan perempuan.
+        if (kainAudioSource != null)
+        {
+            kainAudioSource.clip = bisikanPerempuan;
+            kainAudioSource.Play();
+        }
 
         // Jeda agar pemain merasakan suasana sebelum dialog.
         yield return new WaitForSeconds(eventDelay);
@@ -245,6 +258,13 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
 
     private IEnumerator PlayTepakSirihIntro()
     {
+        // Putar suara pembukaan Tepak Sirih.
+        if (tepakSirihAudioSource != null && tepakSirihOpenSound != null)
+        {
+            tepakSirihAudioSource.clip = tepakSirihOpenSound;
+            tepakSirihAudioSource.Play();
+        }
+
         yield return StartDialogue(
             "Tepak Sirih?",
             "Seharusnya aku bisa menyusunnya"
@@ -271,6 +291,14 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
     {
         NiskalaProgress.tepakSirihPuzzleCompleted = true;
         NiskalaProgress.tepakSirihCollected = true;
+
+        // Putar suara saat Tepak Sirih berhasil diambil.
+        if (tepakSirihAudioSource != null && tepakSirihPickupSound != null)
+        {
+            tepakSirihAudioSource.clip = tepakSirihPickupSound;
+            tepakSirihAudioSource.Play();
+        }
+
 
         if (messyTepakSirihZoom != null)
             messyTepakSirihZoom.SetActive(false);

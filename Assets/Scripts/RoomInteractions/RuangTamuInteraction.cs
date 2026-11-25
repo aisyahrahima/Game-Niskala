@@ -7,9 +7,6 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     [Header("Dialog")]
     [SerializeField] private DialogueSystem dialogueSystem;
 
-    [Header("Audio RuangTamu")]
-    [SerializeField] private AudioSource ambienceSource;
-
     [Header("Jumpscare Audio")]
     public AudioSource jumpscareSource;
     public AudioClip jumpscareSound;
@@ -93,8 +90,6 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
     private void Start()
     {
-          StartRoomAudio();
-
         // Pulihkan progres interaksi objek.
         lukisanClickedOnce =
             NiskalaProgress.lukisanClickedOnce;
@@ -121,24 +116,6 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
             Debug.Log(
                 "Dialog pembuka Ruang Tamu sudah pernah ditampilkan."
             );
-        }
-    }
-
-    // =========================================
-    // AUDIO RUANG TAMU
-    // =========================================
-
-    private void StartRoomAudio()
-    {
-        // Memutar Mysterious Ambience.
-        if (ambienceSource != null)
-        {
-            ambienceSource.loop = true;
-            ambienceSource.Play();
-        }
-        else
-        {
-            Debug.LogWarning("Ambience RuangTamu belum dihubungkan.");
         }
     }
 

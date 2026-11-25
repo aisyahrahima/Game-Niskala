@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
 {
+    [Header("Gentong Audio")]
+    [SerializeField] private AudioSource gentongThunderSource;
+    [SerializeField] private AudioSource gentongWhisperSource;
+    [SerializeField] private AudioSource gentongJumpscareSource;
+    [SerializeField] private AudioSource gentongMoveSource;
+
+    [Header("Bakul Audio")]
+    [SerializeField] private AudioSource bakulPickupSource;
+
+     [Header("Bakul Audio")]
+    [SerializeField] private AudioSource catatanSource;
+
     [Header("Catatan")]
     [SerializeField] private GameObject catatan;
     [SerializeField] private GameObject catatanZoom;
@@ -420,6 +432,9 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
 
     private IEnumerator StartCatatanDialogue()
     {
+        if (catatanSource != null)
+            catatanSource.Play();
+
         yield return new WaitForSeconds(2f);
 
         if (!eventRunning || currentEvent != "Catatan")
@@ -488,10 +503,11 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
                 yield return new WaitForSeconds(1f);
 
                 // Suara benda jatuh dan kilatan dimulai bersamaan.
-                Debug.Log("SFX: Suara benda jatuh");
+                    if (gentongThunderSource != null)
+                        gentongThunderSource.Play();
                 StartCoroutine(PlayJendelaCahayaFlash());
 
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(2f);
 
                 StartRoomDialogue("Apa itu?");
                 break;
@@ -501,9 +517,10 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
 
                 yield return new WaitForSeconds(1f);
 
-                Debug.Log("SFX: Bisikan 'Mayang...'");
+                 if (gentongWhisperSource != null)
+                    gentongWhisperSource.Play();
 
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(1.2f);
 
                 StartRoomDialogue("Siapa...?");
                 break;
@@ -511,11 +528,14 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
             case 3:
                 Debug.Log("Event Gentong 3 dimulai.");
 
-                yield return new WaitForSeconds(3f);
+                yield return new WaitForSeconds(1.5f);
+                // Putar suara jumpscare.
+                if (gentongJumpscareSource != null)
+                    gentongJumpscareSource.Play();
 
                 yield return StartCoroutine(PlayJumpscare());
 
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(2f);
 
                 StartRoomDialogue("Tadi... apa itu?");
                 break;
@@ -524,6 +544,9 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
                 Debug.Log("Event Gentong 4 dimulai.");
 
                 yield return new WaitForSeconds(0.5f);
+
+                if (gentongMoveSource != null)
+                    gentongMoveSource.Play();
 
                 // Gentong bergeser dengan efek fade.
                 yield return StartCoroutine(ShiftGentong());
@@ -733,6 +756,9 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
             return;
 
         Debug.Log("Bakul diklik.");
+
+        if (bakulPickupSource != null)
+            bakulPickupSource.Play();
 
         // Bakul di ruangan menghilang setelah diambil.
         bakul.SetActive(false);

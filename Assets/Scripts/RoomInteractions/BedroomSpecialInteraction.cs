@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
 {
+
+    [Header("Bedroom Audio")]
+    [SerializeField] private AudioSource mirrorJumpscareSource;
+    [SerializeField] private AudioSource glassBreakSource;
+    [SerializeField] private AudioSource footstepsSource;
+
     [Header("Cermin di Kamar")]
     [SerializeField] private GameObject mirrorRoom;
     [SerializeField] private GameObject mirrorBrokenRoom;
@@ -26,7 +32,7 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
     [SerializeField] private float fadeInDuration = 0.25f;
     [SerializeField] private float fadeOutDuration = 0.25f;
     [SerializeField] private float glassBreakDelay = 0.35f;
-    [SerializeField] private float footstepsDelay = 2f;
+    [SerializeField] private float footstepsDelay = 0.1f;
 
     [Header("Jumpscare Canvas Group")]
     [SerializeField] private CanvasGroup jumpscareCanvasGroup;
@@ -176,6 +182,13 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
         if (mirrorJumpscare != null)
             mirrorJumpscare.SetActive(true);
 
+        if (mirrorJumpscare != null)
+            mirrorJumpscare.SetActive(true);
+
+        // Putar SFX jumpscare.
+        if (mirrorJumpscareSource != null)
+            mirrorJumpscareSource.Play();
+
         if (jumpscareCanvasGroup != null)
             jumpscareCanvasGroup.alpha = 0f;
 
@@ -260,13 +273,15 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
         // Cermin utuh terlihat sebentar sebelum pecah.
         yield return new WaitForSeconds(glassBreakDelay);
 
+        // Putar SFX kaca pecah.
+        if (glassBreakSource != null)
+            glassBreakSource.Play();
+
         mirrorIsBroken = true;
         NiskalaProgress.mirrorIsBroken = true;
 
         SetActiveSafe(mirrorZoom, false);
         SetActiveSafe(mirrorZoomBroken, true);
-
-        Debug.Log("SFX: suara kaca pecah (belum ada file audio).");
 
         if (StartDialogue("Aku tidak bisa berkata-kata"))
         {
@@ -316,10 +331,21 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
     {
         Debug.Log("Selendang diperiksa.");
 
-        // Tunggu sebelum suara langkah kaki.
+        /// Tunggu sebelum suara langkah kaki.
         yield return new WaitForSeconds(footstepsDelay);
 
-        Debug.Log("SFX: suara langkah kaki (belum ada file audio).");
+        // Putar SFX langkah kaki.
+        if (footstepsSource != null)
+            footstepsSource.Play();
+
+        {
+            footstepsSource.Play();
+
+            // Tunggu sampai audio footsteps selesai.
+            yield return new WaitWhile(
+                () => footstepsSource.isPlaying
+            );
+        }
 
         // Mulai dialog setelah suara langkah kaki.
         if (StartDialogue("Siapa di sana?"))

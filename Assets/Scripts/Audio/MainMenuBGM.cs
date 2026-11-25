@@ -3,9 +3,10 @@ using UnityEngine;
 
 public class MainMenuBGM : MonoBehaviour
 {
-    public static MainMenuBGM Instance;
+    public static MainMenuBGM Instance { get; private set; }
 
-    private AudioSource bgmSource;
+    [Header("Main Menu Audio")]
+    [SerializeField] private AudioSource bgmSource;
 
     private void Awake()
     {
@@ -16,31 +17,26 @@ public class MainMenuBGM : MonoBehaviour
         }
 
         Instance = this;
-
         DontDestroyOnLoad(gameObject);
-
-        bgmSource = GetComponent<AudioSource>();
     }
 
     private void Start()
     {
-        if (bgmSource != null)
+        if (bgmSource != null && !bgmSource.isPlaying)
         {
             bgmSource.loop = true;
             bgmSource.Play();
         }
-        else
+        else if (bgmSource == null)
         {
-            Debug.LogError("AudioSource tidak ditemukan!");
+            Debug.LogError("BGM Source belum dihubungkan!");
         }
     }
 
     public void StopBGM()
     {
         if (bgmSource != null)
-        {
             bgmSource.Stop();
-        }
 
         Destroy(gameObject);
     }

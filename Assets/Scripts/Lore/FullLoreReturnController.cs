@@ -15,6 +15,9 @@ public class FullLoreReturnController : MonoBehaviour
     [SerializeField] private CanvasGroup mayangCanvasGroup;
     [SerializeField] private float fadeDuration = 0.5f;
 
+    [Header("First Mayang Appearance - Audio")]
+    [SerializeField] private AudioSource firstMayangJumpscareSource;
+
     [Header("Objek yang Tidak Bisa Diinteraksi")]
     [SerializeField] private GameObject[] nonKeyObjects;
 
@@ -136,6 +139,12 @@ public class FullLoreReturnController : MonoBehaviour
         // Mayang muncul bersamaan dengan dialognya.
         if (mayangMulai != null)
             mayangMulai.SetActive(true);
+        
+        // Putar suara jumpscare saat Mayang pertama kali muncul.
+        if (firstMayangJumpscareSource != null)
+        {
+            firstMayangJumpscareSource.Play();
+        }
 
         yield return StartCoroutine(FadeMayang(0f, 1f));
 
@@ -230,6 +239,15 @@ public class FullLoreReturnController : MonoBehaviour
         // 3. MAYANG MUNCUL
         // =========================================
 
+       // Nonaktifkan ambience misterius secara permanen untuk alur ending.
+        if (AmbienceManager.Instance != null)
+            AmbienceManager.Instance.DisableAmbience();
+       
+        if (EndingMelancholicBGM.Instance != null)
+        {
+            EndingMelancholicBGM.Instance.PlayBGM();
+        }
+
         if (mayangFinalRoot != null)
             mayangFinalRoot.SetActive(true);
 
@@ -261,6 +279,7 @@ public class FullLoreReturnController : MonoBehaviour
         // =========================================
         // 4. DIALOG MAYANG PERTAMA
         // =========================================
+
 
         yield return new WaitForSeconds(1f);
 

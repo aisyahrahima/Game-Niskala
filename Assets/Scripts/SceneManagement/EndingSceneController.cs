@@ -70,8 +70,15 @@ public class EndingSceneController : MonoBehaviour
         if (!narrationFinished)
             return;
 
+        // Hentikan dan hancurkan BGM melankolik.
+        if (EndingMelancholicBGM.Instance != null)
+        {
+            EndingMelancholicBGM.Instance.StopBGM();
+        }
+
         if (SceneTransitionManager.Instance != null)
         {
+            
             SceneTransitionManager.Instance.LoadScene("MainMenu");
         }
         else

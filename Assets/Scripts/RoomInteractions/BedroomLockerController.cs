@@ -1,12 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class BedroomLockerController : MonoBehaviour
-{
+{   
     [Header("Lemari di Room")]
     [SerializeField] private GameObject lemariClosed;
     [SerializeField] private GameObject lemariOpened;
+
+    [Header("Locker Audio")]
+    [SerializeField] private AudioSource lockerSource;
+    [SerializeField] private AudioClip lockerUnlockSound;
+    [SerializeField] private AudioClip lockerOpenSound;
+    [SerializeField] private AudioClip lockerPaperSound;
+    [SerializeField] private AudioClip lockerDigitSound;
 
     [Header("Locker Dimmer")]
     [SerializeField] private GameObject lockerDimmer;
@@ -66,6 +74,7 @@ public class BedroomLockerController : MonoBehaviour
     private bool zoomOpen = false;
     private bool catatanCollected = false;
     private bool interactionEventActive = false;
+    private bool unlockingInProgress = false;
 
     private void Start()
     {
@@ -171,12 +180,23 @@ public class BedroomLockerController : MonoBehaviour
         );
     }
 
+    private void PlayLockerSound(AudioClip clip)
+    {
+        if (lockerSource == null || clip == null)
+            return;
+
+        lockerSource.PlayOneShot(clip);
+    }
+
     // =========================================================
     // KLIK LEMARI
     // =========================================================
 
     public void ClickLemari()
     {
+        if (unlockingInProgress)
+            return;
+
         // Jika catatan sudah diambil, lemari tidak bisa dibuka lagi.
         if (catatanCollected)
             return;
@@ -341,6 +361,9 @@ public class BedroomLockerController : MonoBehaviour
         if (currentCode[slotIndex] < 1)
             currentCode[slotIndex] = 9;
 
+        // SFX putar angka
+        PlayLockerSound(lockerDigitSound);
+
         UpdateDigitDisplay();
 
         for (int i = 0; i < currentCode.Length; i++)
@@ -423,25 +446,42 @@ public class BedroomLockerController : MonoBehaviour
         }
 
         // Kalau sampai sini berarti 7318.
-        UnlockLocker();
+        StartCoroutine(UnlockLocker());
     }
 
     // =========================================================
     // LOCKER TERBUKA
     // =========================================================
 
-    private void UnlockLocker()
+    private IEnumerator UnlockLocker()
     {
+        unlockingInProgress = true;
+        SetDigitButtons(false);
+
+        // Putar suara unlock.
+        if (lockerSource != null && lockerUnlockSound != null)
+        {
+            lockerSource.PlayOneShot(lockerUnlockSound);
+
+            // Tunggu sampai suara unlock selesai.
+            yield return new WaitForSeconds(lockerUnlockSound.length);
+        }
+
+        // Simpan status lemari setelah suara selesai.
         lockerUnlocked = true;
         NiskalaProgress.lockerUnlocked = true;
         lockerOpen = false;
 
+        PlayLockerSound(lockerOpenSound);
+
+        // Tutup panel puzzle.
         if (lockerPanel != null)
             lockerPanel.SetActive(false);
 
-        SetDigitButtons(false);
-
+        // Tampilkan zoom lemari yang sudah terbuka.
         OpenLemariZoom();
+
+        Debug.Log("Locker berhasil dibuka!");
     }
 
     // =========================================================
@@ -485,6 +525,9 @@ public class BedroomLockerController : MonoBehaviour
         // Catatan hanya bisa diambil satu kali.
         if (catatanCollected)
             return;
+
+        // Putar suara saat catatan berhasil diambil.
+        PlayLockerSound(lockerPaperSound);
 
         catatanCollected = true;
         NiskalaProgress.catatanCikSimaCollected = true;

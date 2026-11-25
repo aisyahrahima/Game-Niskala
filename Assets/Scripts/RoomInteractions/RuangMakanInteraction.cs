@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
 {
+    [Header("Ruang Makan Audio")]
+    [SerializeField] private AudioSource alatMakanSource;
+    [SerializeField] private AudioSource gelasSource;
+    [SerializeField] private AudioSource tempayanSource;
+    [SerializeField] private AudioSource bisikanTempayanSource;
+
     [Header("Dialog")]
     [SerializeField] private DialogueSystem dialogueSystem;
 
@@ -73,7 +79,8 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
 
             BeginInteraction();
 
-            Debug.Log("SFX: Beberapa perempuan berbicara dan tertawa samar.");
+            if (alatMakanSource != null)
+                alatMakanSource.Play();
 
             StartCoroutine(PlayAlatMakanEvent());
         }
@@ -115,10 +122,18 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
             gelasClickedOnce = true;
             NiskalaProgress.gelasClickedOnce = true;
 
-            Debug.Log("SFX: Suara benda pecah.");
+            StartCoroutine(PlayGelasEvent());
         }
 
         SetArrowBack(true);
+    }
+
+        private IEnumerator PlayGelasEvent()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        if (gelasSource != null)
+            gelasSource.Play();
     }
 
     // =========================================
@@ -151,17 +166,23 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
 
     private IEnumerator PlayTempayanEvent()
     {
-        Debug.Log("SFX: Suara tetesan air.");
-
+        yield return new WaitForSeconds(1.5f);
+        if (tempayanSource != null)
+        {
+            tempayanSource.Play();
+        }
         // Dialog pertama.
         yield return new WaitForSeconds(2f);
 
         yield return StartDialogue("Kosong...");
 
         // Suara bisikan muncul setelah dialog pertama selesai.
-        Debug.Log("SFX: Suara perempuan berbisik 'Air... haus...'");
+        if (bisikanTempayanSource != null)
+        {
+            bisikanTempayanSource.Play();
+        }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(5f);
 
         // Dialog kedua.
         yield return StartDialogue(
