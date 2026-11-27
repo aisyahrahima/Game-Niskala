@@ -10,6 +10,9 @@ public class MainMenuManager : MonoBehaviour
     [Header("Exit Confirmation Popup")]
     [SerializeField] private GameObject exitConfirmPopup;
 
+    [Header("Credit Popup")]
+    [SerializeField] private GameObject creditPopup;
+
     [Header("Audio Settings")]
     [SerializeField] private Slider volumeSlider;
     [SerializeField] private TMP_Text volumePercentage;
@@ -27,6 +30,9 @@ public class MainMenuManager : MonoBehaviour
 
         if (exitConfirmPopup != null)
             exitConfirmPopup.SetActive(false);
+
+        if (creditPopup != null)
+            creditPopup.SetActive(false);
     }
 
     private void Start()
@@ -112,6 +118,18 @@ public class MainMenuManager : MonoBehaviour
     {
         if (settingsPopup != null)
             settingsPopup.SetActive(false);
+    }
+
+    public void OpenCredit()
+    {
+        if (creditPopup != null)
+            creditPopup.SetActive(true);
+    }
+
+    public void CloseCredit()
+    {
+        if (creditPopup != null)
+            creditPopup.SetActive(false);
     }
 
     public void OpenExitConfirm()

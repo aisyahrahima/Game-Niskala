@@ -37,6 +37,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     [Header("Perhiasan")]
     [SerializeField] private GameObject perhiasan;
     [SerializeField] private GameObject perhiasanZoom;
+    [SerializeField] private GameObject perhiasanDimmer;
     [SerializeField] private GameObject jumpscare;
 
     [Header("Animasi Jumpscare")]
@@ -48,10 +49,10 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     [SerializeField] private GameObject sisir;
     [SerializeField] private GameObject sisirZoom;
     [SerializeField] private GameObject sisirRambutZoom;
+    [SerializeField] private GameObject sisirDimmer;
 
     [Header("Senjata")]
     [SerializeField] private GameObject senjata;
-    [SerializeField] private GameObject senjataZoom;
 
     [Header("Efek Getaran")]
     [SerializeField] private RectTransform gameplay;
@@ -74,9 +75,10 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         SetActiveSafe(lukisanZoom, false);
         SetActiveSafe(lukisanDimmer, false);
         SetActiveSafe(perhiasanZoom, false);
+        SetActiveSafe(perhiasanDimmer, false);
         SetActiveSafe(sisirZoom, false);
         SetActiveSafe(sisirRambutZoom, false);
-        SetActiveSafe(senjataZoom, false);
+        SetActiveSafe(sisirDimmer, false);
         SetActiveSafe(jumpscare, false);
 
         SetArrowBack(false);
@@ -156,7 +158,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
                 "Kenapa tiba-tiba pintunya langsung terkunci?",
                 "....",
                 "Yah... mau nggak mau aku harus tetap di sini untuk sementara.",
-                "Sekalian saja aku cari tahu apa yang sebenarnya terjadi di tempat ini."
+                "Sekalian berteduh juga."
             );
 
             if (started)
@@ -208,7 +210,7 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         }
     }
 
-        private IEnumerator PlayLukisanDialogue()
+    private IEnumerator PlayLukisanDialogue()
     {
         yield return new WaitForSeconds(1f);
         // Memutar suara perempuan tertawa.
@@ -241,6 +243,9 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         bool firstClick = !perhiasanClickedOnce;
 
         OpenZoom(perhiasan, perhiasanZoom);
+
+        // Aktifkan dimmer ketika Perhiasan dizoom.
+        SetActiveSafe(perhiasanDimmer, true);
 
         if (firstClick)
         {
@@ -385,10 +390,16 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
         bool firstClick = !sisirClickedOnce;
 
-        OpenZoom(sisir, sisirZoom);
-
         if (firstClick)
         {
+            OpenZoom(sisir, sisirZoom);
+
+            // Pastikan Sisir asli tetap nonaktif.
+            SetActiveSafe(sisir, false);
+
+            // Aktifkan dimmer Sisir.
+            SetActiveSafe(sisirDimmer, true);
+
             sisirClickedOnce = true;
             NiskalaProgress.sisirClickedOnce = true;
 
@@ -399,6 +410,18 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
         }
         else
         {
+            // Nonaktifkan Sisir asli.
+            SetActiveSafe(sisir, false);
+
+            // Aktifkan dimmer Sisir.
+            SetActiveSafe(sisirDimmer, true);
+
+            // Gunakan visual rambut pada klik berikutnya.
+            SetActiveSafe(sisirZoom, false);
+            SetActiveSafe(sisirRambutZoom, true);
+
+            zoomOpen = true;
+
             SetArrowBack(true);
         }
     }
@@ -407,29 +430,24 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
     {
         yield return new WaitForSeconds(0.5f);
 
-        if (sisirZoom != null)
-            sisirZoom.SetActive(false);
+        // Pastikan Sisir asli tetap nonaktif.
+        SetActiveSafe(sisir, false);
 
-        if (sisirRambutZoom != null)
-            sisirRambutZoom.SetActive(true);
+        // Tutup Zoom Sisir biasa.
+        SetActiveSafe(sisirZoom, false);
+
+        // Tampilkan Zoom Sisir_Rambut.
+        SetActiveSafe(sisirRambutZoom, true);
 
         Debug.Log("Tampilan Sisir_Rambut_Zoom muncul.");
 
         // Memutar jumpscare sound 2 khusus sisir.
-       if (jumpscareSource2 != null && jumpscareSound2 != null)
+        if (jumpscareSource2 != null && jumpscareSound2 != null)
         {
             jumpscareSource2.PlayOneShot(jumpscareSound2);
         }
 
         yield return new WaitForSeconds(1f);
-
-        if (sisirRambutZoom != null)
-            sisirRambutZoom.SetActive(false);
-
-        if (sisirZoom != null)
-            sisirZoom.SetActive(true);
-
-        Debug.Log("Tampilan Sisir_Zoom kembali.");
 
         // Jeda setelah pergantian tampilan sebelum dialog.
         yield return new WaitForSeconds(1f);
@@ -456,8 +474,6 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
         bool firstClick = !senjataClickedOnce;
 
-        OpenZoom(senjata, senjataZoom);
-
         if (firstClick)
         {
             senjataClickedOnce = true;
@@ -466,11 +482,9 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
             interactionBusy = true;
             BeginInteraction();
 
+            SetArrowBack(false);
+
             StartCoroutine(PlaySenjataSound());
-        }
-        else
-        {
-            SetArrowBack(true);
         }
     }
 
@@ -485,8 +499,6 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
         interactionBusy = false;
         EndInteraction();
-
-        SetArrowBack(true);
     }
 
     // =========================================
@@ -540,35 +552,35 @@ public class RuangTamuInteraction : MonoBehaviour, IInteractionBlocker
 
     private void CloseAllZoom()
     {
+        // Lukisan
         if (lukisanZoom != null && lukisanZoom.activeSelf)
         {
             lukisanZoom.SetActive(false);
             SetActiveSafe(lukisan, true);
-
-            // Matikan latar hitam setelah zoom Lukisan ditutup.
-            SetActiveSafe(lukisanDimmer, false);
         }
 
+        // Perhiasan
         if (perhiasanZoom != null && perhiasanZoom.activeSelf)
         {
             perhiasanZoom.SetActive(false);
             SetActiveSafe(perhiasan, true);
         }
 
-        if (sisirZoom != null && sisirZoom.activeSelf)
-        {
+        // Sisir
+        if (sisirZoom != null)
             sisirZoom.SetActive(false);
-            SetActiveSafe(sisir, true);
-        }
 
         if (sisirRambutZoom != null)
             sisirRambutZoom.SetActive(false);
 
-        if (senjataZoom != null && senjataZoom.activeSelf)
-        {
-            senjataZoom.SetActive(false);
-            SetActiveSafe(senjata, true);
-        }
+        // Aktifkan kembali objek Sisir asli.
+        if (sisir != null)
+            sisir.SetActive(true);
+
+        // Matikan seluruh dimmer zoom RuangTamu.
+        SetActiveSafe(lukisanDimmer, false);
+        SetActiveSafe(perhiasanDimmer, false);
+        SetActiveSafe(sisirDimmer, false);
 
         zoomOpen = false;
         SetArrowBack(false);

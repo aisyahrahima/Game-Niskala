@@ -21,15 +21,19 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
 
     [Header("Alat Makan")]
     [SerializeField] private GameObject alatMakan;
-    [SerializeField] private GameObject alatMakanZoom;
 
     [Header("Gelas")]
     [SerializeField] private GameObject gelas;
     [SerializeField] private GameObject gelasZoom;
+    [SerializeField] private GameObject gelasDimmer;
+    [SerializeField] private float gelasFallDelay = 1.4f;
+    [SerializeField] private float gelasFallDuration = 0.1f;
+    [SerializeField] private float gelasFallDistance = 1200f;
 
     [Header("Tempayan")]
     [SerializeField] private GameObject tempayan;
     [SerializeField] private GameObject tempayanZoom;
+    [SerializeField] private GameObject tempayanDimmer;
 
     [Header("Mayang Hide Spot")]
     [SerializeField] private MayangHideSpot mayangHideSpot;
@@ -52,9 +56,18 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
         tempayanClickedOnce =
             NiskalaProgress.tempayanClickedOnce;
 
-        SetActiveSafe(alatMakanZoom, false);
         SetActiveSafe(gelasZoom, false);
         SetActiveSafe(tempayanZoom, false);
+
+        SetActiveSafe(gelasDimmer, false);
+        SetActiveSafe(tempayanDimmer, false);
+
+        // Jika Gelas sudah pernah pecah,
+        // sembunyikan Gelas asli secara permanen.
+        if (gelasClickedOnce)
+        {
+            SetActiveSafe(gelas, false);
+        }
 
         SetArrowBack(true);
     }
@@ -68,8 +81,6 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
         if (IsInteractionBlocked())
             return;
 
-        OpenZoom(alatMakan, alatMakanZoom);
-
         if (!alatMakanClickedOnce)
         {
             alatMakanClickedOnce = true;
@@ -79,14 +90,12 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
 
             BeginInteraction();
 
+            SetArrowBack(false);
+
             if (alatMakanSource != null)
                 alatMakanSource.Play();
 
             StartCoroutine(PlayAlatMakanEvent());
-        }
-        else
-        {
-            SetArrowBack(true);
         }
     }
 
@@ -115,25 +124,97 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
         if (IsInteractionBlocked())
             return;
 
+        if (gelasClickedOnce)
+            return;
+
+        gelasClickedOnce = true;
+        NiskalaProgress.gelasClickedOnce = true;
+
+        interactionBusy = true;
+
+        BeginInteraction();
+
+        SetActiveSafe(gelasDimmer, true);
+
         OpenZoom(gelas, gelasZoom);
 
-        if (!gelasClickedOnce)
-        {
-            gelasClickedOnce = true;
-            NiskalaProgress.gelasClickedOnce = true;
+        SetArrowBack(false);
 
-            StartCoroutine(PlayGelasEvent());
-        }
-
-        SetArrowBack(true);
+        StartCoroutine(PlayGelasEvent());
+        StartCoroutine(PlayGelasFall());
     }
 
-        private IEnumerator PlayGelasEvent()
+    private IEnumerator PlayGelasEvent()
     {
         yield return new WaitForSeconds(1.5f);
 
         if (gelasSource != null)
             gelasSource.Play();
+    }
+
+    private IEnumerator PlayGelasFall()
+    {
+        // Tunggu 1 detik sebelum Gelas mulai jatuh.
+        yield return new WaitForSeconds(gelasFallDelay);
+
+        if (gelasZoom == null)
+        {
+            Debug.LogError("Gelas_Zoom belum dihubungkan.");
+            yield break;
+        }
+
+        RectTransform gelasRect =
+            gelasZoom.GetComponent<RectTransform>();
+
+        if (gelasRect == null)
+        {
+            Debug.LogError(
+                "Gelas_Zoom tidak memiliki RectTransform."
+            );
+            yield break;
+        }
+
+        Vector2 startPosition = gelasRect.anchoredPosition;
+
+        Vector2 endPosition = startPosition +
+            Vector2.down * gelasFallDistance;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < gelasFallDuration)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float progress = Mathf.Clamp01(
+                elapsedTime / gelasFallDuration
+            );
+
+            gelasRect.anchoredPosition = Vector2.Lerp(
+                startPosition,
+                endPosition,
+                progress
+            );
+
+            yield return null;
+        }
+
+        gelasRect.anchoredPosition = endPosition;
+
+        // Nonaktifkan Gelas_Zoom setelah jatuh.
+        gelasZoom.SetActive(false);
+
+        // Matikan Dimmer_Gelas.
+        SetActiveSafe(gelasDimmer, false);
+
+        // Zoom sudah selesai.
+        zoomOpen = false;
+
+        interactionBusy = false;
+
+        EndInteraction();
+
+        // Tampilkan ArrowBack setelah Gelas_Zoom menghilang.
+        SetArrowBack(true);
     }
 
     // =========================================
@@ -144,6 +225,8 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
     {
         if (IsInteractionBlocked())
             return;
+
+        SetActiveSafe(tempayanDimmer, true);
 
         OpenZoom(tempayan, tempayanZoom);
 
@@ -263,12 +346,6 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
 
     private void CloseAllZoom()
     {
-        if (alatMakanZoom != null && alatMakanZoom.activeSelf)
-        {
-            alatMakanZoom.SetActive(false);
-            SetActiveSafe(alatMakan, true);
-        }
-
         if (gelasZoom != null && gelasZoom.activeSelf)
         {
             gelasZoom.SetActive(false);
@@ -280,6 +357,10 @@ public class RuangMakanInteraction : MonoBehaviour, IInteractionBlocker
             tempayanZoom.SetActive(false);
             SetActiveSafe(tempayan, true);
         }
+
+        // Matikan kedua Dimmer.
+        SetActiveSafe(gelasDimmer, false);
+        SetActiveSafe(tempayanDimmer, false);
 
         zoomOpen = false;
 

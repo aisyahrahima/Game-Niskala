@@ -17,11 +17,9 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
 
     [Header("Patung")]
     [SerializeField] private GameObject patung;
-    [SerializeField] private GameObject patungZoom;
 
     [Header("Kain")]
     [SerializeField] private GameObject kain;
-    [SerializeField] private GameObject kainZoom;
 
     [Header("Kain Audio")]
     [SerializeField] private AudioSource kainAudioSource;
@@ -30,6 +28,7 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
     [Header("Tepak Sirih")]
     [SerializeField] private GameObject tepakSirih;
     [SerializeField] private GameObject messyTepakSirihZoom;
+    [SerializeField] private GameObject dimmerTepakSirih;
     [SerializeField] private GameObject tepakSirihZoom;
     [SerializeField] private GameObject tepakSirihInventory;
     [SerializeField] private GameObject buttonInvestigasiArtefak;
@@ -52,10 +51,6 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
 
     private void Awake()
     {
-        // Pastikan seluruh tampilan Zoom tertutup saat scene dibuka.
-        SetActiveSafe(patungZoom, false);
-        SetActiveSafe(kainZoom, false);
-
         // Pulihkan status interaksi sebelumnya.
         patungClickedOnce = NiskalaProgress.patungClickedOnce;
         kainClickedOnce = NiskalaProgress.kainClickedOnce;
@@ -67,12 +62,14 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
         {
             SetActiveSafe(tepakSirih, false);
             SetActiveSafe(messyTepakSirihZoom, false);
+            SetActiveSafe(dimmerTepakSirih, false);
             SetActiveSafe(tepakSirihZoom, false);
         }
         else
         {
             SetActiveSafe(tepakSirih, true);
             SetActiveSafe(messyTepakSirihZoom, false);
+            SetActiveSafe(dimmerTepakSirih, false);
             SetActiveSafe(tepakSirihZoom, false);
         }
     }
@@ -86,13 +83,7 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
         if (IsInteractionBlocked())
             return;
 
-        bool firstClick = !patungClickedOnce;
-
-        // Buka tampilan Zoom Patung.
-        if (!OpenZoom(patung, patungZoom))
-            return;
-
-        if (firstClick)
+        if (!patungClickedOnce)
         {
             // Simpan status bahwa Patung sudah pernah diklik.
             patungClickedOnce = true;
@@ -101,13 +92,9 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
             interactionBusy = true;
             BeginInteraction();
 
+            SetArrowBack(false);
+
             StartCoroutine(PlayPatungEvent());
-        }
-        else
-        {
-            // Jika bukan klik pertama, pemain langsung dapat
-            // melihat Patung_Zoom tanpa mengulang dialog.
-            SetArrowBack(true);
         }
     }
 
@@ -140,13 +127,7 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
         if (IsInteractionBlocked())
             return;
 
-        bool firstClick = !kainClickedOnce;
-
-        // Buka tampilan Zoom Kain.
-        if (!OpenZoom(kain, kainZoom))
-            return;
-
-        if (firstClick)
+        if (!kainClickedOnce)
         {
             // Simpan status bahwa Kain sudah pernah diklik.
             kainClickedOnce = true;
@@ -155,12 +136,9 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
             interactionBusy = true;
             BeginInteraction();
 
+            SetArrowBack(false);
+
             StartCoroutine(PlayKainEvent());
-        }
-        else
-        {
-            // Klik berikutnya hanya membuka Zoom.
-            SetArrowBack(true);
         }
     }
 
@@ -226,6 +204,7 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
 
         tepakSirih.SetActive(false);
         messyTepakSirihZoom.SetActive(true);
+        SetActiveSafe(dimmerTepakSirih, true);
 
         zoomOpen = true;
 
@@ -302,6 +281,9 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
 
         if (messyTepakSirihZoom != null)
             messyTepakSirihZoom.SetActive(false);
+
+        // Matikan dimmer ketika puzzle berhasil diselesaikan.
+        SetActiveSafe(dimmerTepakSirih, false);
 
         if (tepakSirih != null)
             tepakSirih.SetActive(false);
@@ -383,24 +365,13 @@ public class RuangTengahInteraction : MonoBehaviour, IInteractionBlocker
 
     private void CloseAllZoom()
     {
-        // Tutup Zoom Patung.
-        if (patungZoom != null && patungZoom.activeSelf)
-        {
-            patungZoom.SetActive(false);
-            SetActiveSafe(patung, true);
-        }
-
-        // Tutup Zoom Kain.
-        if (kainZoom != null && kainZoom.activeSelf)
-        {
-            kainZoom.SetActive(false);
-            SetActiveSafe(kain, true);
-        }
-
         if (messyTepakSirihZoom != null &&
             messyTepakSirihZoom.activeSelf)
         {
             messyTepakSirihZoom.SetActive(false);
+
+            // Matikan dimmer ketika Zoom Tepak Sirih ditutup.
+            SetActiveSafe(dimmerTepakSirih, false);
 
             if (!NiskalaProgress.tepakSirihCollected)
                 SetActiveSafe(tepakSirih, true);

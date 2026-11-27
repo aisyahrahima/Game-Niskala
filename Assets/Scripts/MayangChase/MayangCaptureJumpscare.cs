@@ -32,6 +32,12 @@ public class MayangCaptureJumpscare : MonoBehaviour
     [SerializeField] private CanvasGroup inventoryCanvasGroup;
     [SerializeField] private GameObject arrowBack;
 
+    [Header("Tertangkap Screen")]
+    [SerializeField] private GameObject tertangkapScreen;
+    [SerializeField] private CanvasGroup tertangkapCanvasGroup;
+    [SerializeField] private float tertangkapFadeDuration = 0.5f;
+    [SerializeField] private float tertangkapDisplayDuration = 3f;
+
     private MayangChaseManager chaseManager;
     private Coroutine jumpscareCoroutine;
     private Vector2 ancangHomePosition;
@@ -46,6 +52,12 @@ public class MayangCaptureJumpscare : MonoBehaviour
 
         if (jumpscareMulaiRect != null)
             mulaiHomePosition = jumpscareMulaiRect.anchoredPosition;
+
+        if (tertangkapScreen != null)
+            tertangkapScreen.SetActive(false);
+
+        if (tertangkapCanvasGroup != null)
+            tertangkapCanvasGroup.alpha = 0f;
 
         ResetJumpscare();
     }
@@ -213,6 +225,11 @@ public class MayangCaptureJumpscare : MonoBehaviour
             FadeToBlack()
         );
 
+        // Tampilkan Tertangkap_Screen terlebih dahulu.
+        yield return StartCoroutine(
+            PlayTertangkapScreen()
+        );
+
         // Beri tahu manager bahwa animasi selesai.
         if (chaseManager != null)
         {
@@ -221,11 +238,82 @@ public class MayangCaptureJumpscare : MonoBehaviour
         else
         {
             Debug.LogError(
-                "MayangChaseManager tidak ditemukan."
+               "MayangChaseManager tidak ditemukan."
             );
         }
 
         jumpscareCoroutine = null;
+    }
+
+    private IEnumerator PlayTertangkapScreen()
+    {
+        if (tertangkapScreen == null ||
+            tertangkapCanvasGroup == null)
+        {
+            Debug.LogError(
+                "Tertangkap_Screen atau CanvasGroup " +
+                "belum dihubungkan."
+            );
+
+            yield break;
+        }
+
+        // Aktifkan Tertangkap_Screen.
+        tertangkapScreen.SetActive(true);
+
+        // Mulai dari transparan.
+        tertangkapCanvasGroup.alpha = 0f;
+
+        // Pastikan tidak menerima interaksi.
+        tertangkapCanvasGroup.interactable = false;
+        tertangkapCanvasGroup.blocksRaycasts = false;
+
+        // Fade-in.
+        yield return StartCoroutine(
+            FadeTertangkapScreen(0f, 1f)
+        );
+
+        // Tampilkan layar selama 3 detik.
+        yield return new WaitForSecondsRealtime(
+            tertangkapDisplayDuration
+        );
+
+        // Fade-out.
+        yield return StartCoroutine(
+            FadeTertangkapScreen(1f, 0f)
+        );
+
+        // Nonaktifkan setelah fade-out selesai.
+        tertangkapScreen.SetActive(false);
+    }
+
+    private IEnumerator FadeTertangkapScreen(
+    float startAlpha,
+    float targetAlpha)
+    {
+        float elapsed = 0f;
+
+        float duration = Mathf.Max(
+            0.01f,
+            tertangkapFadeDuration
+        );
+
+        tertangkapCanvasGroup.alpha = startAlpha;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            tertangkapCanvasGroup.alpha = Mathf.Lerp(
+                startAlpha,
+                targetAlpha,
+                Mathf.Clamp01(elapsed / duration)
+            );
+
+            yield return null;
+        }
+
+        tertangkapCanvasGroup.alpha = targetAlpha;
     }
 
     private IEnumerator ShakeJumpscare()

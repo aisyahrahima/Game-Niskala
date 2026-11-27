@@ -1330,7 +1330,7 @@ GameObject:
   - component: {fileID: 322367870}
   - component: {fileID: 322367869}
   m_Layer: 5
-  m_Name: LockerDimmer
+  m_Name: Dimmer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1368,7 +1368,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.78431374}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1722,6 +1722,16 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &425326069 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1062122149047487695, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+  m_PrefabInstance: {fileID: 1805288152}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &425326070 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 3055241247625082810, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+  m_PrefabInstance: {fileID: 1805288152}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &448872284
 GameObject:
   m_ObjectHideFlags: 0
@@ -2122,6 +2132,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1805288154}
     - target: {fileID: 7671037687464523138, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: tertangkapScreen
+      value: 
+      objectReference: {fileID: 425326069}
+    - target: {fileID: 7671037687464523138, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
       propertyPath: ancangAncangSource
       value: 
       objectReference: {fileID: 1086933293}
@@ -2133,6 +2147,14 @@ PrefabInstance:
       propertyPath: inventoryCanvasGroup
       value: 
       objectReference: {fileID: 1805288153}
+    - target: {fileID: 7671037687464523138, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: tertangkapCanvasGroup
+      value: 
+      objectReference: {fileID: 425326070}
+    - target: {fileID: 7671037687464523138, guid: 1c6f94069eacbc3458041312cb7f2a9a, type: 3}
+      propertyPath: tertangkapFadeDuration
+      value: 0.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2561,7 +2583,6 @@ GameObject:
   - component: {fileID: 703083223}
   - component: {fileID: 703083226}
   - component: {fileID: 703083225}
-  - component: {fileID: 703083224}
   - component: {fileID: 703083227}
   m_Layer: 5
   m_Name: ViewRightButton
@@ -2589,50 +2610,6 @@ RectTransform:
   m_AnchoredPosition: {x: 616.32, y: 40.56}
   m_SizeDelta: {x: 124.37, y: 675.72}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &703083224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 703083222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 703083225}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &703083225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4503,8 +4480,8 @@ MonoBehaviour:
   mirrorZoom: {fileID: 484834101}
   mirrorZoomBroken: {fileID: 1374926644}
   mirrorJumpscare: {fileID: 407820839}
+  mirrorDimmer: {fileID: 322367867}
   scarfRoom: {fileID: 2085651670}
-  scarfZoom: {fileID: 0}
   arrowBack: {fileID: 1805288154}
   jumpscareDelay: 2
   jumpscareDuration: 0.65
@@ -4512,6 +4489,7 @@ MonoBehaviour:
   fadeOutDuration: 0.25
   glassBreakDelay: 0.35
   footstepsDelay: 2
+  mirrorDialogueDelay: 1
   jumpscareCanvasGroup: {fileID: 407820843}
   lockerController: {fileID: 1980448205}
   artifactZoomController: {fileID: 2057692702}
@@ -5319,10 +5297,10 @@ RectTransform:
   - {fileID: 743334540}
   - {fileID: 703083223}
   - {fileID: 1694890733}
+  - {fileID: 322367868}
   - {fileID: 484834102}
   - {fileID: 407820840}
   - {fileID: 1374926645}
-  - {fileID: 322367868}
   - {fileID: 1865809478}
   - {fileID: 1305400242}
   - {fileID: 186685481}
@@ -5772,7 +5750,6 @@ GameObject:
   - component: {fileID: 1694890733}
   - component: {fileID: 1694890736}
   - component: {fileID: 1694890735}
-  - component: {fileID: 1694890734}
   - component: {fileID: 1694890737}
   m_Layer: 5
   m_Name: ViewLeftButton
@@ -5800,50 +5777,6 @@ RectTransform:
   m_AnchoredPosition: {x: -848.3, y: 40.558}
   m_SizeDelta: {x: 124.37, y: 675.717}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1694890734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1694890732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 1694890735}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1694890735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6332,6 +6265,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2057692700}
     m_Modifications:
+    - target: {fileID: 1062122149047487695, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2836268802946177121, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
       propertyPath: m_Color.a
       value: 0.16470589
@@ -6491,6 +6428,10 @@ PrefabInstance:
     - target: {fileID: 6452125028470528372, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 6943528031358677990, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.0037841797
       objectReference: {fileID: 0}
     - target: {fileID: 7913837078462829404, guid: a03069045f4b5194ab1f316de74799c1, type: 3}
       propertyPath: m_IsActive
@@ -7078,8 +7019,8 @@ MonoBehaviour:
   catatanCikSimaInventory: {fileID: 1805288155}
   buttonInvestigasiArtefak: {fileID: 1911197193}
   arrowBack: {fileID: 1805288154}
-  viewLeftButton: {fileID: 1694890734}
-  viewRightButton: {fileID: 703083224}
+  viewLeftButton: {fileID: 0}
+  viewRightButton: {fileID: 0}
   upButton1: {fileID: 1105839121}
   downButton1: {fileID: 53726051}
   upButton2: {fileID: 1247874855}

@@ -83,7 +83,8 @@ public class ExteriorController : MonoBehaviour
             "Dari luar saja sudah kelihatan tua banget.",
             "Katanya tempat ini sudah lama kosong.",
             "Tapi masih banyak cerita aneh yang beredar tentang tempat ini.",
-            "Kalau memang ada sesuatu di dalam, aku harus tahu apa itu."
+            "Kalau memang ada sesuatu di dalam, aku harus tahu apa itu.",
+            "Dan..Sepertinya sebentar lagi hujan. Aku harus cepat-cepat masuk."
         );
 
         if (!started)

@@ -19,6 +19,7 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
     [Header("Catatan")]
     [SerializeField] private GameObject catatan;
     [SerializeField] private GameObject catatanZoom;
+    [SerializeField] private GameObject catatanDimmer;
     [SerializeField] private GameObject arrowBack;
 
     [Header("Dialog")]
@@ -203,6 +204,9 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
         if (catatanZoom != null)
             catatanZoom.SetActive(false);
 
+        if (catatanDimmer != null)
+            catatanDimmer.SetActive(false);
+
         if (bakulZoom != null)
             bakulZoom.SetActive(false);
 
@@ -254,6 +258,9 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
 
         if (catatanZoom != null)
             catatanZoom.SetActive(false);
+
+        if (catatanDimmer != null)
+            catatanDimmer.SetActive(false);
 
         if (bakulZoom != null)
             bakulZoom.SetActive(false);
@@ -422,6 +429,11 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
         BeginStorageInteraction("Catatan");
 
         catatan.SetActive(false);
+
+        // Aktifkan Dimmer di belakang Catatan_Zoom.
+        if (catatanDimmer != null)
+            catatanDimmer.SetActive(true);
+
         catatanZoom.SetActive(true);
 
         if (arrowBack != null)
@@ -458,6 +470,11 @@ public class StorageRoomInteraction : MonoBehaviour, IInteractionBlocker
             return;
 
         catatanZoom.SetActive(false);
+
+        // Matikan Dimmer ketika Zoom Catatan ditutup.
+        if (catatanDimmer != null)
+            catatanDimmer.SetActive(false);
+
         catatan.SetActive(true);
 
         if (arrowBack != null)

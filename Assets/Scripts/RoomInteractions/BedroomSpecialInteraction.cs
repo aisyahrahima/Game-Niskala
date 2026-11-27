@@ -18,10 +18,10 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
     [SerializeField] private GameObject mirrorZoom;
     [SerializeField] private GameObject mirrorZoomBroken;
     [SerializeField] private GameObject mirrorJumpscare;
+    [SerializeField] private GameObject mirrorDimmer;
 
     [Header("Selendang")]
     [SerializeField] private GameObject scarfRoom;
-    [SerializeField] private GameObject scarfZoom;
 
     [Header("Common UI")]
     [SerializeField] private GameObject arrowBack;
@@ -33,6 +33,7 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
     [SerializeField] private float fadeOutDuration = 0.25f;
     [SerializeField] private float glassBreakDelay = 0.35f;
     [SerializeField] private float footstepsDelay = 0.1f;
+    [SerializeField] private float mirrorDialogueDelay = 1f;
 
     [Header("Jumpscare Canvas Group")]
     [SerializeField] private CanvasGroup jumpscareCanvasGroup;
@@ -48,7 +49,6 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
     private bool mirrorClickedOnce;
     private bool mirrorIsBroken;
     private bool mirrorZoomOpen;
-    private bool scarfZoomOpen;
     private bool interactionBusy;
 
     private void OnDisable()
@@ -74,7 +74,7 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
         SetActiveSafe(mirrorJumpscare, false);
         SetActiveSafe(mirrorZoom, false);
         SetActiveSafe(mirrorZoomBroken, false);
-        SetActiveSafe(scarfZoom, false);
+        SetActiveSafe(mirrorDimmer, false);
 
         if (jumpscareCanvasGroup != null)
         {
@@ -83,7 +83,6 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
 
         // Reset status zoom.
         mirrorZoomOpen = false;
-        scarfZoomOpen = false;
 
         // Pulihkan tampilan objek sesuai kondisi terakhir.
         SetActiveSafe(mirrorRoom, !mirrorIsBroken);
@@ -115,12 +114,12 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
         SetActiveSafe(mirrorZoom, false);
         SetActiveSafe(mirrorZoomBroken, false);
         SetActiveSafe(mirrorJumpscare, false);
+        SetActiveSafe(mirrorDimmer, false);
 
         if (jumpscareCanvasGroup != null)
             jumpscareCanvasGroup.alpha = 0f;
 
         SetActiveSafe(scarfRoom, true);
-        SetActiveSafe(scarfZoom, false);
 
         SetArrowBack(true);
     }
@@ -146,30 +145,41 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
 
         SetActiveSafe(mirrorJumpscare, false);
 
+        // Tampilkan dimmer di belakang zoom cermin.
+        SetActiveSafe(mirrorDimmer, true);
+
+        // Jika cermin sudah pecah, langsung tampilkan zoom pecah.
         if (mirrorIsBroken)
         {
             SetActiveSafe(mirrorZoom, false);
             SetActiveSafe(mirrorZoomBroken, true);
+
             SetArrowBack(true);
 
             Debug.Log("Cermin dibuka dalam kondisi pecah.");
             return;
         }
 
+        // Tampilkan Zoom cermin normal.
         SetActiveSafe(mirrorZoom, true);
         SetActiveSafe(mirrorZoomBroken, false);
 
         BeginSpecialInteraction();
+
+        // ArrowBack nonaktif selama seluruh rangkaian event.
         SetArrowBack(false);
 
         if (!mirrorClickedOnce)
         {
             mirrorClickedOnce = true;
             NiskalaProgress.mirrorClickedOnce = true;
+
             StartCoroutine(FirstMirrorSequence());
         }
         else
         {
+            // Jika progres interaksi pernah terputus sebelum cermin pecah,
+            // lanjutkan rangkaian hingga cermin menjadi pecah.
             StartCoroutine(BreakMirrorSequence());
         }
     }
@@ -178,9 +188,6 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
     {
         // Tunggu sebelum jumpscare muncul.
         yield return new WaitForSeconds(jumpscareDelay);
-
-        if (mirrorJumpscare != null)
-            mirrorJumpscare.SetActive(true);
 
         if (mirrorJumpscare != null)
             mirrorJumpscare.SetActive(true);
@@ -199,7 +206,7 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
             FadeJumpscare(0f, 1f, fadeInDuration)
         );
 
-        // Tahan jumpscare selama 1.65 detik.
+        // Tahan jumpscare.
         yield return new WaitForSeconds(jumpscareDuration);
 
         // Fade out: terlihat penuh menjadi transparan.
@@ -209,6 +216,10 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
 
         SetActiveSafe(mirrorJumpscare, false);
 
+        // Jeda sebelum dialog pertama muncul.
+        yield return new WaitForSeconds(mirrorDialogueDelay);
+
+        // Dialog pertama.
         if (StartDialogue("Bayangan perempuan?"))
         {
             yield return WaitForDialogueToFinish();
@@ -220,10 +231,45 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
             );
         }
 
+        // Jeda 0.5 detik setelah dialog pertama selesai.
+        yield return new WaitForSeconds(0.5f);
+
+        // Putar SFX kaca pecah.
+        if (glassBreakSource != null)
+            glassBreakSource.Play();
+
+        // Simpan status cermin pecah.
+        mirrorIsBroken = true;
+        NiskalaProgress.mirrorIsBroken = true;
+
+        // Ganti visual cermin normal menjadi cermin pecah.
+        SetActiveSafe(mirrorZoom, false);
+        SetActiveSafe(mirrorZoomBroken, true);
+
+        Debug.Log("Cermin berubah menjadi Cermin_Zoom_Broken.");
+
+        // Jeda sebelum dialog setelah cermin pecah.
+        yield return new WaitForSeconds(mirrorDialogueDelay);
+
+        // Dialog setelah cermin pecah.
+        if (StartDialogue("Aku tidak bisa berkata-kata"))
+        {
+            yield return WaitForDialogueToFinish();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "Dialog cermin pecah tidak berhasil dimulai."
+            );
+        }
+
+        // Interaksi baru berakhir setelah dialog kedua selesai.
         EndSpecialInteraction();
+
+        // ArrowBack baru aktif setelah seluruh event selesai.
         SetArrowBack(true);
 
-        Debug.Log("Interaksi pertama cermin selesai.");
+        Debug.Log("Interaksi cermin selesai. Cermin sudah pecah.");
     }
 
     private IEnumerator FadeJumpscare(
@@ -376,7 +422,7 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
 
     public bool TryCloseSpecialZoom()
     {
-        if (!mirrorZoomOpen && !scarfZoomOpen)
+        if (!mirrorZoomOpen)
             return false;
 
         // Jangan tutup zoom selama jumpscare atau dialog.
@@ -386,42 +432,24 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
             return true;
         }
 
-        if (mirrorZoomOpen)
-        {
-            mirrorZoomOpen = false;
+        mirrorZoomOpen = false;
 
-            SetActiveSafe(mirrorZoom, false);
-            SetActiveSafe(mirrorZoomBroken, false);
-            SetActiveSafe(mirrorJumpscare, false);
+        SetActiveSafe(mirrorZoom, false);
+        SetActiveSafe(mirrorZoomBroken, false);
+        SetActiveSafe(mirrorJumpscare, false);
+        SetActiveSafe(mirrorDimmer, false);
 
-            // Tampilkan kembali gambar cermin yang sesuai.
-            SetActiveSafe(mirrorRoom, !mirrorIsBroken);
-            SetActiveSafe(mirrorBrokenRoom, mirrorIsBroken);
+        // Tampilkan kembali gambar cermin yang sesuai.
+        SetActiveSafe(mirrorRoom, !mirrorIsBroken);
+        SetActiveSafe(mirrorBrokenRoom, mirrorIsBroken);
 
-            SetArrowBack(true);
+        SetArrowBack(true);
 
-            Debug.Log(mirrorIsBroken
-                ? "Kembali ke kamar: cermin sudah pecah."
-                : "Kembali ke kamar: cermin masih utuh.");
+        Debug.Log(mirrorIsBroken
+            ? "Kembali ke kamar: cermin sudah pecah."
+            : "Kembali ke kamar: cermin masih utuh.");
 
-            return true;
-        }
-
-        if (scarfZoomOpen)
-        {
-            scarfZoomOpen = false;
-
-            SetActiveSafe(scarfZoom, false);
-            SetActiveSafe(scarfRoom, true);
-
-            SetArrowBack(true);
-
-            Debug.Log("Zoom selendang ditutup.");
-
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     // =========================================
@@ -512,8 +540,8 @@ public class BedroomSpecialInteractions : MonoBehaviour, IInteractionBlocker
         if (interactionBusy)
             return true;
 
-        // Zoom cermin atau selendang sedang terbuka.
-        if (mirrorZoomOpen || scarfZoomOpen)
+        // Zoom cermin sedang terbuka.
+        if (mirrorZoomOpen)
             return true;
 
         // Dialog dari sistem dialog bersama sedang berlangsung.
