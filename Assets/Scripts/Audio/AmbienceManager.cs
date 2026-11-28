@@ -1,16 +1,28 @@
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class AmbienceManager : MonoBehaviour
 {
-    public static AmbienceManager Instance;
+    public static AmbienceManager Instance { get; private set; }
 
     private AudioSource ambienceSource;
+
     private bool ambienceDisabled;
+
+    // Scene yang menggunakan ambience misterius.
+    private readonly string[] ambienceScenes =
+    {
+        "RuangTamu",
+        "RuangMakan",
+        "RuangTengah",
+        "KamarTidur",
+        "RuangPenyimpanan",
+        "LoreOrder"
+    };
 
     private void Awake()
     {
+        // Hindari duplikasi manager.
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -19,48 +31,123 @@ public class AmbienceManager : MonoBehaviour
 
         Instance = this;
 
+        // Pertahankan manager selama pergantian scene.
         DontDestroyOnLoad(gameObject);
 
+        // Ambil AudioSource ambience.
         ambienceSource = GetComponentInChildren<AudioSource>(true);
 
         if (ambienceSource == null)
         {
-            Debug.LogError("AudioSource Ambience tidak ditemukan!");
+            Debug.LogError(
+                "AudioSource Ambience tidak ditemukan!"
+            );
         }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void Start()
     {
-        // Jangan putar ambience misterius di Ruang Penyimpanan.
-        if (SceneManager.GetActiveScene().name == "RuangPenyimpanan")
-            return;
-
-        PlayAmbience();
+        // Atur ambience berdasarkan scene awal.
+        UpdateAmbienceForScene(
+            SceneManager.GetActiveScene().name
+        );
     }
 
+    // Dipanggil ketika scene baru selesai dimuat.
+    private void OnSceneLoaded(
+        Scene scene,
+        LoadSceneMode mode
+    )
+    {
+        UpdateAmbienceForScene(scene.name);
+    }
+
+    // Mengatur ambience berdasarkan scene.
+    private void UpdateAmbienceForScene(
+        string sceneName
+    )
+    {
+        // Jika ambience telah dinonaktifkan,
+        // jangan putar kembali.
+        if (ambienceDisabled)
+        {
+            StopAmbience();
+            return;
+        }
+
+        // Periksa apakah scene menggunakan ambience misterius.
+        bool shouldPlayAmbience = false;
+
+        foreach (string ambienceScene in ambienceScenes)
+        {
+            if (sceneName == ambienceScene)
+            {
+                shouldPlayAmbience = true;
+                break;
+            }
+        }
+
+        if (shouldPlayAmbience)
+        {
+            PlayAmbience();
+        }
+        else
+        {
+            StopAmbience();
+        }
+    }
+
+    // Memutar ambience.
     public void PlayAmbience()
     {
         if (ambienceDisabled)
             return;
 
-        if (ambienceSource != null && !ambienceSource.isPlaying)
+        if (ambienceSource != null &&
+            !ambienceSource.isPlaying)
         {
             ambienceSource.loop = true;
             ambienceSource.Play();
         }
     }
 
+    // Menghentikan ambience.
     public void StopAmbience()
     {
-        if (ambienceSource != null)
+        if (ambienceSource != null &&
+            ambienceSource.isPlaying)
         {
             ambienceSource.Stop();
         }
     }
 
+    // Menonaktifkan ambience untuk sementara.
     public void DisableAmbience()
     {
         ambienceDisabled = true;
         StopAmbience();
+    }
+
+    // Mengembalikan ambience ke kondisi awal sesi baru.
+    public void ResetAmbience()
+    {
+        ambienceDisabled = false;
+
+        StopAmbience();
+
+        // Sesuaikan ambience dengan scene yang aktif.
+        UpdateAmbienceForScene(
+            SceneManager.GetActiveScene().name
+        );
     }
 }

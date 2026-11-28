@@ -70,15 +70,43 @@ public class EndingSceneController : MonoBehaviour
         if (!narrationFinished)
             return;
 
-        // Hentikan dan hancurkan BGM melankolik.
+        // Reset ambience misterius untuk sesi permainan berikutnya.
+        if (AmbienceManager.Instance != null)
+        {
+            AmbienceManager.Instance.ResetAmbience();
+        }
+
+        // Hentikan ambience hujan.
+        if (StorageRainAmbience.Instance != null)
+        {
+            StorageRainAmbience.Instance.StopRain();
+        }
+
+        // Hentikan seluruh audio pengejaran Mayang.
+        if (MayangChaseManager.Instance != null)
+        {
+            MayangChaseManager.Instance.StopAllChaseAudio();
+        }
+
+        // Hentikan BGM Ending.
         if (EndingMelancholicBGM.Instance != null)
         {
             EndingMelancholicBGM.Instance.StopBGM();
         }
 
+        // Pastikan game tidak dalam keadaan pause.
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        // Reset seluruh progres permainan.
+        NiskalaProgress.ResetAll();
+
+        // Bersihkan alur investigasi artefak.
+        ArtifactLoreFlow.Clear();
+        LoreOrderFlow.Clear();
+
         if (SceneTransitionManager.Instance != null)
         {
-            
             SceneTransitionManager.Instance.LoadScene("MainMenu");
         }
         else

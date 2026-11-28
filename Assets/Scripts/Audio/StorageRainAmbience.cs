@@ -20,12 +20,7 @@ public class StorageRainAmbience : MonoBehaviour
 
     private void Start()
     {
-         // Hentikan ambience misterius.
-        if (AmbienceManager.Instance != null)
-        {
-            AmbienceManager.Instance.StopAmbience();
-        }
-
+        // Putar ambience hujan.
         if (rainAudioSource != null)
         {
             rainAudioSource.loop = true;
@@ -33,17 +28,18 @@ public class StorageRainAmbience : MonoBehaviour
         }
     }
 
-   private void OnDestroy()
+    private void OnDestroy()
     {
+        // Hentikan ambience hujan ketika
+        // object StorageRainAmbience dihancurkan.
         if (rainAudioSource != null)
         {
             rainAudioSource.Stop();
         }
 
-        // Kembalikan ambience misterius jika masih diizinkan.
-        if (AmbienceManager.Instance != null)
+        if (Instance == this)
         {
-            AmbienceManager.Instance.PlayAmbience();
+            Instance = null;
         }
     }
 
@@ -57,7 +53,8 @@ public class StorageRainAmbience : MonoBehaviour
 
     public void PlayRain()
     {
-        if (rainAudioSource != null && !rainAudioSource.isPlaying)
+        if (rainAudioSource != null &&
+            !rainAudioSource.isPlaying)
         {
             rainAudioSource.Play();
         }
@@ -65,6 +62,7 @@ public class StorageRainAmbience : MonoBehaviour
 
     public bool IsRainPlaying()
     {
-        return rainAudioSource != null && rainAudioSource.isPlaying;
+        return rainAudioSource != null &&
+               rainAudioSource.isPlaying;
     }
 }

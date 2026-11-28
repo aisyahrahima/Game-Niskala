@@ -266,6 +266,52 @@ public class MayangChaseManager : MonoBehaviour
         Debug.Log("Pengejaran Mayang dihentikan.");
     }
 
+    public void StopAllChaseAudio()
+    {
+        // Hentikan BGM pengejaran.
+        if (chaseBGMSource != null)
+            chaseBGMSource.Stop();
+
+        // Hentikan heartbeat.
+        if (heartbeatSource != null)
+            heartbeatSource.Stop();
+
+        // Hentikan warning.
+        if (warningSource != null)
+            warningSource.Stop();
+
+        // Hentikan audio ancang-ancang.
+        if (ancangAncangSource != null)
+            ancangAncangSource.Stop();
+
+        // Hentikan audio jumpscare.
+        if (jumpscareSource != null)
+            jumpscareSource.Stop();
+
+        Debug.Log("Seluruh audio pengejaran Mayang dihentikan.");
+    }
+
+    public void ResetChaseState()
+    {
+        // Hentikan seluruh audio pengejaran.
+        StopAllChaseAudio();
+
+        // Reset status pengejaran.
+        chaseRunning = false;
+        isDangerPhase = false;
+        isPlayerHiding = false;
+        failureSequenceActive = false;
+        warningPlayedThisSafePhase = false;
+
+        // Reset waktu fase.
+        phaseTimer = 0f;
+
+        // Beri tahu sistem visual bahwa fase kembali aman.
+        OnPhaseChanged?.Invoke(false);
+
+        Debug.Log("Status pengejaran Mayang berhasil direset.");
+    }
+
     public void PlayJumpscareSound()
     {
         if (jumpscareSource != null)
