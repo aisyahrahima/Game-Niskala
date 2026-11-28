@@ -6,6 +6,7 @@ public class AmbienceManager : MonoBehaviour
     public static AmbienceManager Instance { get; private set; }
 
     private AudioSource ambienceSource;
+    private AudioFadeController ambienceFadeController;
 
     private bool ambienceDisabled;
 
@@ -42,6 +43,19 @@ public class AmbienceManager : MonoBehaviour
             Debug.LogError(
                 "AudioSource Ambience tidak ditemukan!"
             );
+        }
+        else
+        {
+            // Ambil AudioFadeController.
+            ambienceFadeController =
+                ambienceSource.GetComponent<AudioFadeController>();
+
+            if (ambienceFadeController == null)
+            {
+                Debug.LogError(
+                    "AudioFadeController Ambience tidak ditemukan!"
+                );
+            }
         }
     }
 
@@ -107,27 +121,48 @@ public class AmbienceManager : MonoBehaviour
         }
     }
 
-    // Memutar ambience.
+    // Memutar ambience dengan fade-in.
     public void PlayAmbience()
     {
         if (ambienceDisabled)
             return;
 
-        if (ambienceSource != null &&
-            !ambienceSource.isPlaying)
+        if (ambienceSource == null)
+            return;
+
+        if (ambienceFadeController == null)
         {
             ambienceSource.loop = true;
-            ambienceSource.Play();
+
+            if (!ambienceSource.isPlaying)
+                ambienceSource.Play();
+
+            return;
+        }
+
+        if (!ambienceSource.isPlaying)
+        {
+            ambienceSource.loop = true;
+            ambienceFadeController.FadeIn();
         }
     }
 
-    // Menghentikan ambience.
+    // Menghentikan ambience dengan fade-out.
     public void StopAmbience()
     {
-        if (ambienceSource != null &&
-            ambienceSource.isPlaying)
+        if (ambienceSource == null)
+            return;
+
+        if (ambienceSource.isPlaying)
         {
-            ambienceSource.Stop();
+            if (ambienceFadeController != null)
+            {
+                ambienceFadeController.FadeOut();
+            }
+            else
+            {
+                ambienceSource.Stop();
+            }
         }
     }
 
@@ -143,7 +178,11 @@ public class AmbienceManager : MonoBehaviour
     {
         ambienceDisabled = false;
 
-        StopAmbience();
+        // Hentikan audio dan fade yang sedang berjalan.
+        if (ambienceSource != null)
+        {
+            ambienceSource.Stop();
+        }
 
         // Sesuaikan ambience dengan scene yang aktif.
         UpdateAmbienceForScene(

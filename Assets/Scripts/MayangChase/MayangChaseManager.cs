@@ -12,6 +12,7 @@ public class MayangChaseManager : MonoBehaviour
 
     [Header("Mayang Chase Audio")]
     [SerializeField] private AudioSource chaseBGMSource;
+    [SerializeField] private AudioFadeController chaseBGMFadeController;
     [SerializeField] private AudioSource heartbeatSource;
     [SerializeField] private AudioSource warningSource;
     [SerializeField] private AudioSource ancangAncangSource;
@@ -94,9 +95,18 @@ public class MayangChaseManager : MonoBehaviour
             StorageRainAmbience.Instance.StopRain();
         }
 
-        // Putar musik latar pengejaran.
+        // Putar musik latar pengejaran dengan fade-in.
         if (chaseBGMSource != null)
-            chaseBGMSource.Play();
+        {
+            if (chaseBGMFadeController != null)
+            {
+                chaseBGMFadeController.FadeIn();
+            }
+            else
+            {
+                chaseBGMSource.Play();
+            }
+        }
 
         Debug.Log("Pengejaran Mayang dimulai.");
         Debug.Log("Fase aman: " + safeDuration + " detik.");
@@ -251,9 +261,19 @@ public class MayangChaseManager : MonoBehaviour
         chaseRunning = false;
         phaseTimer = 0f;
 
-        // Hentikan BGM pengejaran.
-        if (chaseBGMSource != null && chaseBGMSource.isPlaying)
-            chaseBGMSource.Stop();
+        // Hentikan BGM pengejaran dengan fade-out.
+        if (chaseBGMSource != null &&
+            chaseBGMSource.isPlaying)
+        {
+            if (chaseBGMFadeController != null)
+            {
+                chaseBGMFadeController.FadeOut();
+            }
+            else
+            {
+                chaseBGMSource.Stop();
+            }
+        }
 
         // Hentikan warning.
         if (warningSource != null && warningSource.isPlaying)
@@ -268,9 +288,19 @@ public class MayangChaseManager : MonoBehaviour
 
     public void StopAllChaseAudio()
     {
-        // Hentikan BGM pengejaran.
-        if (chaseBGMSource != null)
-            chaseBGMSource.Stop();
+        // Hentikan BGM pengejaran dengan fade-out.
+        if (chaseBGMSource != null &&
+            chaseBGMSource.isPlaying)
+        {
+            if (chaseBGMFadeController != null)
+            {
+                chaseBGMFadeController.FadeOut();
+            }
+            else
+            {
+                chaseBGMSource.Stop();
+            }
+        }
 
         // Hentikan heartbeat.
         if (heartbeatSource != null)
@@ -335,9 +365,17 @@ public class MayangChaseManager : MonoBehaviour
 
     public void StopChaseBGM()
     {
-        if (chaseBGMSource != null && chaseBGMSource.isPlaying)
+        if (chaseBGMSource != null &&
+            chaseBGMSource.isPlaying)
         {
-            chaseBGMSource.Stop();
+            if (chaseBGMFadeController != null)
+            {
+                chaseBGMFadeController.FadeOut();
+            }
+            else
+            {
+                chaseBGMSource.Stop();
+            }
         }
     }
 

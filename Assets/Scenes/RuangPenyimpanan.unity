@@ -779,6 +779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StorageRainAmbience
   rainAudioSource: {fileID: 2118806745}
+  rainFadeController: {fileID: 2118806747}
 --- !u!4 &399992539
 Transform:
   m_ObjectHideFlags: 0
@@ -959,6 +960,7 @@ MonoBehaviour:
   safeDuration: 10
   dangerDuration: 8
   chaseBGMSource: {fileID: 759122381}
+  chaseBGMFadeController: {fileID: 759122382}
   heartbeatSource: {fileID: 1645058119}
   warningSource: {fileID: 701478049}
   ancangAncangSource: {fileID: 1492538972}
@@ -1319,6 +1321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 759122380}
   - component: {fileID: 759122381}
+  - component: {fileID: 759122382}
   m_Layer: 0
   m_Name: ChaseBGMSource
   m_TagString: Untagged
@@ -1438,6 +1441,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &759122382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759122379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75419d1ffce531c43bb350a6fe9e0612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioFadeController
+  audioSource: {fileID: 759122381}
+  fadeInDuration: 1.5
+  fadeOutDuration: 1.5
 --- !u!1 &766332140
 GameObject:
   m_ObjectHideFlags: 0
@@ -4888,6 +4906,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2118806746}
   - component: {fileID: 2118806745}
+  - component: {fileID: 2118806747}
   m_Layer: 0
   m_Name: RainSource
   m_TagString: Untagged
@@ -5007,6 +5026,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 399992539}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2118806747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118806744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75419d1ffce531c43bb350a6fe9e0612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioFadeController
+  audioSource: {fileID: 2118806745}
+  fadeInDuration: 1.5
+  fadeOutDuration: 1.5
 --- !u!1001 &5478909036920598983
 PrefabInstance:
   m_ObjectHideFlags: 0

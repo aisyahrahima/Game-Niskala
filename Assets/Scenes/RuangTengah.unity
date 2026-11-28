@@ -312,6 +312,7 @@ GameObject:
   m_Component:
   - component: {fileID: 11895628}
   - component: {fileID: 11895629}
+  - component: {fileID: 11895630}
   m_Layer: 0
   m_Name: ChaseBGMSource
   m_TagString: Untagged
@@ -431,6 +432,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &11895630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11895627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75419d1ffce531c43bb350a6fe9e0612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioFadeController
+  audioSource: {fileID: 11895629}
+  fadeInDuration: 1.5
+  fadeOutDuration: 1.5
 --- !u!1 &54920286
 GameObject:
   m_ObjectHideFlags: 0
@@ -5273,6 +5289,7 @@ MonoBehaviour:
   safeDuration: 10
   dangerDuration: 8
   chaseBGMSource: {fileID: 11895629}
+  chaseBGMFadeController: {fileID: 11895630}
   heartbeatSource: {fileID: 419921266}
   warningSource: {fileID: 1884381560}
   ancangAncangSource: {fileID: 1824860802}

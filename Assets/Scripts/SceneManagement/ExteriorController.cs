@@ -19,6 +19,9 @@ public class ExteriorController : MonoBehaviour
     [SerializeField] private AudioSource ambienceMalamSource;
     [SerializeField] private AudioSource ambienceGledekSource;
 
+    [Header("Fade Ambience Malam")]
+    [SerializeField] private AudioFadeController ambienceMalamFade;
+
     [Header("Audio Interaksi")]
     [SerializeField] private AudioSource interactionSource;
     [SerializeField] private AudioClip doorOpenSound;
@@ -53,11 +56,23 @@ public class ExteriorController : MonoBehaviour
             return;
         }
 
-        // Memulai ambience malam.
+        // Memulai ambience malam dengan fade-in.
         if (ambienceMalamSource != null)
         {
             ambienceMalamSource.loop = true;
-            ambienceMalamSource.Play();
+
+            if (ambienceMalamFade != null)
+            {
+                ambienceMalamFade.FadeIn();
+            }
+            else
+            {
+                ambienceMalamSource.Play();
+
+                Debug.LogWarning(
+                    "AudioFadeController Ambience Malam belum dihubungkan."
+                );
+            }
         }
 
         // Memulai ambience gledek.
@@ -121,19 +136,42 @@ public class ExteriorController : MonoBehaviour
 
     private IEnumerator EnterBuildingSequence()
     {
+        // Memulai fade-out ambience malam.
         if (ambienceMalamSource != null)
-            ambienceMalamSource.Stop();
+        {
+            if (ambienceMalamFade != null)
+            {
+                ambienceMalamFade.FadeOut();
+            }
+            else
+            {
+                ambienceMalamSource.Stop();
+            }
+        }
 
+        // Hentikan ambience gledek seperti sebelumnya.
         if (ambienceGledekSource != null)
             ambienceGledekSource.Stop();
+
+        // Putar suara pintu langsung tanpa menunggu fade-out.
+        float doorSoundDuration = 0f;
 
         if (interactionSource != null && doorOpenSound != null)
         {
             interactionSource.PlayOneShot(doorOpenSound);
 
-            yield return new WaitForSeconds(doorOpenSound.length);
+            doorSoundDuration = doorOpenSound.length;
         }
 
+        // Tunggu sampai fade-out ambience dan suara pintu selesai.
+        float waitDuration = Mathf.Max(
+            1.5f,
+            doorSoundDuration
+        );
+
+        yield return new WaitForSecondsRealtime(waitDuration);
+
+        // Pindah ke scene RuangTamu.
         if (SceneTransitionManager.Instance != null)
         {
             SceneTransitionManager.Instance.LoadScene(nextSceneName);

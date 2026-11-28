@@ -175,6 +175,7 @@ MonoBehaviour:
   dialogueStartDelay: 2
   ambienceMalamSource: {fileID: 302685013}
   ambienceGledekSource: {fileID: 1196634279}
+  ambienceMalamFade: {fileID: 302685014}
   interactionSource: {fileID: 816989780}
   doorOpenSound: {fileID: 8300000, guid: 385cafd8dc4ed494aa3c92ef7282f132, type: 3}
 --- !u!1 &302685011
@@ -187,6 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 302685012}
   - component: {fileID: 302685013}
+  - component: {fileID: 302685014}
   m_Layer: 0
   m_Name: MalamSource
   m_TagString: Untagged
@@ -306,6 +308,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &302685014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302685011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75419d1ffce531c43bb350a6fe9e0612, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioFadeController
+  audioSource: {fileID: 302685013}
+  fadeInDuration: 1.5
+  fadeOutDuration: 1.5
 --- !u!1 &360276129
 GameObject:
   m_ObjectHideFlags: 0

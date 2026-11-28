@@ -7,6 +7,9 @@ public class StorageRainAmbience : MonoBehaviour
     [Header("Rain Ambience Audio")]
     [SerializeField] private AudioSource rainAudioSource;
 
+    [Header("Audio Fade")]
+    [SerializeField] private AudioFadeController rainFadeController;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -20,11 +23,23 @@ public class StorageRainAmbience : MonoBehaviour
 
     private void Start()
     {
-        // Putar ambience hujan.
+        // Putar ambience hujan dengan fade-in.
         if (rainAudioSource != null)
         {
             rainAudioSource.loop = true;
-            rainAudioSource.Play();
+
+            if (rainFadeController != null)
+            {
+                rainFadeController.FadeIn();
+            }
+            else
+            {
+                rainAudioSource.Play();
+
+                Debug.LogWarning(
+                    "AudioFadeController Ambience Hujan belum dihubungkan!"
+                );
+            }
         }
     }
 
@@ -47,7 +62,15 @@ public class StorageRainAmbience : MonoBehaviour
     {
         if (rainAudioSource != null)
         {
-            rainAudioSource.Stop();
+            if (rainFadeController != null &&
+                rainAudioSource.isPlaying)
+            {
+                rainFadeController.FadeOut();
+            }
+            else
+            {
+                rainAudioSource.Stop();
+            }
         }
     }
 
@@ -56,7 +79,14 @@ public class StorageRainAmbience : MonoBehaviour
         if (rainAudioSource != null &&
             !rainAudioSource.isPlaying)
         {
-            rainAudioSource.Play();
+            if (rainFadeController != null)
+            {
+                rainFadeController.FadeIn();
+            }
+            else
+            {
+                rainAudioSource.Play();
+            }
         }
     }
 
